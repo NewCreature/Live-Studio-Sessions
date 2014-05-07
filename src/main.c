@@ -301,6 +301,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
 	int f;
 	ALLEGRO_PATH * songs_path;
+	const char * val;
 	
 	/* initialize T3F */
 	if(!t3f_initialize("Live Studio Sessions", 640, 480, 60.0, app_logic, app_render, T3F_DEFAULT, app))
@@ -321,7 +322,23 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	al_convert_mask_to_alpha(app->notes_texture, al_map_rgba_f(1.0, 0.0, 1.0, 1.0));
 	
 	/* create song database */
-	songs_path = al_create_path("/Volumes/My Passport/Archive/Games/FOF/songs");
+	if(argc > 1)
+	{
+		songs_path = al_create_path(argv[1]);
+		al_set_config_value(t3f_config, "Live Studio Sessions", "Library Path", argv[1]);
+	}
+	else
+	{
+		val = al_get_config_value(t3f_config, "Live Studio Sessions", "Library Path");
+		if(val)
+		{
+			songs_path = al_create_path(val);
+		}
+		else
+		{
+			return false;
+		}
+	}
 	f = lss_song_list_count_files(al_path_cstr(songs_path, '/'), 0);
 	printf("Found %d songs!\n", f);
 	app->song_list = lss_create_song_list(t3f_get_filename(t3f_data_path, "song_list.cache"), f);
