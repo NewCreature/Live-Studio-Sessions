@@ -15,6 +15,7 @@ typedef struct
 	int tick;
 	int length;
 	bool active;
+	bool playing;
 	
 } LSS_SONG_NOTE;
 

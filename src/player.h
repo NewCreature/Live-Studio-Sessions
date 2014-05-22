@@ -13,6 +13,14 @@ typedef struct
 	int selected_track;
 	int selected_difficulty;
 	int score;
+	
+	/* list of currently playing notes */
+	int playing_note[32];
+	int playing_notes;
+	
+	/* list of notes that can be hit */
+	int hittable_note[32];
+	int hittable_notes;
 
 } LSS_PLAYER;
 

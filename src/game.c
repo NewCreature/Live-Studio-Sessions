@@ -31,7 +31,21 @@ void lss_game_exit(LSS_GAME * gp)
 
 void lss_game_logic(LSS_GAME * gp)
 {
+	int i, d;
+	
+	/* handle player logic */
 	lss_read_controller(gp->player[0].controller);
+	gp->player[0].hittable_notes = 0;
+	for(i = 0; i < gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes; i++)
+	{
+		d = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick - (gp->current_tick - gp->av_delay)));
+		if(d >= -8 && d <= 8)
+		{
+			gp->player[0].hittable_note[gp->player[0].hittable_notes] = i;
+			gp->player[0].hittable_notes++;
+		}
+	}
+	
 	if(t3f_key[ALLEGRO_KEY_ESCAPE])
 	{
 		lss_destroy_song_audio(gp->song_audio);
@@ -49,7 +63,7 @@ void lss_game_render(LSS_GAME * gp)
 	float oy[5] = {3.0, 1.0, 0.0, 1.0, 3.0};
 	ALLEGRO_VERTEX v[5];
 	double a, c, cy, z, end_z;
-	int i;
+	int i, j;
 
 	/* render note tails */
 	for(i = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes - 1; i >= 0; i--)
@@ -104,6 +118,13 @@ void lss_game_render(LSS_GAME * gp)
 				if(a < 0.0)
 				{
 					a = 0.0;
+				}
+			}
+			for(j = 0; j < gp->player[0].hittable_notes; j++)
+			{
+				if(gp->player[0].hittable_note[j] == i)
+				{
+					a *= 0.5;
 				}
 			}
 			c = al_get_bitmap_width(gp->notes_texture) / 2;
