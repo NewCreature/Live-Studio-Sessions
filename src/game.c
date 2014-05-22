@@ -31,6 +31,7 @@ void lss_game_exit(LSS_GAME * gp)
 
 void lss_game_logic(LSS_GAME * gp)
 {
+	lss_read_controller(gp->player[0].controller);
 	if(t3f_key[ALLEGRO_KEY_ESCAPE])
 	{
 		lss_destroy_song_audio(gp->song_audio);
@@ -112,8 +113,16 @@ void lss_game_render(LSS_GAME * gp)
 	}
 	for(i = 0; i < 5; i++)
 	{
+		if(gp->player[0].controller->controller->state[i].down)
+		{
+			a = 1.0;
+		}
+		else
+		{
+			a = 0.5;
+		}
 		c = al_get_bitmap_width(gp->notes_texture) / 2;
 		cy = c + c / 2;
-		t3f_draw_scaled_rotated_bitmap(gp->notes_texture, al_map_rgba_f(0.5, 0.5, 0.5, 0.5), c, cy, 160 + i * 80, 340 + cy + oy[i], 0, rotate[i], 1.5, 1.5, 0);
+		t3f_draw_scaled_rotated_bitmap(gp->notes_texture, al_map_rgba_f(a, a, a, a), c, cy, 160 + i * 80, 340 + cy + oy[i], 0, rotate[i], 1.5, 1.5, 0);
 	}
 }

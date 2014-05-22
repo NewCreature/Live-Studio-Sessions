@@ -11,6 +11,7 @@
 #include "player.h"
 #include "game.h"
 #include "resources.h"
+#include "controller.h"
 
 /* structure to hold all of our app-specific data */
 typedef struct
@@ -18,6 +19,7 @@ typedef struct
 	
 	/* global data */
 	LSS_RESOURCES resources;
+	LSS_CONTROLLER controller[LSS_MAX_CONTROLLERS];
 
 	LSS_SONG_LIST * song_list;
 	
@@ -125,6 +127,7 @@ void app_logic(void * data)
 			}
 			if(t3f_key[ALLEGRO_KEY_ENTER])
 			{
+				app->game.player[0].controller = &app->controller[0];
 				lss_game_initialize(&app->game, app->song_list->entry[app->selected_song]->path);
 				app->state = 3;
 				t3f_key[ALLEGRO_KEY_ENTER] = 0;
@@ -212,6 +215,32 @@ void app_render(void * data)
 	al_hold_bitmap_drawing(false);
 }
 
+static bool lss_setup_default_controllers(APP_INSTANCE * app)
+{
+	app->controller[0].controller = t3f_create_controller(8);
+	if(!app->controller[0].controller)
+	{
+		return false;
+	}
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_GREEN].type = T3F_CONTROLLER_BINDING_KEY;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_GREEN].button = ALLEGRO_KEY_F1;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_YELLOW].type = T3F_CONTROLLER_BINDING_KEY;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_YELLOW].button = ALLEGRO_KEY_F2;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_RED].type = T3F_CONTROLLER_BINDING_KEY;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_RED].button = ALLEGRO_KEY_F3;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_BLUE].type = T3F_CONTROLLER_BINDING_KEY;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_BLUE].button = ALLEGRO_KEY_F4;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_ORANGE].type = T3F_CONTROLLER_BINDING_KEY;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_ORANGE].button = ALLEGRO_KEY_F5;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].type = T3F_CONTROLLER_BINDING_KEY;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].button = ALLEGRO_KEY_RSHIFT;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].type = T3F_CONTROLLER_BINDING_KEY;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].button = ALLEGRO_KEY_ENTER;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STAR_POWER].type = T3F_CONTROLLER_BINDING_KEY;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STAR_POWER].button = ALLEGRO_KEY_SPACE;
+	return true;
+}
+
 /* initialize our app, load graphics, etc. */
 bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
@@ -223,6 +252,10 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	if(!t3f_initialize("Live Studio Sessions", 640, 480, 60.0, app_logic, app_render, T3F_DEFAULT, app))
 	{
 		printf("Error initializing T3F\n");
+		return false;
+	}
+	if(!lss_setup_default_controllers(app))
+	{
 		return false;
 	}
 	if(!lss_load_global_resources(&app->resources))
