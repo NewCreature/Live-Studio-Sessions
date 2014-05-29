@@ -6,6 +6,7 @@
 #include "song.h"
 #include "song_audio.h"
 #include "player.h"
+#include "resources.h"
 
 typedef struct
 {
@@ -27,6 +28,6 @@ typedef struct
 bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path);
 void lss_game_exit(LSS_GAME * gp);
 void lss_game_logic(LSS_GAME * gp);
-void lss_game_render(LSS_GAME * gp);
+void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp);
 
 #endif

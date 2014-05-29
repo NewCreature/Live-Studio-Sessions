@@ -14,6 +14,11 @@ typedef struct
 	int selected_difficulty;
 	int score;
 	
+	int hit_notes;
+
+	int next_note[32];
+	int next_notes;
+
 	/* list of currently playing notes */
 	int playing_note[32];
 	int playing_notes;
