@@ -60,6 +60,9 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 	gp->player[0].next_note[0] = -1;
 	gp->player[0].next_notes = 1;
 	gp->player[0].hit_notes = 0;
+	gp->player[0].streak = 0;
+	gp->player[0].life = 100;
+	gp->player[0].miss_streak = 0;
 	lss_player_get_next_notes(gp->song, &gp->player[0]);
 	lss_set_song_audio_playing(gp->song_audio, true);
 	gp->done = false;
@@ -112,6 +115,13 @@ void lss_game_logic(LSS_GAME * gp)
 			}
 			gp->player[0].playing_notes = gp->player[0].next_notes;
 			gp->player[0].hit_notes++;
+			gp->player[0].streak++;
+			gp->player[0].miss_streak = 0;
+			gp->player[0].life += gp->player[0].streak;
+			if(gp->player[0].life > 100)
+			{
+				gp->player[0].life = 100;
+			}
 			lss_player_get_next_notes(gp->song, &gp->player[0]);
 		}
 	}
@@ -121,11 +131,14 @@ void lss_game_logic(LSS_GAME * gp)
 		d = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_note[0]]->tick - (gp->current_tick - gp->av_delay)));
 		if(d < -8)
 		{
+			gp->player[0].streak = 0;
+			gp->player[0].miss_streak++;
+			gp->player[0].life -= gp->player[0].miss_streak;
 			lss_player_get_next_notes(gp->song, &gp->player[0]);
 		}
 	}
 	
-	if(t3f_key[ALLEGRO_KEY_ESCAPE])
+	if(t3f_key[ALLEGRO_KEY_ESCAPE] || gp->player[0].life <= 0)
 	{
 		lss_destroy_song_audio(gp->song_audio);
 		lss_destroy_song(gp->song);
@@ -236,5 +249,6 @@ void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)
 		t3f_draw_scaled_rotated_bitmap(gp->notes_texture, al_map_rgba_f(a, a, a, a), c, cy, 160 + i * 80, 340 + cy + oy[i], 0, rotate[i], 1.5, 1.5, 0);
 	}
 	al_draw_textf(rp->font, t3f_color_white, 0, 0, 0, "%d/%d", gp->player[0].hit_notes, gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes);
+	al_draw_textf(rp->font, t3f_color_white, 0, 24, 0, "%d", gp->player[0].life);
 	al_hold_bitmap_drawing(false);
 }

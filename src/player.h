@@ -13,6 +13,9 @@ typedef struct
 	int selected_track;
 	int selected_difficulty;
 	int score;
+	int streak;
+	int life;
+	int miss_streak;
 	
 	int hit_notes;
 
