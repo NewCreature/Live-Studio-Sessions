@@ -118,8 +118,10 @@ static bool lss_song_populate_tracks(LSS_SONG * sp)
 					{
 						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->val = sp->source_midi->track[i]->event[j]->data_i[0] - difficulty_offset;
 						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->tick = (sp->source_midi->track[i]->event[j]->pos_sec + sp->offset) * 60.0;
+						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->play_tick = sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->tick;
 						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->length = (sp->source_midi->track[i]->event[note_off_event]->pos_sec + sp->offset) * 60.0 - sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->tick;
 						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->active = true;
+						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->visible = true;
 						sp->track[i][difficulty].note_count++;
 					}
 				}

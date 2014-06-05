@@ -112,6 +112,8 @@ void lss_game_logic(LSS_GAME * gp)
 			for(i = 0; i < gp->player[0].next_notes; i++)
 			{
 				gp->player[0].playing_note[i] = gp->player[0].next_note[i];
+				gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_note[i]]->visible = false;
+				gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_note[i]]->play_tick = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_note[i]]->tick;
 			}
 			gp->player[0].playing_notes = gp->player[0].next_notes;
 			gp->player[0].hit_notes++;
@@ -127,6 +129,30 @@ void lss_game_logic(LSS_GAME * gp)
 	}
 	else
 	{
+		/* see if we are holding a sustain */
+		for(i = 0; i < gp->player[0].playing_notes; i++)
+		{
+			lane[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_note[i]]->val] = 1;
+		}
+		for(i = 0; i < 5; i++)
+		{
+			if(gp->player[0].controller->controller->state[i].held)
+			{
+				tap_lane[i] = 1;
+			}
+		}
+		if(memcmp(lane, tap_lane, sizeof(int) * 8))
+		{
+			gp->player[0].playing_notes = 0;
+		}
+		else
+		{
+			for(i = 0; i < gp->player[0].playing_notes; i++)
+			{
+				gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_note[i]]->play_tick = gp->current_tick;
+			}
+		}
+		
 		/* move on to next note if we missed this one */
 		d = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_note[0]]->tick - (gp->current_tick - gp->av_delay)));
 		if(d < -8)
@@ -157,10 +183,12 @@ void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)
 	ALLEGRO_COLOR color;
 	double a, c, cy, z, end_z;
 	int i, j;
+	bool playing;
 
 	/* render note tails */
 	for(i = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes - 1; i >= 0; i--)
 	{
+		playing = false;
 		if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->active)
 		{
 			color = al_map_rgba_f(0.5, 0.5, 1.0, 1.0);
@@ -169,12 +197,20 @@ void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)
 				if(gp->player[0].playing_note[j] == i)
 				{
 					color = t3f_color_white;
+					playing = true;
 				}
 			}
-			z = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick - (gp->current_tick - gp->av_delay))) * 12.0;
-			end_z = z + ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->length)) * 12.0;
+			if(playing)
+			{
+				z = 0.0;
+			}
+			else
+			{
+				z = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->play_tick - (gp->current_tick - gp->av_delay))) * 12.0;
+			}
+			end_z = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->length - (gp->current_tick - gp->av_delay))) * 12.0;
 			a = 1.0;
-			if(z < 2048.0 + 128.0 && end_z > -640.0)
+			if(z < 2048.0 + 128.0 && end_z > -640.0 && end_z > z)
 			{
 				if(z < -639.0)
 				{
@@ -186,20 +222,20 @@ void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)
 				}
 				c = al_get_bitmap_width(gp->notes_texture) / 2;
 				cy = c + c / 2;
-				v[0].x = t3f_project_x(160 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80 - 8, z);
-				v[0].y = t3f_project_y(340 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z);
+				v[0].x = t3f_project_x(320 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80 - 8, z);
+				v[0].y = t3f_project_y(420 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z);
 				v[0].color = color;
-				v[1].x = t3f_project_x(160 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80 + 8, z);
-				v[1].y = t3f_project_y(340 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z);
+				v[1].x = t3f_project_x(320 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80 + 8, z);
+				v[1].y = t3f_project_y(420 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z);
 				v[1].color = color;
-				v[2].x = t3f_project_x(160 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80 + 8, end_z);
-				v[2].y = t3f_project_y(340 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], end_z);
+				v[2].x = t3f_project_x(320 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80 + 8, end_z);
+				v[2].y = t3f_project_y(420 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], end_z);
 				v[2].color = color;
-				v[3].x = t3f_project_x(160 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80 - 8, end_z);
-				v[3].y = t3f_project_y(340 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], end_z);
+				v[3].x = t3f_project_x(320 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80 - 8, end_z);
+				v[3].y = t3f_project_y(420 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], end_z);
 				v[3].color = color;
-				v[4].x = t3f_project_x(160 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80 - 8, z);
-				v[4].y = t3f_project_y(340 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z);
+				v[4].x = t3f_project_x(320 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80 - 8, z);
+				v[4].y = t3f_project_y(420 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z);
 				v[4].color = color;
 				al_draw_prim(v, NULL, NULL, 0, 4, ALLEGRO_PRIM_TRIANGLE_FAN);
 			}
@@ -210,6 +246,7 @@ void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)
 	al_hold_bitmap_drawing(true);
 	for(i = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes - 1; i >= 0; i--)
 	{
+		playing = false;
 		if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->active)
 		{
 			z = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick - (gp->current_tick - gp->av_delay))) * 12.0;
@@ -227,11 +264,15 @@ void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)
 				if(gp->player[0].playing_note[j] == i)
 				{
 					a *= 0.5;
+					playing = true;
 				}
 			}
 			c = al_get_bitmap_width(gp->notes_texture) / 2;
 			cy = c + c / 2;
-			t3f_draw_scaled_rotated_bitmap(gp->notes_texture, al_map_rgba_f(a, a, a, a), c, cy, 160 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80, 340 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z, rotate[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], 1.5, 1.5, 0);
+			if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->visible)
+			{
+				t3f_draw_scaled_rotated_bitmap(gp->notes_texture, al_map_rgba_f(a, a, a, a), c, cy, 320 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80, 420 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z, rotate[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], 1.5, 1.5, 0);
+			}
 		}
 	}
 	for(i = 0; i < 5; i++)
@@ -246,7 +287,7 @@ void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)
 		}
 		c = al_get_bitmap_width(gp->notes_texture) / 2;
 		cy = c + c / 2;
-		t3f_draw_scaled_rotated_bitmap(gp->notes_texture, al_map_rgba_f(a, a, a, a), c, cy, 160 + i * 80, 340 + cy + oy[i], 0, rotate[i], 1.5, 1.5, 0);
+		t3f_draw_scaled_rotated_bitmap(gp->notes_texture, al_map_rgba_f(a, a, a, a), c, cy, 320 + i * 80, 420 + cy + oy[i], 0, rotate[i], 1.5, 1.5, 0);
 	}
 	al_draw_textf(rp->font, t3f_color_white, 0, 0, 0, "%d/%d", gp->player[0].hit_notes, gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes);
 	al_draw_textf(rp->font, t3f_color_white, 0, 24, 0, "%d", gp->player[0].life);

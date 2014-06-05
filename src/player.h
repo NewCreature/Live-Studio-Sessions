@@ -12,6 +12,7 @@ typedef struct
 	
 	int selected_track;
 	int selected_difficulty;
+	double song_pos;
 	int score;
 	int streak;
 	int life;
