@@ -18,6 +18,7 @@ typedef struct
 	bool active;
 	bool playing;
 	bool visible;
+	bool hopo;
 	
 } LSS_SONG_NOTE;
 
