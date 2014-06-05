@@ -16,6 +16,7 @@ typedef struct
 	int play_tick;
 	int length;
 	bool active;
+	bool in_chord;
 	bool playing;
 	bool visible;
 	bool hopo;

@@ -144,6 +144,8 @@ void lss_game_logic(LSS_GAME * gp)
 	else
 	{
 		/* see if we are holding a sustain */
+		memset(lane, 0, sizeof(int) * 8);
+		memset(tap_lane, 0, sizeof(int) * 8);
 		for(i = 0; i < gp->player[0].playing_notes; i++)
 		{
 			lane[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_note[i]]->val] = 1;
@@ -164,6 +166,43 @@ void lss_game_logic(LSS_GAME * gp)
 			for(i = 0; i < gp->player[0].playing_notes; i++)
 			{
 				gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_note[i]]->play_tick = gp->current_tick;
+			}
+		}
+		
+		/* see if we are hitting a HOPO note */
+		if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_note[0]]->hopo && gp->player[0].streak > 0)
+		{
+			memset(lane, 0, sizeof(int) * 8);
+			memset(tap_lane, 0, sizeof(int) * 8);
+			for(i = 0; i < gp->player[0].next_notes; i++)
+			{
+				lane[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_note[i]]->val] = 1;
+			}
+			for(i = 0; i < 5; i++)
+			{
+				if(gp->player[0].controller->controller->state[i].held)
+				{
+					tap_lane[i] = 1;
+				}
+			}
+			if(!memcmp(lane, tap_lane, sizeof(int) * 8))
+			{
+				for(i = 0; i < gp->player[0].next_notes; i++)
+				{
+					gp->player[0].playing_note[i] = gp->player[0].next_note[i];
+					gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_note[i]]->visible = false;
+					gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_note[i]]->play_tick = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_note[i]]->tick;
+				}
+				gp->player[0].playing_notes = gp->player[0].next_notes;
+				gp->player[0].hit_notes++;
+				gp->player[0].streak++;
+				gp->player[0].miss_streak = 0;
+				gp->player[0].life += gp->player[0].streak;
+				if(gp->player[0].life > 100)
+				{
+					gp->player[0].life = 100;
+				}
+				lss_player_get_next_notes(gp->song, &gp->player[0]);
 			}
 		}
 		
@@ -277,13 +316,9 @@ void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)
 					a = 0.0;
 				}
 			}
-			for(j = 0; j < gp->player[0].playing_notes; j++)
+			if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->hopo)
 			{
-				if(gp->player[0].playing_note[j] == i)
-				{
-					a *= 0.5;
-					playing = true;
-				}
+				a *= 0.5;
 			}
 			c = al_get_bitmap_width(gp->notes_texture) / 2;
 			cy = c + c / 2;

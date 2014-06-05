@@ -80,10 +80,14 @@ static int lss_song_get_note_end_event(LSS_SONG * sp, int track, int note_on_eve
 
 static bool lss_song_populate_tracks(LSS_SONG * sp)
 {
-	int i, j;
+	int i, j, d;
 	int difficulty, difficulty_offset;
 	int note_off_event;
+	int previous_note_tick[16] = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
+	bool chord[16] = {false};
+	int hopo_threshold;
 
+	hopo_threshold = sp->source_midi->raw_data->divisions / 3; // 12th note
 	for(i = 0; i < sp->source_midi->tracks; i++)
 	{
 		for(j = 0; j < sp->source_midi->track[i]->events; j++)
@@ -122,8 +126,42 @@ static bool lss_song_populate_tracks(LSS_SONG * sp)
 						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->length = (sp->source_midi->track[i]->event[note_off_event]->pos_sec + sp->offset) * 60.0 - sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->tick;
 						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->active = true;
 						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->visible = true;
+						
+						/* check for auto HOPO status (12th note or shorter) */
+						if(previous_note_tick[difficulty] >= 0)
+						{
+							d = sp->source_midi->track[i]->event[j]->tick - previous_note_tick[difficulty];
+							if(d > 0)
+							{
+								if(d < hopo_threshold)
+								{
+									/* previous note wasn't part of a chord */
+									if(!chord[difficulty])
+									{
+										/* previous note doesn't have the same value as this note */
+										if(sp->track[i][difficulty].note_count && sp->track[i][difficulty].note[sp->track[i][difficulty].note_count - 1]->val != sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->val)
+										{
+											sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->hopo = true;
+										}
+									}
+								}
+								chord[difficulty] = false;
+							}
+							else
+							{
+								sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->hopo = false;
+								
+								/* make sure previous note is not marked HOPO */
+								if(sp->track[i][difficulty].note_count > 0)
+								{
+									sp->track[i][difficulty].note[sp->track[i][difficulty].note_count - 1]->hopo = false;
+								}
+								chord[difficulty] = true;
+							}
+						}
 						sp->track[i][difficulty].note_count++;
 					}
+					previous_note_tick[difficulty] = sp->source_midi->track[i]->event[j]->tick;
 				}
 			}
 		}
