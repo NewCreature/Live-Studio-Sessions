@@ -254,10 +254,12 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 	if(!lss_setup_default_controllers(app))
 	{
+		printf("Could not set up controllers!\n");
 		return false;
 	}
 	if(!lss_load_global_resources(&app->resources))
 	{
+		printf("Could not load global resources!\n");
 		return false;
 	}
 	
@@ -276,6 +278,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		}
 		else
 		{
+			printf("Could not get library path!\n");
 			return false;
 		}
 	}
@@ -284,6 +287,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	app->song_list = lss_create_song_list(t3f_get_filename(t3f_data_path, "song_list.cache"), f);
 	if(!app->song_list)
 	{
+		printf("Could create song list!\n");
 		return false;
 	}
 	lss_song_list_add_files(app->song_list, songs_path, 0);
