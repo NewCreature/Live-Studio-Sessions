@@ -3,10 +3,40 @@
 
 #include "t3f/t3f.h"
 
+#include "controller.h"
 #include "song.h"
 #include "song_audio.h"
-#include "player.h"
 #include "resources.h"
+
+#define LSS_MAX_PLAYERS 8
+
+typedef struct
+{
+
+	LSS_CONTROLLER * controller; //pointer to controller used by player
+	
+	int selected_track;
+	int selected_difficulty;
+	double song_pos;
+	int score;
+	int streak;
+	int life;
+	int miss_streak;
+	
+	int hit_notes;
+
+	int next_note[32];
+	int next_notes;
+
+	/* list of currently playing notes */
+	int playing_note[32];
+	int playing_notes;
+	
+	/* list of notes that can be hit */
+	int hittable_note[32];
+	int hittable_notes;
+
+} LSS_PLAYER;
 
 typedef struct
 {
@@ -14,7 +44,8 @@ typedef struct
 	LSS_SONG * song;
 	LSS_SONG_AUDIO * song_audio;
 
-	ALLEGRO_BITMAP * notes_texture;
+	ALLEGRO_BITMAP * note_texture[2];
+	ALLEGRO_BITMAP * studio_image;
 
 	LSS_PLAYER player[LSS_MAX_PLAYERS];
 	int current_tick;
@@ -22,6 +53,7 @@ typedef struct
 
 	int av_delay;
 	double offset;
+	double board_y;
 
 } LSS_GAME;
 

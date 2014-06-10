@@ -155,7 +155,6 @@ void app_render(void * data)
 	char * difficulty_text[4] = {"Easy", "Medium", "Hard", "Expert"};
 
 	al_clear_to_color(t3f_color_black);
-	al_hold_bitmap_drawing(true);
 	switch(app->state)
 	{
 		case 0:
@@ -212,7 +211,6 @@ void app_render(void * data)
 			break;
 		}
 	}
-	al_hold_bitmap_drawing(false);
 }
 
 static bool lss_setup_default_controllers(APP_INSTANCE * app)
