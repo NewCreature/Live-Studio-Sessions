@@ -210,6 +210,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	double a, c, cy, z, end_z;
 	int i, j;
 	bool playing;
+	int note_type;
 
 	c = al_get_bitmap_width(gp->note_texture[0]) / 2;
 	cy = c;
@@ -300,6 +301,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 		{
 			z = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick - (gp->current_tick - gp->av_delay))) * 12.0;
 			a = 1.0;
+			note_type = 0;
 			if(z > 2048.0)
 			{
 				a = 1.0 - (z - 2048.0) / 128.0;
@@ -310,11 +312,12 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 			}
 			if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->hopo)
 			{
-				a *= 0.5;
+//				a *= 0.5;
+				note_type = 1;
 			}
 			if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->visible)
 			{
-				t3f_draw_rotated_bitmap(gp->note_texture[0], al_map_rgba_f(a, a, a, a), c, cy, 320 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80, 420 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z, rotate[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], 0);
+				t3f_draw_rotated_bitmap(gp->note_texture[note_type], al_map_rgba_f(a, a, a, a), c, cy, 320 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80, 420 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z, rotate[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], 0);
 			}
 		}
 	}
