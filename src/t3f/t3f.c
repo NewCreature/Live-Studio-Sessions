@@ -346,6 +346,7 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 	/* initialize Allegro */
 	if(!al_init())
 	{
+		printf("Could not initialize Allegro!\n");
 		return 0;
 	}
 	
@@ -385,12 +386,14 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 	
 	if(!al_init_image_addon())
 	{
+		printf("Failed to initialize image add-on!\n");
 		return 0;
 	}
 	al_init_font_addon();
 	if(!al_init_ttf_addon())
 	{
-		return false;
+		printf("Failed to initialize TTF add-on!\n");
+		return 0;
 	}
 	if(flags & T3F_USE_SOUND)
 	{
@@ -436,12 +439,14 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 	t3f_timer = al_create_timer(1.000 / fps);
 	if(!t3f_timer)
 	{
+		printf("Failed to create timer!\n");
 		return 0;
 	}
 	
 	t3f_queue = al_create_event_queue();
 	if(!t3f_queue)
 	{
+		printf("Failed to create event queue!\n");
 		return 0;
 	}
 	
@@ -450,6 +455,7 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 	{
 		if(!t3f_set_gfx_mode(w, h, flags))
 		{
+			printf("Failed to create display!\n");
 			return 0;
 		}
 	}
@@ -480,6 +486,7 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 	t3f_default_view = t3f_create_view(0, 0, w, h, w / 2, h / 2);
 	if(!t3f_default_view)
 	{
+		printf("Failed to create default view!\n");
 		return 0;
 	}
 	t3f_select_view(t3f_default_view);
