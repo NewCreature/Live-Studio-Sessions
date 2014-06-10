@@ -50,15 +50,17 @@ void lss_initialize_player(LSS_GAME * gp, int player)
 	gp->player[0].streak = 0;
 	gp->player[0].life = 100;
 	gp->player[0].miss_streak = 0;
+	gp->player[0].score = 0;
 	lss_player_get_next_notes(gp->song, &gp->player[0]);
 }
 
 void lss_player_logic(LSS_GAME * gp, int player)
 {
-	int i, d;
+	int i, d, m, t;
 	int lane[8] = {0};
 	int tap_lane[8] = {0};
 	bool missed = false;
+	int points = 0;
 	
 	/* handle player logic */
 	lss_read_controller(gp->player[0].controller);
@@ -100,7 +102,14 @@ void lss_player_logic(LSS_GAME * gp, int player)
 					gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_note[i]]->play_tick = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_note[i]]->tick;
 				}
 				gp->player[0].playing_notes = gp->player[0].next_notes;
-				gp->player[0].hit_notes++;
+				gp->player[0].hit_notes += gp->player[0].playing_notes;
+				m = gp->player[0].streak / 8 + 1;
+				if(m > 4)
+				{
+					m = 4;
+				}
+				points = gp->player[0].playing_notes * LSS_GAME_NOTE_BASE_POINTS * m;
+				gp->player[0].score += points;
 				gp->player[0].streak++;
 				gp->player[0].miss_streak = 0;
 				gp->player[0].life += gp->player[0].streak;
@@ -123,28 +132,49 @@ void lss_player_logic(LSS_GAME * gp, int player)
 	else
 	{
 		/* see if we are holding a sustain */
-		memset(lane, 0, sizeof(int) * 8);
-		memset(tap_lane, 0, sizeof(int) * 8);
-		for(i = 0; i < gp->player[0].playing_notes; i++)
+		if(gp->player[0].playing_notes)
 		{
-			lane[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_note[i]]->val] = 1;
-		}
-		for(i = 0; i < 5; i++)
-		{
-			if(gp->player[0].controller->controller->state[i].held)
+			/* see if we have reached the end of the note */
+			t = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_note[0]]->tick + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_note[0]]->length;
+			if(gp->current_tick - gp->av_delay > t)
 			{
-				tap_lane[i] = 1;
+				gp->player[0].playing_notes = 0;
 			}
-		}
-		if(memcmp(lane, tap_lane, sizeof(int) * 8))
-		{
-			gp->player[0].playing_notes = 0;
-		}
-		else
-		{
-			for(i = 0; i < gp->player[0].playing_notes; i++)
+
+			/* continue sustain */
+			else
 			{
-				gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_note[i]]->play_tick = gp->current_tick;
+				memset(lane, 0, sizeof(int) * 8);
+				memset(tap_lane, 0, sizeof(int) * 8);
+				for(i = 0; i < gp->player[0].playing_notes; i++)
+				{
+					lane[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_note[i]]->val] = 1;
+				}
+				for(i = 0; i < 5; i++)
+				{
+					if(gp->player[0].controller->controller->state[i].held)
+					{
+						tap_lane[i] = 1;
+					}
+				}
+				if(memcmp(lane, tap_lane, sizeof(int) * 8))
+				{
+					gp->player[0].playing_notes = 0;
+				}
+				else
+				{
+					for(i = 0; i < gp->player[0].playing_notes; i++)
+					{
+						gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_note[i]]->play_tick = gp->current_tick;
+					}
+					m = gp->player[0].streak / 8 + 1;
+					if(m > 4)
+					{
+						m = 4;
+					}
+					points = gp->player[0].playing_notes * LSS_GAME_NOTE_SUSTAIN_BASE_POINTS * m;
+					gp->player[0].score += points;
+				}
 			}
 		}
 		
@@ -174,6 +204,13 @@ void lss_player_logic(LSS_GAME * gp, int player)
 				}
 				gp->player[0].playing_notes = gp->player[0].next_notes;
 				gp->player[0].hit_notes++;
+				m = gp->player[0].streak / 8 + 1;
+				if(m > 4)
+				{
+					m = 4;
+				}
+				points = gp->player[0].playing_notes * LSS_GAME_NOTE_BASE_POINTS * m;
+				gp->player[0].score += points;
 				gp->player[0].streak++;
 				gp->player[0].miss_streak = 0;
 				gp->player[0].life += gp->player[0].streak;
