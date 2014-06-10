@@ -309,6 +309,10 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 				{
 					end_z = -639.0;
 				}
+				else if(end_z > 2048.0)
+				{
+					end_z = 2048.0;
+				}
 				v[0].x = t3f_project_x(320 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80 - 8, z);
 				v[0].y = t3f_project_y(420 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z);
 				v[0].color = color;
