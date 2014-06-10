@@ -212,7 +212,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	bool playing;
 
 	c = al_get_bitmap_width(gp->note_texture[0]) / 2;
-	cy = c + c / 2;
+	cy = c;
 
 	al_hold_bitmap_drawing(true);
 	al_draw_bitmap(gp->studio_image, 0, 0, 0);
@@ -220,19 +220,19 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	z = -480;
 	end_z = 2048;
 	v[0].x = t3f_project_x(320 - 24, z);
-	v[0].y = t3f_project_y(420, z);
+	v[0].y = t3f_project_y(420 + cy, z);
 	v[0].color = t3f_color_black;
 	v[1].x = t3f_project_x(320 + 4 * 80 + 24, z);
-	v[1].y = t3f_project_y(420, z);
+	v[1].y = t3f_project_y(420 + cy, z);
 	v[1].color = t3f_color_black;
 	v[2].x = t3f_project_x(320 + 4 * 80 + 24, end_z);
-	v[2].y = t3f_project_y(420, end_z);
+	v[2].y = t3f_project_y(420 + cy, end_z);
 	v[2].color = t3f_color_black;
 	v[3].x = t3f_project_x(320 - 24, end_z);
-	v[3].y = t3f_project_y(420, end_z);
+	v[3].y = t3f_project_y(420 + cy, end_z);
 	v[3].color = t3f_color_black;
 	v[4].x = t3f_project_x(320 - 24, z);
-	v[4].y = t3f_project_y(420, z);
+	v[4].y = t3f_project_y(420 + cy, z);
 	v[4].color = t3f_color_black;
 	al_draw_prim(v, NULL, NULL, 0, 4, ALLEGRO_PRIM_TRIANGLE_FAN);
 	
@@ -272,19 +272,19 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 					end_z = -639.0;
 				}
 				v[0].x = t3f_project_x(320 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80 - 8, z);
-				v[0].y = t3f_project_y(420 + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z);
+				v[0].y = t3f_project_y(420 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z);
 				v[0].color = color;
 				v[1].x = t3f_project_x(320 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80 + 8, z);
-				v[1].y = t3f_project_y(420 + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z);
+				v[1].y = t3f_project_y(420 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z);
 				v[1].color = color;
 				v[2].x = t3f_project_x(320 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80 + 8, end_z);
-				v[2].y = t3f_project_y(420 + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], end_z);
+				v[2].y = t3f_project_y(420 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], end_z);
 				v[2].color = color;
 				v[3].x = t3f_project_x(320 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80 - 8, end_z);
-				v[3].y = t3f_project_y(420 + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], end_z);
+				v[3].y = t3f_project_y(420 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], end_z);
 				v[3].color = color;
 				v[4].x = t3f_project_x(320 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80 - 8, z);
-				v[4].y = t3f_project_y(420 + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z);
+				v[4].y = t3f_project_y(420 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z);
 				v[4].color = color;
 				al_draw_prim(v, NULL, NULL, 0, 4, ALLEGRO_PRIM_TRIANGLE_FAN);
 			}
