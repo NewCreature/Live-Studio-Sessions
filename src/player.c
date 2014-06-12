@@ -255,7 +255,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	al_hold_bitmap_drawing(true);
 	al_draw_bitmap(gp->studio_image, 0, 0, 0);
 	al_hold_bitmap_drawing(false);
-	z = -480;
+/*	z = -480;
 	end_z = 2048;
 	v[0].x = t3f_project_x(320 - 32, z);
 	v[0].y = t3f_project_y(420 + cy + oy[0] + 2.0, z);
@@ -306,12 +306,29 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	v[14].z = 0;
 	v[14].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
 
-/*	memcpy(&v[15], &v[14], sizeof(ALLEGRO_VERTEX));
-	v[16].x = t3f_project_x(320 - 32, z);
-	v[16].y = t3f_project_y(420 + cy + oy[0] + 2.0, z);
-	v[16].color = t3f_color_black; */
-	al_draw_prim(v, NULL, NULL, 0, 15, ALLEGRO_PRIM_TRIANGLE_FAN);
+	al_draw_prim(v, NULL, NULL, 0, 15, ALLEGRO_PRIM_TRIANGLE_FAN); */
 	
+/*	al_draw_line(320 + 0 * 80 - 32, 420 + cy + oy[0] + 2.0, 320 + 0 * 80, 420 + cy + oy[0], t3f_color_white, 2.0);
+	al_draw_line(320 + 0 * 80, 420 + cy + oy[0], 320 + 1 * 80, 420 + cy + oy[1], t3f_color_white, 2.0);
+	al_draw_line(320 + 1 * 80, 420 + cy + oy[1], 320 + 2 * 80, 420 + cy + oy[2], t3f_color_white, 2.0);
+	al_draw_line(320 + 2 * 80, 420 + cy + oy[2], 320 + 3 * 80, 420 + cy + oy[3], t3f_color_white, 2.0);
+	al_draw_line(320 + 3 * 80, 420 + cy + oy[3], 320 + 4 * 80, 420 + cy + oy[4], t3f_color_white, 2.0);
+	al_draw_line(320 + 4 * 80, 420 + cy + oy[4], 320 + 4 * 80 + 32, 420 + cy + oy[4] + 2.0, t3f_color_white, 2.0); */
+	
+	al_hold_bitmap_drawing(true);
+	al_draw_bitmap(gp->fret_board_image, 200, 320, 0);
+	t3f_draw_bitmap(gp->beat_line_image, t3f_color_white, 280, 420 + 4, 0, 0);
+	for(i = 0; i < gp->song->beats; i++)
+	{
+		z = ((gp->song->beat[i]->tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
+		t3f_draw_bitmap(gp->beat_line_image, t3f_color_white, 280, 420 + 4, z, 0);
+		if(z > 2048)
+		{
+			break;
+		}
+	}
+	al_hold_bitmap_drawing(false);
+
 	/* render note tails */
 	for(i = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes - 1; i >= 0; i--)
 	{

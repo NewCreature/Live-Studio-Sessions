@@ -49,6 +49,8 @@ typedef struct
 
 	ALLEGRO_BITMAP * note_texture[2];
 	ALLEGRO_BITMAP * studio_image;
+	ALLEGRO_BITMAP * fret_board_image;
+	ALLEGRO_BITMAP * beat_line_image;
 
 	LSS_PLAYER player[LSS_MAX_PLAYERS];
 	int current_tick;

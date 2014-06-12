@@ -24,6 +24,16 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 	{
 		return false;
 	}
+	gp->fret_board_image = t3f_load_resource((void *)(&gp->fret_board_image), T3F_RESOURCE_TYPE_BITMAP, "data/fret_board.png", 0, 0, 0);
+	if(!gp->fret_board_image)
+	{
+		return false;
+	}
+	gp->beat_line_image = t3f_load_resource((void *)(&gp->beat_line_image), T3F_RESOURCE_TYPE_BITMAP, "data/beat_line.png", 0, 0, 0);
+	if(!gp->beat_line_image)
+	{
+		return false;
+	}
 	gp->current_tick = 0;
 	gp->song_audio = lss_load_song_audio(song_path);
 	if(!gp->song_audio)
@@ -34,6 +44,7 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 	gp->board_speed = 12.0;
 	lss_initialize_player(gp, 0);
 	lss_set_song_audio_playing(gp->song_audio, true);
+	lss_song_mark_beats(gp->song, gp->song_audio->length);
 	gp->done = false;
 	return true;
 }
@@ -43,6 +54,8 @@ void lss_game_exit(LSS_GAME * gp)
 	t3f_destroy_resource(gp->note_texture[0]);
 	t3f_destroy_resource(gp->note_texture[1]);
 	t3f_destroy_resource(gp->studio_image);
+	t3f_destroy_resource(gp->fret_board_image);
+	t3f_destroy_resource(gp->beat_line_image);
 }
 
 void lss_game_logic(LSS_GAME * gp)
