@@ -47,10 +47,11 @@ typedef struct
 	LSS_SONG * song;
 	LSS_SONG_AUDIO * song_audio;
 
-	ALLEGRO_BITMAP * note_texture[2];
+	ALLEGRO_BITMAP * note_texture[10];
 	ALLEGRO_BITMAP * studio_image;
 	ALLEGRO_BITMAP * fret_board_image;
 	ALLEGRO_BITMAP * beat_line_image;
+	T3F_ATLAS * atlas;
 
 	LSS_PLAYER player[LSS_MAX_PLAYERS];
 	int current_tick;

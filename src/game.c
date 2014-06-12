@@ -9,13 +9,33 @@
 
 bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 {
-	gp->note_texture[0] = t3f_load_resource((void *)(&gp->note_texture[0]), T3F_RESOURCE_TYPE_BITMAP, "data/note_strum.png", 0, 0, 0);
+	gp->note_texture[0] = t3f_load_resource((void *)(&gp->note_texture[0]), T3F_RESOURCE_TYPE_BITMAP, "data/note_green.png", 0, 0, 0);
 	if(!gp->note_texture[0])
 	{
 		return false;
 	}
-	gp->note_texture[1] = t3f_load_resource((void *)(&gp->note_texture[1]), T3F_RESOURCE_TYPE_BITMAP, "data/note_tap.png", 0, 0, 0);
+	gp->note_texture[1] = t3f_load_resource((void *)(&gp->note_texture[1]), T3F_RESOURCE_TYPE_BITMAP, "data/note_red.png", 0, 0, 0);
 	if(!gp->note_texture[1])
+	{
+		return false;
+	}
+	gp->note_texture[2] = t3f_load_resource((void *)(&gp->note_texture[2]), T3F_RESOURCE_TYPE_BITMAP, "data/note_yellow.png", 0, 0, 0);
+	if(!gp->note_texture[2])
+	{
+		return false;
+	}
+	gp->note_texture[3] = t3f_load_resource((void *)(&gp->note_texture[3]), T3F_RESOURCE_TYPE_BITMAP, "data/note_blue.png", 0, 0, 0);
+	if(!gp->note_texture[3])
+	{
+		return false;
+	}
+	gp->note_texture[4] = t3f_load_resource((void *)(&gp->note_texture[4]), T3F_RESOURCE_TYPE_BITMAP, "data/note_orange.png", 0, 0, 0);
+	if(!gp->note_texture[4])
+	{
+		return false;
+	}
+	gp->note_texture[5] = t3f_load_resource((void *)(&gp->note_texture[5]), T3F_RESOURCE_TYPE_BITMAP, "data/note_tap.png", 0, 0, 0);
+	if(!gp->note_texture[5])
 	{
 		return false;
 	}
@@ -34,6 +54,13 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 	{
 		return false;
 	}
+	gp->atlas = t3f_create_atlas(1024, 1024);
+	t3f_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[0], T3F_ATLAS_SPRITE);
+	t3f_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[1], T3F_ATLAS_SPRITE);
+	t3f_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[2], T3F_ATLAS_SPRITE);
+	t3f_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[3], T3F_ATLAS_SPRITE);
+	t3f_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[4], T3F_ATLAS_SPRITE);
+	t3f_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[5], T3F_ATLAS_SPRITE);
 	gp->current_tick = 0;
 	gp->song_audio = lss_load_song_audio(song_path);
 	if(!gp->song_audio)
@@ -51,8 +78,12 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 
 void lss_game_exit(LSS_GAME * gp)
 {
-	t3f_destroy_resource(gp->note_texture[0]);
-	t3f_destroy_resource(gp->note_texture[1]);
+	int i;
+	
+	for(i = 0; i < 6; i++)
+	{
+		t3f_destroy_resource(gp->note_texture[i]);
+	}
 	t3f_destroy_resource(gp->studio_image);
 	t3f_destroy_resource(gp->fret_board_image);
 	t3f_destroy_resource(gp->beat_line_image);

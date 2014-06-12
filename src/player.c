@@ -244,6 +244,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	float oy[5] = {3.0, 1.0, 0.0, 1.0, 3.0};
 	ALLEGRO_VERTEX v[32];
 	ALLEGRO_COLOR color;
+	ALLEGRO_COLOR color_chart[5];
 	double a, c, cy, z, end_z;
 	int i, j;
 	bool playing;
@@ -251,6 +252,11 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 
 	c = al_get_bitmap_width(gp->note_texture[0]) / 2;
 	cy = c;
+	color_chart[0] = al_map_rgb(0, 150, 0);
+	color_chart[1] = al_map_rgb(139, 0, 0);
+	color_chart[2] = al_map_rgb(192, 192, 0);
+	color_chart[3] = al_map_rgb(0, 0, 204);
+	color_chart[4] = al_map_rgb(215, 78, 0);
 
 	al_hold_bitmap_drawing(true);
 	al_draw_bitmap(gp->studio_image, 0, 0, 0);
@@ -335,7 +341,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 		playing = false;
 		if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->active)
 		{
-			color = al_map_rgba_f(0.5, 0.5, 1.0, 1.0);
+			color = color_chart[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val];
 			for(j = 0; j < gp->player[0].playing_notes; j++)
 			{
 				if(gp->player[0].playing_note[j] == i)
@@ -409,7 +415,11 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 			if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->hopo)
 			{
 //				a *= 0.5;
-				note_type = 1;
+				note_type = 5;
+			}
+			else
+			{
+				note_type = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val;
 			}
 			if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->visible)
 			{
@@ -427,6 +437,6 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 		{
 			a = 0.5;
 		}
-		t3f_draw_rotated_bitmap(gp->note_texture[0], al_map_rgba_f(a, a, a, a), c, cy, 320 + i * 80, 420 + cy + oy[i], 0, rotate[i], 0);
+		t3f_draw_rotated_bitmap(gp->note_texture[i], al_map_rgba_f(a, a, a, a), c, cy, 320 + i * 80, 420 + cy + oy[i], 0, rotate[i], 0);
 	}
 }
