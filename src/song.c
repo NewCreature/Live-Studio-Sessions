@@ -13,19 +13,19 @@ static bool lss_song_allocate_notes(LSS_SONG * sp)
 			if(sp->source_midi->track[i]->event[j]->type == RTK_MIDI_EVENT_TYPE_NOTE_ON && sp->source_midi->track[i]->event[j]->data_i[1] != 0)
 			{
 				difficulty = -1;
-				if(sp->source_midi->track[i]->event[j]->data_i[0] >= 60 && sp->source_midi->track[i]->event[j]->data_i[0] < 66)
+				if(sp->source_midi->track[i]->event[j]->data_i[0] >= 60 && sp->source_midi->track[i]->event[j]->data_i[0] < 65)
 				{
 					difficulty = 0;
 				}
-				else if(sp->source_midi->track[i]->event[j]->data_i[0] >= 72 && sp->source_midi->track[i]->event[j]->data_i[0] < 78)
+				else if(sp->source_midi->track[i]->event[j]->data_i[0] >= 72 && sp->source_midi->track[i]->event[j]->data_i[0] < 77)
 				{
 					difficulty = 1;
 				}
-				else if(sp->source_midi->track[i]->event[j]->data_i[0] >= 84 && sp->source_midi->track[i]->event[j]->data_i[0] < 90)
+				else if(sp->source_midi->track[i]->event[j]->data_i[0] >= 84 && sp->source_midi->track[i]->event[j]->data_i[0] < 89)
 				{
 					difficulty = 2;
 				}
-				else if(sp->source_midi->track[i]->event[j]->data_i[0] >= 96 && sp->source_midi->track[i]->event[j]->data_i[0] < 102)
+				else if(sp->source_midi->track[i]->event[j]->data_i[0] >= 96 && sp->source_midi->track[i]->event[j]->data_i[0] < 101)
 				{
 					difficulty = 3;
 				}
