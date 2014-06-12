@@ -59,6 +59,23 @@ void app_logic(void * data)
 				}
 				t3f_key[ALLEGRO_KEY_DOWN] = 0;
 			}
+			if(t3f_key[ALLEGRO_KEY_PGUP])
+			{
+				app->selected_song -= 20;
+				if(app->selected_song < 0)
+				{
+					app->selected_song = app->song_list->entries - 1;
+				}
+			}
+			if(t3f_key[ALLEGRO_KEY_PGDN])
+			{
+				app->selected_song += 20;
+				if(app->selected_song >= app->song_list->entries)
+				{
+					app->selected_song = 0;
+				}
+				t3f_key[ALLEGRO_KEY_PGDN] = 0;
+			}
 			if(t3f_key[ALLEGRO_KEY_ENTER])
 			{
 				app->game.song = lss_load_song(app->song_list->entry[app->selected_song]->path);
