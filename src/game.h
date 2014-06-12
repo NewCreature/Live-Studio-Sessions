@@ -57,6 +57,7 @@ typedef struct
 	int av_delay;
 	double offset;
 	double board_y;
+	double board_speed;
 
 } LSS_GAME;
 

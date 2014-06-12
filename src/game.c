@@ -31,6 +31,7 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 		return false;
 	}
 	gp->board_y = 420.0;
+	gp->board_speed = 12.0;
 	lss_initialize_player(gp, 0);
 	lss_set_song_audio_playing(gp->song_audio, true);
 	gp->done = false;
@@ -47,6 +48,16 @@ void lss_game_exit(LSS_GAME * gp)
 void lss_game_logic(LSS_GAME * gp)
 {
 	lss_player_logic(gp, 0);
+	if(t3f_key[ALLEGRO_KEY_UP])
+	{
+		gp->board_speed += 1.0;
+		t3f_key[ALLEGRO_KEY_UP] = 0;
+	}
+	if(t3f_key[ALLEGRO_KEY_DOWN])
+	{
+		gp->board_speed -= 1.0;
+		t3f_key[ALLEGRO_KEY_DOWN] = 0;
+	}
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || gp->player[0].life <= 0)
 	{
 		lss_destroy_song_audio(gp->song_audio);
