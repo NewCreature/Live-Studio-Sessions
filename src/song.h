@@ -35,16 +35,28 @@ typedef struct
 
 typedef struct
 {
+
+	double BPM;
+	int tick;
+
+} LSS_SONG_BEAT;
+
+typedef struct
+{
 	
 	RTK_MIDI * source_midi;
 	ALLEGRO_CONFIG * tags;
 	
 	LSS_SONG_TRACK track[LSS_SONG_MAX_TRACKS][LSS_SONG_MAX_DIFFICULTIES];
 	double offset;
+	
+	LSS_SONG_BEAT ** beat;
+	int beats;
 
 } LSS_SONG;
 
 LSS_SONG * lss_load_song(ALLEGRO_PATH * pp);
 void lss_destroy_song(LSS_SONG * sp);
+bool lss_song_mark_beats(LSS_SONG * sp, double total_length);
 
 #endif

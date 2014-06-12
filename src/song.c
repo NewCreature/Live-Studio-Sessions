@@ -44,7 +44,7 @@ static bool lss_song_allocate_notes(LSS_SONG * sp)
 		{
 			if(sp->track[i][j].notes)
 			{
-				sp->track[i][j].note = malloc(sizeof(LSS_SONG_NOTE) * sp->track[i][j].notes);
+				sp->track[i][j].note = malloc(sizeof(LSS_SONG_NOTE *) * sp->track[i][j].notes);
 				if(!sp->track[i][j].note)
 				{
 					return false;
@@ -169,6 +169,87 @@ static bool lss_song_populate_tracks(LSS_SONG * sp)
 	return true;
 }
 
+bool lss_song_mark_beats(LSS_SONG * sp, double total_length)
+{
+	int i;
+	int current_beat_event = 0;
+	double BPM = 120.0;
+	double current_time = 0.0;
+	double beat_time;
+	int current_beat = 0;
+	
+	/* count beats */
+	sp->beats = 0;
+	beat_time = 60.0 / BPM;
+	if(sp->source_midi->tempo_events)
+	{
+		while(current_time < total_length)
+		{
+			if(current_beat_event < sp->source_midi->tempo_events)
+			{
+				/* get new BPM if we are sitting on a tempo change */
+				if(current_time >= sp->source_midi->tempo_event[current_beat_event]->pos_sec)
+				{
+					current_time = sp->source_midi->tempo_event[current_beat_event]->pos_sec;
+					current_beat_event++;
+					if(current_beat_event < sp->source_midi->tempo_events)
+					{
+						BPM = rtk_ppqn_to_bpm(sp->source_midi->tempo_event[current_beat_event]->data_i[0]);
+						beat_time = 60.0 / BPM;
+					}
+				}
+			}
+			sp->beats++;
+			current_time += beat_time;
+		}
+	}
+
+	/* allocate beats */
+	sp->beat = malloc(sizeof(LSS_SONG_BEAT *) * sp->beats);
+	if(!sp->beat)
+	{
+		return false;
+	}
+	for(i = 0; i < sp->beats; i++)
+	{
+		sp->beat[i] = malloc(sizeof(LSS_SONG_BEAT));
+		if(!sp->beat[i])
+		{
+			return false;
+		}
+	}
+
+	/* initialize beats */
+	BPM = 120.0;
+	beat_time = 60.0 / BPM;
+	current_beat_event = 0;
+	current_time = 0.0;
+	if(sp->source_midi->tempo_events)
+	{
+		while(current_time < total_length)
+		{
+			/* get new BPM if we are sitting on a tempo change */
+			if(current_beat_event < sp->source_midi->tempo_events)
+			{
+				if(current_time >= sp->source_midi->tempo_event[current_beat_event]->pos_sec)
+				{
+					current_time = sp->source_midi->tempo_event[current_beat_event]->pos_sec;
+					current_beat_event++;
+					if(current_beat_event < sp->source_midi->tempo_events)
+					{
+						BPM = rtk_ppqn_to_bpm(sp->source_midi->tempo_event[current_beat_event]->data_i[0]);
+						beat_time = 60.0 / BPM;
+					}
+				}
+			}
+			sp->beat[current_beat]->tick = (current_time + sp->offset) * 60.0;
+			current_time += beat_time;
+			current_beat++;
+		}
+	}
+	return true;
+}
+
 LSS_SONG * lss_load_song(ALLEGRO_PATH * pp)
 {
 	ALLEGRO_PATH * pcp;
@@ -248,5 +329,10 @@ void lss_destroy_song(LSS_SONG * sp)
 			}
 		}
 	}
+	for(i = 0; i < sp->beats; i++)
+	{
+		free(sp->beat[i]);
+	}
+	free(sp->beat);
 	free(sp);
 }
