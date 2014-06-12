@@ -6,6 +6,8 @@ LSS_SONG_AUDIO * lss_load_song_audio(ALLEGRO_PATH * pp)
 {
 	ALLEGRO_PATH * pcp;
 	LSS_SONG_AUDIO * ap;
+	double length;
+	int i;
 	
 	ap = malloc(sizeof(LSS_SONG_AUDIO));
 	if(!ap)
@@ -30,6 +32,20 @@ LSS_SONG_AUDIO * lss_load_song_audio(ALLEGRO_PATH * pp)
 	ap->stream[2] = al_load_audio_stream(al_path_cstr(pcp, '/'), 4, 1024);
 	al_set_path_filename(pcp, "drums.ogg");
 	ap->stream[3] = al_load_audio_stream(al_path_cstr(pcp, '/'), 4, 1024);
+	
+	/* get stream length */
+	ap->length = 0.0;
+	for(i = 0; i < 4; i++)
+	{
+		if(ap->stream[i])
+		{
+			length = al_get_audio_stream_length_secs(ap->stream[i]);
+			if(length > ap->length)
+			{
+				ap->length = length;
+			}
+		}
+	}
 	
 	ap->playing = false;
 	

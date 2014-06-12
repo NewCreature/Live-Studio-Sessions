@@ -12,6 +12,7 @@ typedef struct
 	ALLEGRO_MIXER * mixer;
 	ALLEGRO_AUDIO_STREAM * stream[LSS_SONG_AUDIO_MAX_STREAMS];
 	
+	double length;
 	bool playing;
 	
 } LSS_SONG_AUDIO;
