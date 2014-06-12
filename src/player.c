@@ -242,7 +242,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 {
 	float rotate[5] = {-0.06, -0.03, 0.0, 0.03, 0.06};
 	float oy[5] = {3.0, 1.0, 0.0, 1.0, 3.0};
-	ALLEGRO_VERTEX v[5];
+	ALLEGRO_VERTEX v[32];
 	ALLEGRO_COLOR color;
 	double a, c, cy, z, end_z;
 	int i, j;
@@ -258,21 +258,59 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	z = -480;
 	end_z = 2048;
 	v[0].x = t3f_project_x(320 - 32, z);
-	v[0].y = t3f_project_y(420 + cy, z);
-	v[0].color = t3f_color_black;
+	v[0].y = t3f_project_y(420 + cy + oy[0] + 2.0, z);
+	v[0].z = 0;
+	v[0].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
 	v[1].x = t3f_project_x(320 + 4 * 80 + 32, z);
-	v[1].y = t3f_project_y(420 + cy, z);
-	v[1].color = t3f_color_black;
+	v[1].y = t3f_project_y(420 + cy + oy[0] + 2.0, z);
+	v[1].z = 0;
+	v[1].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
 	v[2].x = t3f_project_x(320 + 4 * 80 + 32, end_z);
-	v[2].y = t3f_project_y(420 + cy, end_z);
-	v[2].color = t3f_color_black;
-	v[3].x = t3f_project_x(320 - 32, end_z);
-	v[3].y = t3f_project_y(420 + cy, end_z);
-	v[3].color = t3f_color_black;
-	v[4].x = t3f_project_x(320 - 32, z);
-	v[4].y = t3f_project_y(420 + cy, z);
-	v[4].color = t3f_color_black;
-	al_draw_prim(v, NULL, NULL, 0, 4, ALLEGRO_PRIM_TRIANGLE_FAN);
+	v[2].y = t3f_project_y(420 + cy + oy[0] + 2.0, end_z);
+	v[2].z = 0;
+	v[2].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
+
+	memcpy(&v[3], &v[2], sizeof(ALLEGRO_VERTEX));
+	v[4].x = t3f_project_x(320 + 4 * 80, end_z);
+	v[4].y = t3f_project_y(420 + cy + oy[4], end_z);
+	v[4].z = 0;
+	v[4].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
+	
+	memcpy(&v[5], &v[4], sizeof(ALLEGRO_VERTEX));
+	v[6].x = t3f_project_x(320 + 3 * 80, end_z);
+	v[6].y = t3f_project_y(420 + cy + oy[3], end_z);
+	v[6].z = 0;
+	v[6].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
+	
+	memcpy(&v[7], &v[6], sizeof(ALLEGRO_VERTEX));
+	v[8].x = t3f_project_x(320 + 2 * 80, end_z);
+	v[8].y = t3f_project_y(420 + cy + oy[2], end_z);
+	v[8].z = 0;
+	v[8].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
+
+	memcpy(&v[9], &v[8], sizeof(ALLEGRO_VERTEX));
+	v[10].x = t3f_project_x(320 + 1 * 80, end_z);
+	v[10].y = t3f_project_y(420 + cy + oy[1], end_z);
+	v[10].z = 0;
+	v[10].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
+
+	memcpy(&v[11], &v[10], sizeof(ALLEGRO_VERTEX));
+	v[12].x = t3f_project_x(320 + 0 * 80, end_z);
+	v[12].y = t3f_project_y(420 + cy + oy[0], end_z);
+	v[12].z = 0;
+	v[12].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
+
+	memcpy(&v[13], &v[12], sizeof(ALLEGRO_VERTEX));
+	v[14].x = t3f_project_x(320 + 0 * 80 - 32, end_z);
+	v[14].y = t3f_project_y(420 + cy + oy[0] + 2.0, end_z);
+	v[14].z = 0;
+	v[14].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
+
+/*	memcpy(&v[15], &v[14], sizeof(ALLEGRO_VERTEX));
+	v[16].x = t3f_project_x(320 - 32, z);
+	v[16].y = t3f_project_y(420 + cy + oy[0] + 2.0, z);
+	v[16].color = t3f_color_black; */
+	al_draw_prim(v, NULL, NULL, 0, 15, ALLEGRO_PRIM_TRIANGLE_FAN);
 	
 	/* render note tails */
 	for(i = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes - 1; i >= 0; i--)
