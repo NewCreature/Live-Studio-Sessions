@@ -325,7 +325,7 @@ static double rtk_tick_to_real_time(int division, double bpm, unsigned long tick
 }
 
 /* convert MIDI PPQN to BPM */
-static double rtk_ppqn_to_bpm(unsigned long ppqn)
+double rtk_ppqn_to_bpm(unsigned long ppqn)
 {
 	return 60000000.0 / (double)ppqn;
 }

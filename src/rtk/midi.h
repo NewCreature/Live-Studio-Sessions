@@ -108,4 +108,7 @@ RTK_MIDI * rtk_load_midi(const char * fn);
 int rtk_save_midi(RTK_MIDI * mp, const char * fn);
 void rtk_destroy_midi(RTK_MIDI * mp);
 
+/* utility functions */
+double rtk_ppqn_to_bpm(unsigned long ppqn);
+
 #endif
