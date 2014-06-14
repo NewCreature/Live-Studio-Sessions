@@ -1,0 +1,24 @@
+Live Studio Sessions Issues
+---------------------------
+
+[ ]Fix song loading issues for GH, RB, etc. GH shows no notes, BH crashes, etc.
+
+[ ]Make song selection screen more intelligent by only allowing valid
+   selections.
+
+[ ]Make controls configurable.
+
+[ ]Add a way to adjust AV Delay.
+
+[ ]Add touch screen controls.
+
+[ ]Fix beat lines.
+
+[ ]Silence audio for current part if note is missed and there is an audio track
+   assigned.
+
+[ ]Add online leaderboard support.
+
+[ ]Store relevant info in the song list (artist, title, etc.).
+
+[ ]Add profile system.
