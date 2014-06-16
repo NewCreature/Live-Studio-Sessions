@@ -139,11 +139,18 @@ void lss_song_list_add_file(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int fla
 {
 	const char * val;
 	char val2[128] = {0};
+	ALLEGRO_CONFIG * cp;
 
+	cp = al_load_config_file(al_path_cstr(pp, '/'));
+	if(!cp)
+	{
+		return;
+	}
 //	printf("Adding song: %s\n", al_path_cstr(pp, '/'));
 	dp->entry[dp->entries] = malloc(sizeof(LSS_SONG_LIST_ENTRY));
 	if(dp->entry[dp->entries])
 	{
+//		memset(&dp->entry[dp->entries], 0, sizeof(LSS_SONG_LIST_ENTRY));
 		dp->entry[dp->entries]->path = al_clone_path(pp);
 //		dp->entry[dp->entries]->extra = NULL;
 		if(!(flags & LSS_SONG_LIST_FLAG_NO_CHECKSUM))
@@ -153,6 +160,21 @@ void lss_song_list_add_file(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int fla
 				val = al_get_config_value(dp->cache, al_path_cstr(pp, '/'), "checksum");
 				if(!val)
 				{
+					val = al_get_config_value(cp, "song", "artist");
+					if(val)
+					{
+						strcpy(dp->entry[dp->entries]->artist, val);
+					}
+					val = al_get_config_value(cp, "song", "name");
+					if(val)
+					{
+						strcpy(dp->entry[dp->entries]->title, val);
+					}
+					val = al_get_config_value(cp, "song", "frets");
+					if(val)
+					{
+						strcpy(dp->entry[dp->entries]->frets, val);
+					}
 					dp->entry[dp->entries]->checksum = t3f_checksum_file(al_path_cstr(dp->entry[dp->entries]->path, '/'));
 					sprintf(val2, "%lu", dp->entry[dp->entries]->checksum);
 					al_set_config_value(dp->cache, al_path_cstr(pp, '/'), "checksum", val2);
@@ -169,6 +191,7 @@ void lss_song_list_add_file(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int fla
 		}
 		dp->entries++;
 	}
+	al_destroy_config(cp);
 }
 
 void lss_song_list_add_files(LSS_SONG_LIST * dp, const ALLEGRO_PATH * path, int flags)

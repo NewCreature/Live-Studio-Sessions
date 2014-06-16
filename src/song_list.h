@@ -12,6 +12,9 @@ typedef struct
 	unsigned long checksum;
 	
 	/* cached song info */
+	char artist[128];
+	char title[256];
+	char frets[128];
 
 } LSS_SONG_LIST_ENTRY;
 

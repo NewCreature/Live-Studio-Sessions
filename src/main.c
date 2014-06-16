@@ -186,7 +186,7 @@ void app_render(void * data)
 				{
 					color = al_map_rgba_f(0.5, 0.5, 0.5, 1.0);
 				}
-				al_draw_textf(app->resources.font, color, 0, i * 20, 0, "%s", al_path_cstr(app->song_list->entry[app->selected_song + i]->path, '/'));
+				al_draw_textf(app->resources.font, color, 0, i * 20, 0, "%s - %s", app->song_list->entry[app->selected_song + i]->artist, app->song_list->entry[app->selected_song + i]->title);
 			}
 			break;
 		}
@@ -260,6 +260,7 @@ static bool lss_setup_default_controllers(APP_INSTANCE * app)
 bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
 	int f;
+	ALLEGRO_PATH * included_songs_path;
 	ALLEGRO_PATH * songs_path;
 	const char * val;
 	
@@ -281,6 +282,11 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 	
 	/* create song database */
+	included_songs_path = al_create_path("data/songs");
+	if(!included_songs_path)
+	{
+		return false;
+	}
 	if(argc > 1)
 	{
 		songs_path = al_create_path(argv[1]);
@@ -299,7 +305,8 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 			return false;
 		}
 	}
-	f = lss_song_list_count_files(al_path_cstr(songs_path, '/'), 0);
+	f = lss_song_list_count_files(al_path_cstr(included_songs_path, '/'), 0);
+	f += lss_song_list_count_files(al_path_cstr(songs_path, '/'), 0);
 	printf("Found %d songs!\n", f);
 	app->song_list = lss_create_song_list(t3f_get_filename(t3f_data_path, "song_list.cache"), f);
 	if(!app->song_list)
@@ -307,6 +314,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Could create song list!\n");
 		return false;
 	}
+	lss_song_list_add_files(app->song_list, included_songs_path, 0);
 	lss_song_list_add_files(app->song_list, songs_path, 0);
 //	app_load_song(app);
 //	app->current_event = 0;
