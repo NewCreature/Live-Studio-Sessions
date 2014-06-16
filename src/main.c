@@ -192,6 +192,7 @@ void app_render(void * data)
 		}
 		case 1:
 		{
+			al_draw_textf(app->resources.font, t3f_color_white, 0, 0, 0, "%s - %s", app->song_list->entry[app->selected_song]->artist, app->song_list->entry[app->selected_song]->title);
 			for(i = 0; i < app->game.song->source_midi->tracks; i++)
 			{
 				if(i == app->game.player[0].selected_track)
@@ -202,12 +203,14 @@ void app_render(void * data)
 				{
 					color = al_map_rgba_f(0.5, 0.5, 0.5, 1.0);
 				}
-				al_draw_textf(app->resources.font, color, 0, i * 20, 0, "%s", app->game.song->source_midi->track[i]->name);
+				al_draw_textf(app->resources.font, color, 0, (i + 2) * 20, 0, "%s", app->game.song->source_midi->track[i]->name);
 			}
 			break;
 		}
 		case 2:
 		{
+			al_draw_textf(app->resources.font, t3f_color_white, 0, 0, 0, "%s - %s", app->song_list->entry[app->selected_song]->artist, app->song_list->entry[app->selected_song]->title);
+			al_draw_textf(app->resources.font, t3f_color_white, 0, 20, 0, "%s", app->game.song->source_midi->track[app->game.player[0].selected_track]->name);
 			for(i = 0; i < 4; i++)
 			{
 				if(i == app->game.player[0].selected_difficulty)
@@ -218,7 +221,7 @@ void app_render(void * data)
 				{
 					color = al_map_rgba_f(0.5, 0.5, 0.5, 1.0);
 				}
-				al_draw_textf(app->resources.font, color, 0, i * 20, 0, "%s (%d)", difficulty_text[i], app->game.song->track[app->game.player[0].selected_track][i].note_count);
+				al_draw_textf(app->resources.font, color, 0, (i + 3) * 20, 0, "%s (%d)", difficulty_text[i], app->game.song->track[app->game.player[0].selected_track][i].note_count);
 			}
 			break;
 		}
