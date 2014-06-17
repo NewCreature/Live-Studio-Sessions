@@ -1,7 +1,7 @@
 Live Studio Sessions Issues
 ---------------------------
 
-[ ]Fix song loading issues for GH, RB, etc. GH shows no notes, BH crashes, etc.
+[X]Fix song loading issues for GH, RB, etc. GH shows no notes, BH crashes, etc.
 
 [ ]Make song selection screen more intelligent by only allowing valid
    selections.
