@@ -4,6 +4,7 @@ static bool lss_song_allocate_notes(LSS_SONG * sp)
 {
 	int i, j, k;
 	int difficulty;
+	int range_start[5] = {60, 72, 84, 96};
 
 	/* count number of notes in each track and difficulty so we can allocate enough memory */
 	for(i = 0; i < sp->source_midi->tracks; i++)
@@ -13,19 +14,19 @@ static bool lss_song_allocate_notes(LSS_SONG * sp)
 			if(sp->source_midi->track[i]->event[j]->type == RTK_MIDI_EVENT_TYPE_NOTE_ON && sp->source_midi->track[i]->event[j]->data_i[1] != 0)
 			{
 				difficulty = -1;
-				if(sp->source_midi->track[i]->event[j]->data_i[0] >= 60 && sp->source_midi->track[i]->event[j]->data_i[0] < 65)
+				if(sp->source_midi->track[i]->event[j]->data_i[0] >= range_start[0] && sp->source_midi->track[i]->event[j]->data_i[0] < range_start[0] + 5)
 				{
 					difficulty = 0;
 				}
-				else if(sp->source_midi->track[i]->event[j]->data_i[0] >= 72 && sp->source_midi->track[i]->event[j]->data_i[0] < 77)
+				else if(sp->source_midi->track[i]->event[j]->data_i[0] >= range_start[1] && sp->source_midi->track[i]->event[j]->data_i[0] < range_start[1] + 5)
 				{
 					difficulty = 1;
 				}
-				else if(sp->source_midi->track[i]->event[j]->data_i[0] >= 84 && sp->source_midi->track[i]->event[j]->data_i[0] < 89)
+				else if(sp->source_midi->track[i]->event[j]->data_i[0] >= range_start[2] && sp->source_midi->track[i]->event[j]->data_i[0] < range_start[2] + 5)
 				{
 					difficulty = 2;
 				}
-				else if(sp->source_midi->track[i]->event[j]->data_i[0] >= 96 && sp->source_midi->track[i]->event[j]->data_i[0] < 101)
+				else if(sp->source_midi->track[i]->event[j]->data_i[0] >= range_start[3] && sp->source_midi->track[i]->event[j]->data_i[0] < range_start[3] + 5)
 				{
 					difficulty = 3;
 				}
@@ -74,6 +75,10 @@ static int lss_song_get_note_end_event(LSS_SONG * sp, int track, int note_on_eve
 		{
 			return i;
 		}
+		if(sp->source_midi->track[track]->event[i]->type == RTK_MIDI_EVENT_TYPE_NOTE_ON && sp->source_midi->track[track]->event[i]->data_i[1] == 0 && sp->source_midi->track[track]->event[i]->data_i[0] == sp->source_midi->track[track]->event[note_on_event]->data_i[0])
+		{
+			return i;
+		}
 	}
 	return -1;
 }
@@ -81,11 +86,12 @@ static int lss_song_get_note_end_event(LSS_SONG * sp, int track, int note_on_eve
 static bool lss_song_populate_tracks(LSS_SONG * sp)
 {
 	int i, j, d;
-	int difficulty, difficulty_offset;
+	int difficulty;
 	int note_off_event;
 	int previous_note_tick[16] = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
 	bool chord[16] = {false};
 	int hopo_threshold;
+	int range_start[5] = {60, 72, 84, 96};
 
 	hopo_threshold = sp->source_midi->raw_data->divisions / 3; // 12th note
 	for(i = 0; i < sp->source_midi->tracks; i++)
@@ -95,32 +101,28 @@ static bool lss_song_populate_tracks(LSS_SONG * sp)
 			if(sp->source_midi->track[i]->event[j]->type == RTK_MIDI_EVENT_TYPE_NOTE_ON && sp->source_midi->track[i]->event[j]->data_i[1] != 0)
 			{
 				difficulty = -1;
-				if(sp->source_midi->track[i]->event[j]->data_i[0] >= 60 && sp->source_midi->track[i]->event[j]->data_i[0] < 65)
+				if(sp->source_midi->track[i]->event[j]->data_i[0] >= range_start[0] && sp->source_midi->track[i]->event[j]->data_i[0] < range_start[0] + 5)
 				{
 					difficulty = 0;
-					difficulty_offset = 60;
 				}
-				else if(sp->source_midi->track[i]->event[j]->data_i[0] >= 72 && sp->source_midi->track[i]->event[j]->data_i[0] < 77)
+				else if(sp->source_midi->track[i]->event[j]->data_i[0] >= range_start[1] && sp->source_midi->track[i]->event[j]->data_i[0] < range_start[1] + 5)
 				{
 					difficulty = 1;
-					difficulty_offset = 72;
 				}
-				else if(sp->source_midi->track[i]->event[j]->data_i[0] >= 84 && sp->source_midi->track[i]->event[j]->data_i[0] < 89)
+				else if(sp->source_midi->track[i]->event[j]->data_i[0] >= range_start[2] && sp->source_midi->track[i]->event[j]->data_i[0] < range_start[2] + 5)
 				{
 					difficulty = 2;
-					difficulty_offset = 84;
 				}
-				else if(sp->source_midi->track[i]->event[j]->data_i[0] >= 96 && sp->source_midi->track[i]->event[j]->data_i[0] < 101)
+				else if(sp->source_midi->track[i]->event[j]->data_i[0] >= range_start[3] && sp->source_midi->track[i]->event[j]->data_i[0] < range_start[3] + 5)
 				{
 					difficulty = 3;
-					difficulty_offset = 96;
 				}
 				if(difficulty >= 0)
 				{
 					note_off_event = lss_song_get_note_end_event(sp, i, j);
 					if(note_off_event >= 0)
 					{
-						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->val = sp->source_midi->track[i]->event[j]->data_i[0] - difficulty_offset;
+						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->val = sp->source_midi->track[i]->event[j]->data_i[0] - range_start[difficulty];
 						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->tick = (sp->source_midi->track[i]->event[j]->pos_sec + sp->offset) * 60.0;
 						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->play_tick = sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->tick;
 						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->length = (sp->source_midi->track[i]->event[note_off_event]->pos_sec + sp->offset) * 60.0 - sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->tick;
