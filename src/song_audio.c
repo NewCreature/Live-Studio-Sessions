@@ -35,10 +35,11 @@ LSS_SONG_AUDIO * lss_load_song_audio(ALLEGRO_PATH * pp)
 	
 	/* get stream length */
 	ap->length = 0.0;
-	for(i = 0; i < 4; i++)
+	for(i = 0; i < LSS_SONG_AUDIO_MAX_STREAMS; i++)
 	{
 		if(ap->stream[i])
 		{
+			al_set_audio_stream_playing(ap->stream[i], false);
 			length = al_get_audio_stream_length_secs(ap->stream[i]);
 			if(length > ap->length)
 			{
@@ -74,28 +75,54 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 		{
 			return false;
 		}
+		if(!al_set_voice_playing(ap->voice, false))
+		{
+			printf("failed to stop voice\n");
+		}
 		
 		/* create mixer into which all streams will be mixed before passing to the voice */
-		ap->mixer = al_create_mixer(44100, ALLEGRO_AUDIO_DEPTH_FLOAT32, ALLEGRO_CHANNEL_CONF_2);
+		ap->mixer = al_create_mixer(al_get_voice_frequency(ap->voice), ALLEGRO_AUDIO_DEPTH_FLOAT32, al_get_voice_channels(ap->voice));
 		if(!ap->mixer)
 		{
 			al_destroy_voice(ap->voice);
 			return false;
 		}
 		
+		/* attach mixer to voice, must be done before starting stream playback
+		 * or it causes crashes on Mac (look into this later) */
+		if(!al_attach_mixer_to_voice(ap->mixer, ap->voice))
+		{
+			printf("failed to attach mixer to voice\n");
+			return false;
+		}
+
 		/* attach the streams to the mixer and set them to playing */
 		for(i = 0; i < LSS_SONG_AUDIO_MAX_STREAMS; i++)
 		{
 			if(ap->stream[i])
 			{
-				al_attach_audio_stream_to_mixer(ap->stream[i], ap->mixer);
-				al_set_audio_stream_playing(ap->stream[i], true);
+				if(!al_attach_audio_stream_to_mixer(ap->stream[i], ap->mixer))
+				{
+					printf("failed to attach stream to audio mixer\n");
+					return false;
+				}
+				if(!al_set_audio_stream_playing(ap->stream[i], true))
+				{
+					printf("failed to start playing audio stream\n");
+					return false;
+				}
 			}
 		}
 		
-		/* attach mixer to voice and start audio playback */
-		al_attach_mixer_to_voice(ap->mixer, ap->voice);
-		al_set_voice_playing(ap->voice, true);
+		/* start voice if it isn't already playing */
+		if(!al_get_voice_playing(ap->voice))
+		{
+			if(!al_set_voice_playing(ap->voice, true))
+			{
+				printf("failed to start voice playback\n");
+				return false;
+			}
+		}
 		ap->playing = true;
 	}
 	else if(!playing && ap->playing)
@@ -115,7 +142,7 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 		al_destroy_voice(ap->voice);
 		ap->playing = false;
 	}
-	return false;
+	return true;
 }
 
 void lss_set_song_audio_loop(LSS_SONG_AUDIO * ap, double start, double end)

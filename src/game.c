@@ -70,7 +70,10 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 	gp->board_y = 420.0;
 	gp->board_speed = 12.0;
 	lss_initialize_player(gp, 0);
-	lss_set_song_audio_playing(gp->song_audio, true);
+	if(!lss_set_song_audio_playing(gp->song_audio, true))
+	{
+		return false;
+	}
 	lss_song_mark_beats(gp->song, gp->song_audio->length);
 	gp->done = false;
 	return true;

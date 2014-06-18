@@ -145,8 +145,14 @@ void app_logic(void * data)
 			if(t3f_key[ALLEGRO_KEY_ENTER])
 			{
 				app->game.player[0].controller = &app->controller[0];
-				lss_game_initialize(&app->game, app->song_list->entry[app->selected_song]->path);
-				app->state = 3;
+				if(lss_game_initialize(&app->game, app->song_list->entry[app->selected_song]->path))
+				{
+					app->state = 3;
+				}
+				else
+				{
+					printf("failed to initialize game\n");
+				}
 				t3f_key[ALLEGRO_KEY_ENTER] = 0;
 			}
 			break;
