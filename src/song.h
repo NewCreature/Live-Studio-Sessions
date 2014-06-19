@@ -30,6 +30,7 @@ typedef struct
 	LSS_SONG_NOTE ** note;
 	int notes;
 	int note_count;
+	int stream;
 	
 } LSS_SONG_TRACK;
 

@@ -33,6 +33,16 @@ LSS_SONG_AUDIO * lss_load_song_audio(ALLEGRO_PATH * pp)
 	al_set_path_filename(pcp, "drums.ogg");
 	ap->stream[3] = al_load_audio_stream(al_path_cstr(pcp, '/'), 4, 1024);
 	
+	/* count streams */
+	ap->streams = 0;
+	for(i = 0; i < LSS_SONG_AUDIO_MAX_STREAMS; i++)
+	{
+		if(ap->stream[i])
+		{
+			ap->streams++;
+		}
+	}
+	
 	/* get stream length */
 	ap->length = 0.0;
 	for(i = 0; i < LSS_SONG_AUDIO_MAX_STREAMS; i++)

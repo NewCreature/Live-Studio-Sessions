@@ -92,10 +92,36 @@ static bool lss_song_populate_tracks(LSS_SONG * sp)
 	bool chord[16] = {false};
 	int hopo_threshold;
 	int range_start[5] = {60, 72, 84, 96};
+	int stream;
 
 	hopo_threshold = sp->source_midi->raw_data->divisions / 3; // 12th note
 	for(i = 0; i < sp->source_midi->tracks; i++)
 	{
+		stream = -1;
+		if(!strcmp(sp->source_midi->track[i]->name, "T1 GEMS"))
+		{
+			stream = 1;
+		}
+		if(!strcmp(sp->source_midi->track[i]->name, "PART GUITAR"))
+		{
+			stream = 1;
+		}
+		if(!strcmp(sp->source_midi->track[i]->name, "PART BASS"))
+		{
+			stream = 2;
+		}
+		if(!strcmp(sp->source_midi->track[i]->name, "PART GUITAR COOP"))
+		{
+			stream = 2;
+		}
+		if(!strcmp(sp->source_midi->track[i]->name, "PART RHYTHM"))
+		{
+			stream = 2;
+		}
+		if(!strcmp(sp->source_midi->track[i]->name, "PART DRUMS"))
+		{
+			stream = 3;
+		}
 		for(j = 0; j < sp->source_midi->track[i]->events; j++)
 		{
 			if(sp->source_midi->track[i]->event[j]->type == RTK_MIDI_EVENT_TYPE_NOTE_ON && sp->source_midi->track[i]->event[j]->data_i[1] != 0)
@@ -119,6 +145,7 @@ static bool lss_song_populate_tracks(LSS_SONG * sp)
 				}
 				if(difficulty >= 0)
 				{
+					sp->track[i][difficulty].stream = stream;
 					note_off_event = lss_song_get_note_end_event(sp, i, j);
 					if(note_off_event >= 0)
 					{
