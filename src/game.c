@@ -120,8 +120,8 @@ void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)
 {
 	lss_player_render_board(gp, 0);
 	al_hold_bitmap_drawing(true);
-	al_draw_textf(rp->font, t3f_color_white, 0, 0, 0, "%d/%d", gp->player[0].hit_notes, gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes);
-	al_draw_textf(rp->font, t3f_color_white, 0, 24, 0, "%d", gp->player[0].life);
-	al_draw_textf(rp->font, t3f_color_white, 480, 0, ALLEGRO_ALIGN_CENTRE, "Score: %d", gp->player[0].score);
+	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 0, 0, "%d/%d", gp->player[0].hit_notes, gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes);
+	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 24, 0, "%d", gp->player[0].life);
+	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 480, 0, ALLEGRO_ALIGN_CENTRE, "Score: %d", gp->player[0].score);
 	al_hold_bitmap_drawing(false);
 }
