@@ -3,10 +3,14 @@
 
 #include "t3f/t3f.h"
 
+#define LSS_MAX_FONTS  2
+#define LSS_FONT_SMALL 0
+#define LSS_FONT_LARGE 1
+
 typedef struct
 {
 
-	ALLEGRO_FONT * font;
+	ALLEGRO_FONT * font[LSS_MAX_FONTS];
 
 } LSS_RESOURCES;
 
