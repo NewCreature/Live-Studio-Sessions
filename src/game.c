@@ -105,7 +105,7 @@ void lss_game_logic(LSS_GAME * gp)
 		gp->board_speed -= 1.0;
 		t3f_key[ALLEGRO_KEY_DOWN] = 0;
 	}
-	if(t3f_key[ALLEGRO_KEY_ESCAPE] || gp->player[0].life <= 0)
+	if(t3f_key[ALLEGRO_KEY_ESCAPE] || gp->player[0].life <= 0 || gp->current_tick >= gp->song_audio->length * 60.0)
 	{
 		lss_destroy_song_audio(gp->song_audio);
 		lss_destroy_song(gp->song);

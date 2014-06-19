@@ -20,12 +20,12 @@ static bool lss_player_get_next_notes(LSS_SONG * sp, LSS_PLAYER * pp)
 		cur_tick = sp->track[pp->selected_track][pp->selected_difficulty].note[cur_note]->tick;
 	}
 	
+	pp->next_notes = 0;
 	while(cur_note < sp->track[pp->selected_track][pp->selected_difficulty].notes)
 	{
 		/* found next note */
 		if(sp->track[pp->selected_track][pp->selected_difficulty].note[cur_note]->tick != cur_tick)
 		{
-			pp->next_notes = 0;
 			cur_tick = sp->track[pp->selected_track][pp->selected_difficulty].note[cur_note]->tick;
 			while(cur_note < sp->track[pp->selected_track][pp->selected_difficulty].notes && sp->track[pp->selected_track][pp->selected_difficulty].note[cur_note]->tick == cur_tick)
 			{
@@ -223,11 +223,14 @@ void lss_player_logic(LSS_GAME * gp, int player)
 		}
 		
 		/* move on to next note if we missed this one */
-		d = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_note[0]]->tick - (gp->current_tick - gp->av_delay)));
-		if(d < -8)
+		if(gp->player[0].next_notes)
 		{
-			missed = true;
-			lss_player_get_next_notes(gp->song, &gp->player[0]);
+			d = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_note[0]]->tick - (gp->current_tick - gp->av_delay)));
+			if(d < -8)
+			{
+				missed = true;
+				lss_player_get_next_notes(gp->song, &gp->player[0]);
+			}
 		}
 	}
 	if(missed)
