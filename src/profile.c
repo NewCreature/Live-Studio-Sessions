@@ -29,6 +29,7 @@ LSS_PROFILES * lss_load_profiles(void)
 			{
 				al_set_config_value(pp->entry[0].config, "Settings", "Name", "Guest");
 				pp->entry[0].name = al_get_config_value(pp->entry[0].config, "Settings", "Name");
+				pp->entries = 1;
 			}
 		}
 	}
