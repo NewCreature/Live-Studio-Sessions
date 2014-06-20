@@ -3,6 +3,13 @@ Live Studio Sessions Issues
 
 [X]Fix song loading issues for GH, RB, etc. GH shows no notes, BH crashes, etc.
 
+[X]Add profile system.
+
+[X]Store relevant info in the song list (artist, title, etc.).
+
+[X]Silence audio for current part if note is missed and there is an audio track
+   assigned.
+
 [ ]Make song selection screen more intelligent by only allowing valid
    selections.
 
@@ -14,11 +21,17 @@ Live Studio Sessions Issues
 
 [ ]Fix beat lines.
 
-[ ]Silence audio for current part if note is missed and there is an audio track
-   assigned.
-
 [ ]Add online leaderboard support.
 
-[ ]Store relevant info in the song list (artist, title, etc.).
+[ ]Implement "perfect" bonus for hitting the notes sufficiently accurately.
 
-[ ]Add profile system.
+   [ ]This should play into the awards system. We might require getting all 
+      perfect hits to qualify for a multiplatinum award.
+
+[ ]Store scores in profile config. Should probably just store each song's score
+   info under a header using its unique ID. The scores should be stored using
+   the same obfuscation technique used by the leaderboard code.
+
+[ ]Add song results screen.
+
+[ ]Adjust balance of failing mechanism. It is way too hard at the moment.
