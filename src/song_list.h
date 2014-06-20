@@ -10,6 +10,7 @@ typedef struct
 	/* file info */
 	ALLEGRO_PATH * path;
 	unsigned long checksum;
+	char id[256]; // unique identifier used for leaderboards and such
 	
 	/* cached song info */
 	char artist[128];

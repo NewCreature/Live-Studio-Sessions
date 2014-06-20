@@ -140,6 +140,7 @@ void lss_song_list_add_file(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int fla
 	const char * val;
 	char val2[128] = {0};
 	ALLEGRO_CONFIG * cp;
+	ALLEGRO_PATH * midi_path;
 
 	cp = al_load_config_file(al_path_cstr(pp, '/'));
 	if(!cp)
@@ -157,32 +158,61 @@ void lss_song_list_add_file(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int fla
 		{
 			if(dp->cache)
 			{
+				/* cache pertinent song info so we don't have to extract it from
+				 * the config file every time */
+				val = al_get_config_value(cp, "song", "artist");
+				if(val)
+				{
+					strcpy(dp->entry[dp->entries]->artist, val);
+				}
+				val = al_get_config_value(cp, "song", "name");
+				if(val)
+				{
+					strcpy(dp->entry[dp->entries]->title, val);
+				}
+				val = al_get_config_value(cp, "song", "frets");
+				if(val)
+				{
+					strcpy(dp->entry[dp->entries]->frets, val);
+				}
+				
 				val = al_get_config_value(dp->cache, al_path_cstr(pp, '/'), "checksum");
 				if(!val)
 				{
-					val = al_get_config_value(cp, "song", "artist");
-					if(val)
-					{
-						strcpy(dp->entry[dp->entries]->artist, val);
-					}
-					val = al_get_config_value(cp, "song", "name");
-					if(val)
-					{
-						strcpy(dp->entry[dp->entries]->title, val);
-					}
-					val = al_get_config_value(cp, "song", "frets");
-					if(val)
-					{
-						strcpy(dp->entry[dp->entries]->frets, val);
-					}
-					dp->entry[dp->entries]->checksum = t3f_checksum_file(al_path_cstr(dp->entry[dp->entries]->path, '/'));
+					/* get checksum from notes.mid file */
+					midi_path = al_clone_path(pp);
+					al_set_path_filename(midi_path, "notes.mid");
+					dp->entry[dp->entries]->checksum = t3f_checksum_file(al_path_cstr(midi_path, '/'));
+					
+					/* create ID from checksum and song info */
+					sprintf(dp->entry[dp->entries]->id, "%.3s%.3s%lu", dp->entry[dp->entries]->artist, dp->entry[dp->entries]->title, dp->entry[dp->entries]->checksum);
 					sprintf(val2, "%lu", dp->entry[dp->entries]->checksum);
 					al_set_config_value(dp->cache, al_path_cstr(pp, '/'), "checksum", val2);
+					
+					/* store path of song under ID so we can reference songs by ID later */
+					al_set_config_value(dp->cache, dp->entry[dp->entries]->id, "Path", al_path_cstr(pp, '/'));
+//					printf("checksum: %s\n", val2);
 				}
 				else
 				{
 					dp->entry[dp->entries]->checksum = atoi(val);
+					val = al_get_config_value(dp->cache, al_path_cstr(pp, '/'), "id");
+					if(val)
+					{
+						strcpy(dp->entry[dp->entries]->id, val);
+					}
 				}
+				
+				sprintf(dp->entry[dp->entries]->id, "%.3s%.3s%lu", dp->entry[dp->entries]->artist, dp->entry[dp->entries]->title, dp->entry[dp->entries]->checksum);
+				
+				/* store info from song.ini in the song list cache for easy
+				 * access */
+				al_set_config_value(dp->cache, al_path_cstr(pp, '/'), "Artist", dp->entry[dp->entries]->artist);
+				al_set_config_value(dp->cache, al_path_cstr(pp, '/'), "Title", dp->entry[dp->entries]->title);
+				al_set_config_value(dp->cache, al_path_cstr(pp, '/'), "Frets", dp->entry[dp->entries]->frets);
+				sprintf(val2, "%lu", dp->entry[dp->entries]->checksum);
+				al_set_config_value(dp->cache, al_path_cstr(pp, '/'), "checksum", val2);
+				al_set_config_value(dp->cache, al_path_cstr(pp, '/'), "id", dp->entry[dp->entries]->id);
 			}
 			else
 			{
