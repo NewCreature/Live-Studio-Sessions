@@ -4,6 +4,7 @@
 #include "resources.h"
 #include "controller.h"
 #include "song_list.h"
+#include "profile.h"
 #include "game.h"
 
 /* structure to hold all of our app-specific data */
@@ -15,6 +16,8 @@ typedef struct
 	LSS_CONTROLLER controller[LSS_MAX_CONTROLLERS];
 
 	LSS_SONG_LIST * song_list;
+	
+	LSS_PROFILES * profiles;
 	
 	/* menu data */
 	int selected_song;

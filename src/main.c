@@ -113,6 +113,13 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 	lss_song_list_add_files(app->song_list, included_songs_path, 0);
 	lss_song_list_add_files(app->song_list, songs_path, 0);
+	
+	app->profiles = lss_load_profiles();
+	if(!app->profiles)
+	{
+		printf("Could not load profiles!\n");
+		return false;
+	}
 //	app_load_song(app);
 //	app->current_event = 0;
 //	app->current_event_tick = (app->midi->track[1]->event[app->current_event]->pos_sec + app->offset) * 60.0;
@@ -126,7 +133,10 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 
 void app_exit(APP_INSTANCE * app)
 {
+	lss_save_profiles(app->profiles);
+	lss_destroy_profiles(app->profiles);
 	lss_free_global_resources(&app->resources);
+	lss_destroy_song_list(app->song_list);
 }
 
 int main(int argc, char * argv[])
