@@ -107,10 +107,13 @@ void lss_player_logic(LSS_GAME * gp, int player)
 		{
 			if(lss_player_check_notes(gp->song, &gp->player[0], gp->player[0].next_note, gp->player[0].next_notes))
 			{
-				stream = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].stream;
-				if(stream >= 0 && gp->song_audio->stream[stream])
+				if(gp->song_audio->streams > 1)
 				{
-					al_set_audio_stream_gain(gp->song_audio->stream[stream], 1.0);
+					stream = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].stream;
+					if(stream >= 0 && gp->song_audio->stream[stream])
+					{
+						al_set_audio_stream_gain(gp->song_audio->stream[stream], 1.0);
+					}
 				}
 				for(i = 0; i < gp->player[0].next_notes; i++)
 				{
@@ -163,10 +166,13 @@ void lss_player_logic(LSS_GAME * gp, int player)
 			{
 				if(!lss_player_check_notes(gp->song, &gp->player[0], gp->player[0].playing_note, gp->player[0].playing_notes))
 				{
-					stream = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].stream;
-					if(stream >= 0 && gp->song_audio->stream[stream])
+					if(gp->song_audio->streams > 1)
 					{
-//						al_set_audio_stream_gain(gp->song_audio->stream[stream], 0.0);
+						stream = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].stream;
+						if(stream >= 0 && gp->song_audio->stream[stream])
+						{
+//							al_set_audio_stream_gain(gp->song_audio->stream[stream], 0.0);
+						}
 					}
 					gp->player[0].playing_notes = 0;
 				}
@@ -192,10 +198,13 @@ void lss_player_logic(LSS_GAME * gp, int player)
 		{
 			if(lss_player_check_notes(gp->song, &gp->player[0], gp->player[0].next_note, gp->player[0].next_notes))
 			{
-				stream = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].stream;
-				if(stream >= 0 && gp->song_audio->stream[stream])
+				if(gp->song_audio->streams > 1)
 				{
-					al_set_audio_stream_gain(gp->song_audio->stream[stream], 1.0);
+					stream = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].stream;
+					if(stream >= 0 && gp->song_audio->stream[stream])
+					{
+						al_set_audio_stream_gain(gp->song_audio->stream[stream], 1.0);
+					}
 				}
 				for(i = 0; i < gp->player[0].next_notes; i++)
 				{
@@ -229,10 +238,13 @@ void lss_player_logic(LSS_GAME * gp, int player)
 			d = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_note[0]]->tick - (gp->current_tick - gp->av_delay)));
 			if(d < -8)
 			{
-				stream = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].stream;
-				if(stream >= 0 && gp->song_audio->stream[stream])
+				if(gp->song_audio->streams > 1)
 				{
-					al_set_audio_stream_gain(gp->song_audio->stream[stream], 0.0);
+					stream = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].stream;
+					if(stream >= 0 && gp->song_audio->stream[stream])
+					{
+						al_set_audio_stream_gain(gp->song_audio->stream[stream], 0.0);
+					}
 				}
 				missed = true;
 				lss_player_get_next_notes(gp->song, &gp->player[0]);
