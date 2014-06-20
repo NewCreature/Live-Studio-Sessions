@@ -32,6 +32,7 @@ void lss_state_logic(APP_INSTANCE * app)
 				{
 					app->selected_song = app->song_list->entries - 1;
 				}
+				t3f_key[ALLEGRO_KEY_PGUP] = 0;
 			}
 			if(t3f_key[ALLEGRO_KEY_PGDN])
 			{

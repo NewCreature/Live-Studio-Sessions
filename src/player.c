@@ -174,7 +174,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 				{
 					for(i = 0; i < gp->player[0].playing_notes; i++)
 					{
-						gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_note[i]]->play_tick = gp->current_tick;
+						gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_note[i]]->play_tick = gp->current_tick - gp->av_delay;
 					}
 					m = gp->player[0].streak / 8 + 1;
 					if(m > 4)
