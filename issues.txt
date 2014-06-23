@@ -21,6 +21,11 @@ Live Studio Sessions Issues
 
 [ ]Fix beat lines.
 
+   [ ]When two beat markers are sufficiently close, they should be merged.
+   
+   [ ]Make beat line generation code more robust so it can handle "non-standard"
+      positioning of tempo changes.
+
 [ ]Add online leaderboard support.
 
 [ ]Implement "perfect" bonus for hitting the notes sufficiently accurately.
@@ -35,3 +40,6 @@ Live Studio Sessions Issues
 [ ]Add song results screen.
 
 [ ]Adjust balance of failing mechanism. It is way too hard at the moment.
+
+[ ]Find what is causing the game to freeze sometimes when stopping the song
+   audio.
