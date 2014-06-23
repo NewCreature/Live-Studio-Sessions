@@ -223,7 +223,7 @@ bool lss_song_mark_beats(LSS_SONG * sp, double total_length)
 					current_beat_event++;
 					if(current_beat_event < sp->source_midi->tempo_events)
 					{
-						BPM = rtk_ppqn_to_bpm(sp->source_midi->tempo_event[current_beat_event]->data_i[0]);
+						BPM = rtk_ppqn_to_bpm(sp->source_midi->tempo_event[current_beat_event - 1]->data_i[0]);
 						beat_time = 60.0 / BPM;
 					}
 				}
@@ -266,7 +266,7 @@ bool lss_song_mark_beats(LSS_SONG * sp, double total_length)
 					current_beat_event++;
 					if(current_beat_event < sp->source_midi->tempo_events)
 					{
-						BPM = rtk_ppqn_to_bpm(sp->source_midi->tempo_event[current_beat_event]->data_i[0]);
+						BPM = rtk_ppqn_to_bpm(sp->source_midi->tempo_event[current_beat_event - 1]->data_i[0]);
 						beat_time = 60.0 / BPM;
 					}
 				}
