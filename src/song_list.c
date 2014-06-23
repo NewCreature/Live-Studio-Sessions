@@ -160,6 +160,9 @@ void lss_song_list_add_file(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int fla
 			{
 				/* cache pertinent song info so we don't have to extract it from
 				 * the config file every time */
+				strcpy(dp->entry[dp->entries]->artist, "");
+				strcpy(dp->entry[dp->entries]->title, "");
+				strcpy(dp->entry[dp->entries]->frets, "");
 				val = al_get_config_value(cp, "song", "artist");
 				if(val)
 				{
