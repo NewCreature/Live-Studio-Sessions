@@ -262,7 +262,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 void lss_player_render_board(LSS_GAME * gp, int player)
 {
 	float rotate[5] = {-0.06, -0.03, 0.0, 0.03, 0.06};
-	float oy[5] = {3.0, 1.0, 0.0, 1.0, 3.0};
+	float oy[5] = {3.0 - 4.0, 1.0 - 4.0, 0.0 - 4.0, 1.0 - 4.0, 3.0 - 4.0};
 	ALLEGRO_VERTEX v[32];
 	ALLEGRO_COLOR color;
 	ALLEGRO_COLOR color_chart[5];
