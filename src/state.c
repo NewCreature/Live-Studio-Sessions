@@ -112,6 +112,7 @@ void lss_state_logic(APP_INSTANCE * app)
 			}
 			if(t3f_key[ALLEGRO_KEY_ENTER])
 			{
+				app->game.player[0].profile = &app->profiles->entry[0];
 				app->game.player[0].controller = &app->controller[0];
 				if(lss_game_initialize(&app->game, app->song_list->entry[app->selected_song]->path))
 				{

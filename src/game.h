@@ -7,6 +7,7 @@
 #include "song.h"
 #include "song_audio.h"
 #include "resources.h"
+#include "profile.h"
 
 #define LSS_MAX_PLAYERS 8
 
@@ -16,6 +17,7 @@
 typedef struct
 {
 
+	LSS_PROFILE * profile;
 	LSS_CONTROLLER * controller; //pointer to controller used by player
 	
 	int selected_track;
