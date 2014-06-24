@@ -8,6 +8,7 @@
 #define LSS_STATE_SONG_SELECT_TRACK      2
 #define LSS_STATE_SONG_SELECT_DIFFICULTY 3
 #define LSS_STATE_GAME                   4
+#define LSS_STATE_GAME_RESULTS           5
 
 void lss_state_logic(APP_INSTANCE * app);
 void lss_state_render(APP_INSTANCE * app);

@@ -1,5 +1,6 @@
 #include "instance.h"
 #include "state.h"
+#include "game_results.h"
 
 void lss_state_logic(APP_INSTANCE * app)
 {
@@ -129,6 +130,15 @@ void lss_state_logic(APP_INSTANCE * app)
 			lss_game_logic(&app->game);
 			if(app->game.done)
 			{
+				app->state = LSS_STATE_GAME_RESULTS;
+			}
+			break;
+		}
+		case LSS_STATE_GAME_RESULTS:
+		{
+			lss_game_results_logic(&app->game);
+			if(t3f_key[ALLEGRO_KEY_ESCAPE])
+			{
 				app->state = LSS_STATE_SONG_SELECT;
 			}
 			break;
@@ -199,6 +209,11 @@ void lss_state_render(APP_INSTANCE * app)
 		case LSS_STATE_GAME:
 		{
 			lss_game_render(&app->game, &app->resources);
+			break;
+		}
+		case LSS_STATE_GAME_RESULTS:
+		{
+			lss_game_results_render(&app->game, &app->resources);
 			break;
 		}
 	}
