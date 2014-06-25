@@ -279,8 +279,6 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	color_chart[3] = al_map_rgb(0, 0, 204);
 	color_chart[4] = al_map_rgb(215, 78, 0);
 
-	al_hold_bitmap_drawing(true);
-	al_draw_bitmap(gp->studio_image, 0, 0, 0);
 	al_hold_bitmap_drawing(false);
 /*	z = -480;
 	end_z = 2048;

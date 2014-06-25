@@ -118,6 +118,7 @@ void lss_game_logic(LSS_GAME * gp)
 
 void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)
 {
+	al_draw_bitmap(gp->studio_image, 0, 0, 0);
 	lss_player_render_board(gp, 0);
 	al_hold_bitmap_drawing(true);
 	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 0, 0, "%d/%d", gp->player[0].hit_notes, gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes);
