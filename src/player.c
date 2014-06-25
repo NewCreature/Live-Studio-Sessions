@@ -272,7 +272,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	int note_type;
 
 	c = al_get_bitmap_width(gp->note_texture[0]) / 2;
-	cy = c;
+	cy = c + c / 4;
 	color_chart[0] = al_map_rgb(0, 150, 0);
 	color_chart[1] = al_map_rgb(139, 0, 0);
 	color_chart[2] = al_map_rgb(192, 192, 0);
@@ -348,8 +348,17 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	for(i = 0; i < gp->song->beats; i++)
 	{
 		z = ((gp->song->beat[i]->tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
-		t3f_draw_bitmap(gp->beat_line_image, t3f_color_white, 280, 420 + 4, z, 0);
-		if(z > 2048)
+		a = 1.0;
+		if(z > 1984)
+		{
+			a = 1.0 - (z - 1984.0) / 128.0;
+			if(a < 0.0)
+			{
+				a = 0.0;
+			}
+		}
+		t3f_draw_bitmap(gp->beat_line_image, al_map_rgba_f(a, a, a, a), 280, 420 + 4, z, 0);
+		if(z > 1984 + 128.0)
 		{
 			break;
 		}
