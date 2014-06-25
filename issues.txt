@@ -10,7 +10,7 @@ Live Studio Sessions Issues
 [X]Silence audio for current part if note is missed and there is an audio track
    assigned.
 
-[ ]Make song selection screen more intelligent by only allowing valid
+[X]Make song selection screen more intelligent by only allowing valid
    selections.
 
 [ ]Make controls configurable.
