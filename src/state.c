@@ -1,11 +1,17 @@
 #include "instance.h"
 #include "state.h"
 #include "game_results.h"
+#include "title.h"
 
 void lss_state_logic(APP_INSTANCE * app)
 {
 	switch(app->state)
 	{
+		case LSS_STATE_TITLE:
+		{
+			lss_title_logic(&app->title, app);
+			break;
+		}
 		case LSS_STATE_SONG_SELECT:
 		{
 			if(t3f_key[ALLEGRO_KEY_UP])
@@ -49,6 +55,11 @@ void lss_state_logic(APP_INSTANCE * app)
 				app->game.song = lss_load_song(app->song_list->entry[app->selected_song]->path);
 				app->state = LSS_STATE_SONG_SELECT_TRACK;
 				t3f_key[ALLEGRO_KEY_ENTER] = 0;
+			}
+			else if(t3f_key[ALLEGRO_KEY_ESCAPE])
+			{
+				app->state = LSS_STATE_TITLE;
+				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 			}
 			break;
 		}
@@ -156,6 +167,11 @@ void lss_state_render(APP_INSTANCE * app)
 	al_clear_to_color(t3f_color_black);
 	switch(app->state)
 	{
+		case LSS_STATE_TITLE:
+		{
+			lss_title_render(&app->title, &app->resources);
+			break;
+		}
 		case LSS_STATE_SONG_SELECT:
 		{
 			for(i = 0; i < 20 && i + app->selected_song < app->song_list->entries; i++)

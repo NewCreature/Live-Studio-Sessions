@@ -6,6 +6,8 @@
 #include "song_list.h"
 #include "profile.h"
 #include "game.h"
+#include "struct_title.h"
+#include "defines_title.h"
 
 /* structure to hold all of our app-specific data */
 typedef struct
@@ -24,6 +26,7 @@ typedef struct
 	
 	int state;
 	
+	LSS_TITLE_DATA title;
 	LSS_GAME game;
 	
 } APP_INSTANCE;

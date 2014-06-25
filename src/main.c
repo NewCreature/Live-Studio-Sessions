@@ -14,6 +14,7 @@
 #include "game.h"
 #include "resources.h"
 #include "controller.h"
+#include "title.h"
 
 /* main logic routine */
 void app_logic(void * data)
@@ -123,7 +124,11 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 //	app_load_song(app);
 //	app->current_event = 0;
 //	app->current_event_tick = (app->midi->track[1]->event[app->current_event]->pos_sec + app->offset) * 60.0;
-	app->state = LSS_STATE_SONG_SELECT;
+	if(!lss_title_initialize(&app->title, &app->resources))
+	{
+		return false;
+	}
+	app->state = LSS_STATE_TITLE;
 	app->game.av_delay = 15;
 	app->selected_song = 0;
 	app->game.player[0].selected_track = 0;
@@ -133,6 +138,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 
 void app_exit(APP_INSTANCE * app)
 {
+	lss_title_exit(&app->title);
 	lss_save_profiles(app->profiles);
 	lss_destroy_profiles(app->profiles);
 	lss_free_global_resources(&app->resources);
