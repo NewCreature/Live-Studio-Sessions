@@ -2,6 +2,7 @@
 #include "state.h"
 #include "game_results.h"
 #include "title.h"
+#include "obfuscate.h"
 
 static int lss_track[16];
 static int lss_tracks = 0;
@@ -44,6 +45,8 @@ static void lss_enumerate_difficulties(LSS_SONG * sp, int track)
 
 void lss_state_logic(APP_INSTANCE * app)
 {
+	char buf[2][64];
+
 	switch(app->state)
 	{
 		case LSS_STATE_TITLE:
@@ -166,6 +169,7 @@ void lss_state_logic(APP_INSTANCE * app)
 			}
 			if(t3f_key[ALLEGRO_KEY_ENTER])
 			{
+				app->game.song_id = app->song_list->entry[app->selected_song]->id;
 				app->game.player[0].selected_track = lss_track[app->game.player[0].selected_track];
 				app->game.player[0].selected_difficulty = lss_diff[app->game.player[0].selected_difficulty];
 				app->game.player[0].profile = &app->profiles->entry[0];
@@ -187,6 +191,13 @@ void lss_state_logic(APP_INSTANCE * app)
 			lss_game_logic(&app->game);
 			if(app->game.done)
 			{
+				if(app->game.player[0].score > app->game.player[0].high_score)
+				{
+					app->game.player[0].high_score = app->game.player[0].score;
+					sprintf(buf[0], "high_score_%d_%d", app->game.player[0].selected_track, app->game.player[0].selected_difficulty);
+					sprintf(buf[1], "%d", lss_obfuscate_value(app->game.player[0].high_score));
+					al_set_config_value(app->game.player[0].profile->config, app->game.song_id, buf[0], buf[1]);
+				}
 				app->state = LSS_STATE_GAME_RESULTS;
 			}
 			break;

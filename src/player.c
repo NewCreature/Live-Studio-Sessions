@@ -4,6 +4,7 @@
 
 #include "game.h"
 #include "player.h"
+#include "obfuscate.h"
 
 static bool lss_player_get_next_notes(LSS_SONG * sp, LSS_PLAYER * pp)
 {
@@ -67,6 +68,9 @@ static bool lss_player_check_notes(LSS_SONG * sp, LSS_PLAYER * pp, int note[], i
 
 void lss_initialize_player(LSS_GAME * gp, int player)
 {
+	const char * val;
+	char buf[64] = {0};
+
 	gp->player[0].playing_notes = 0;
 	gp->player[0].next_note[0] = -1;
 	gp->player[0].next_notes = 1;
@@ -75,6 +79,13 @@ void lss_initialize_player(LSS_GAME * gp, int player)
 	gp->player[0].life = 100;
 	gp->player[0].miss_streak = 0;
 	gp->player[0].score = 0;
+	gp->player[0].high_score = 0;
+	sprintf(buf, "high_score_%d_%d", gp->player[0].selected_track, gp->player[0].selected_difficulty);
+	val = al_get_config_value(gp->player[0].profile->config, gp->song_id, buf);
+	if(val)
+	{
+		gp->player[0].high_score = lss_unobfuscate_value(atoi(val));
+	}
 	lss_player_get_next_notes(gp->song, &gp->player[0]);
 }
 

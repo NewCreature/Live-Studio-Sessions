@@ -23,7 +23,7 @@ typedef struct
 	int selected_track;
 	int selected_difficulty;
 	double song_pos;
-	int score;
+	int score, high_score;
 	int streak;
 	int life;
 	int miss_streak;
@@ -48,6 +48,7 @@ typedef struct
 
 	LSS_SONG * song;
 	LSS_SONG_AUDIO * song_audio;
+	const char * song_id;
 
 	ALLEGRO_BITMAP * note_texture[10];
 	ALLEGRO_BITMAP * studio_image;
