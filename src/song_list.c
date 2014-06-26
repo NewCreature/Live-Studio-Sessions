@@ -1,3 +1,5 @@
+#include <ctype.h>
+
 #include "t3f/t3f.h"
 #include "song_list.h"
 
@@ -135,10 +137,37 @@ unsigned long lss_song_list_count_files(const char * location, int flags)
 	return lss_song_list_file_count;
 }
 
+static int lss_song_list_encode_character(int c)
+{
+	c = tolower(c);
+	if((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9'))
+	{
+		return c;
+	}
+	return '_';
+}
+
+static char * lss_song_list_encode_artist_title(char * out, char * artist, char * title)
+{
+	int i;
+	
+	strcpy(out, "______");
+	for(i = 0; i < 3 && i < strlen(artist); i++)
+	{
+		out[i] = lss_song_list_encode_character(artist[i]);
+	}
+	for(i = 0; i < 3 && i < strlen(title); i++)
+	{
+		out[i + 3] = lss_song_list_encode_character(title[i]);
+	}
+	return out;
+}
+
 void lss_song_list_add_file(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int flags)
 {
 	const char * val;
 	char val2[128] = {0};
+	char buf[32] = {0};
 	ALLEGRO_CONFIG * cp;
 	ALLEGRO_PATH * midi_path;
 
@@ -188,7 +217,7 @@ void lss_song_list_add_file(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int fla
 					dp->entry[dp->entries]->checksum = t3f_checksum_file(al_path_cstr(midi_path, '/'));
 					
 					/* create ID from checksum and song info */
-					sprintf(dp->entry[dp->entries]->id, "%.3s%.3s%lu", dp->entry[dp->entries]->artist, dp->entry[dp->entries]->title, dp->entry[dp->entries]->checksum);
+					sprintf(dp->entry[dp->entries]->id, "%s%lu", lss_song_list_encode_artist_title(buf, dp->entry[dp->entries]->artist, dp->entry[dp->entries]->title), dp->entry[dp->entries]->checksum);
 					sprintf(val2, "%lu", dp->entry[dp->entries]->checksum);
 					al_set_config_value(dp->cache, al_path_cstr(pp, '/'), "checksum", val2);
 					
@@ -204,9 +233,11 @@ void lss_song_list_add_file(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int fla
 					{
 						strcpy(dp->entry[dp->entries]->id, val);
 					}
+					else
+					{
+						sprintf(dp->entry[dp->entries]->id, "%s%lu", lss_song_list_encode_artist_title(buf, dp->entry[dp->entries]->artist, dp->entry[dp->entries]->title), dp->entry[dp->entries]->checksum);
+					}
 				}
-				
-				sprintf(dp->entry[dp->entries]->id, "%.3s%.3s%lu", dp->entry[dp->entries]->artist, dp->entry[dp->entries]->title, dp->entry[dp->entries]->checksum);
 				
 				/* store info from song.ini in the song list cache for easy
 				 * access */
