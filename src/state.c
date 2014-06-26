@@ -1,3 +1,5 @@
+#include "t3net/t3net.h"
+
 #include "instance.h"
 #include "state.h"
 #include "game_results.h"
@@ -197,6 +199,15 @@ void lss_state_logic(APP_INSTANCE * app)
 					sprintf(buf[0], "high_score_%d_%d", app->game.player[0].selected_track, app->game.player[0].selected_difficulty);
 					sprintf(buf[1], "%d", lss_obfuscate_value(app->game.player[0].high_score));
 					al_set_config_value(app->game.player[0].profile->config, app->game.song_id, buf[0], buf[1]);
+				}
+				if(app->game.player[0].score > 0)
+				{
+					sprintf(buf[0], "%d%d", app->game.player[0].selected_track, app->game.player[0].selected_difficulty);
+					sprintf(buf[1], "%s", app->game.player[0].profile->name);
+					if(!t3net_upload_score("http://www.t3-i.com/leaderboards/poll.php", "live_studio_sessions", "0.1", buf[0], app->song_list->entry[app->selected_song]->id, buf[1], app->game.player[0].score))
+					{
+						printf("failed to upload score\n");
+					}
 				}
 				app->state = LSS_STATE_GAME_RESULTS;
 			}
