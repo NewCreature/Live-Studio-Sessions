@@ -87,7 +87,7 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 	if(playing && !ap->playing)
 	{
 		/* create voice for audio to be played back through */
-		ap->voice = al_create_voice(44100, ALLEGRO_AUDIO_DEPTH_INT16, ALLEGRO_CHANNEL_CONF_2);
+/*		ap->voice = al_create_voice(44100, ALLEGRO_AUDIO_DEPTH_INT16, ALLEGRO_CHANNEL_CONF_2);
 		if(!ap->voice)
 		{
 			return false;
@@ -95,40 +95,40 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 		if(!al_set_voice_playing(ap->voice, false))
 		{
 			printf("failed to stop voice\n");
-		}
+		} */
 		
 		/* create mixer into which all streams will be mixed before passing to the voice */
-		ap->mixer = al_create_mixer(al_get_voice_frequency(ap->voice), ALLEGRO_AUDIO_DEPTH_FLOAT32, al_get_voice_channels(ap->voice));
+/*		ap->mixer = al_create_mixer(al_get_voice_frequency(ap->voice), ALLEGRO_AUDIO_DEPTH_FLOAT32, al_get_voice_channels(ap->voice));
 		if(!ap->mixer)
 		{
 			al_destroy_voice(ap->voice);
 			return false;
-		}
+		} */
 		
 		/* set a callback for the mixer so we can start the audio at the exact
 		 * time we want */
-		 if(!al_set_mixer_postprocess_callback(ap->mixer, lss_song_audio_callback, NULL))
+		 if(!al_set_mixer_postprocess_callback(al_get_default_mixer(), lss_song_audio_callback, NULL))
 		 {
 			 printf("Failed to set mixer callback!\n");
 		 }
 
 		/* attach mixer to voice, must be done before starting stream playback
 		 * or it causes crashes on Mac (look into this later) */
-		if(!al_attach_mixer_to_voice(ap->mixer, ap->voice))
+/*		if(!al_attach_mixer_to_voice(ap->mixer, ap->voice))
 		{
 			printf("failed to attach mixer to voice\n");
 			return false;
-		}
+		} */
 
 		/* start voice if it isn't already playing */
-		if(!al_get_voice_playing(ap->voice))
+/*		if(!al_get_voice_playing(ap->voice))
 		{
 			if(!al_set_voice_playing(ap->voice, true))
 			{
 				printf("failed to start voice playback\n");
 				return false;
 			}
-		}
+		} */
 		/* attach the streams to the mixer and set them to playing */
 		lss_song_audio_callback_counter = 0;
 		while(lss_song_audio_callback_counter == 0)
@@ -142,7 +142,7 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 		{
 			if(ap->stream[i])
 			{
-				if(!al_attach_audio_stream_to_mixer(ap->stream[i], ap->mixer))
+				if(!al_attach_audio_stream_to_mixer(ap->stream[i], al_get_default_mixer()))
 				{
 					printf("failed to attach stream to audio mixer\n");
 					return false;
@@ -159,7 +159,7 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 	}
 	else if(!playing && ap->playing)
 	{
-		al_set_voice_playing(ap->voice, false);
+//		al_set_voice_playing(ap->voice, false);
 		for(i = 0; i < LSS_SONG_AUDIO_MAX_STREAMS; i++)
 		{
 			if(ap->stream[i])
@@ -169,9 +169,9 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 				al_destroy_audio_stream(ap->stream[i]);
 			}
 		}
-		al_detach_mixer(ap->mixer);
-		al_destroy_mixer(ap->mixer);
-		al_destroy_voice(ap->voice);
+//		al_detach_mixer(ap->mixer);
+//		al_destroy_mixer(ap->mixer);
+//		al_destroy_voice(ap->voice);
 		ap->playing = false;
 	}
 	return true;
