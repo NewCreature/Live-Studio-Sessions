@@ -157,6 +157,10 @@ int main(int argc, char * argv[])
 	{
 		printf("Error: could not initialize T3F!\n");
 	}
+	if(app.state == LSS_STATE_GAME)
+	{
+		lss_game_exit(&app.game);
+	}
 	app_exit(&app);
 	return 0;
 }
