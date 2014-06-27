@@ -7,6 +7,18 @@
 #include "game.h"
 #include "player.h"
 
+void lss_add_bitmap_to_atlas(T3F_ATLAS * ap, ALLEGRO_BITMAP ** bp, int type)
+{
+	ALLEGRO_BITMAP * abp;
+
+	abp = t3f_add_bitmap_to_atlas(ap, bp, type);
+	if(abp)
+	{
+		al_destroy_bitmap(*bp);
+		*bp = abp;
+	}
+}
+
 bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 {
 	gp->note_texture[0] = t3f_load_resource((void *)(&gp->note_texture[0]), T3F_RESOURCE_TYPE_BITMAP, "data/note_green.png", 0, 0, 0);
@@ -55,12 +67,12 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 		return false;
 	}
 	gp->atlas = t3f_create_atlas(1024, 1024);
-	t3f_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[0], T3F_ATLAS_SPRITE);
-	t3f_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[1], T3F_ATLAS_SPRITE);
-	t3f_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[2], T3F_ATLAS_SPRITE);
-	t3f_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[3], T3F_ATLAS_SPRITE);
-	t3f_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[4], T3F_ATLAS_SPRITE);
-	t3f_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[5], T3F_ATLAS_SPRITE);
+	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[0], T3F_ATLAS_SPRITE);
+	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[1], T3F_ATLAS_SPRITE);
+	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[2], T3F_ATLAS_SPRITE);
+	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[3], T3F_ATLAS_SPRITE);
+	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[4], T3F_ATLAS_SPRITE);
+	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[5], T3F_ATLAS_SPRITE);
 	gp->current_tick = 0;
 	gp->song_audio = lss_load_song_audio(song_path);
 	if(!gp->song_audio)
@@ -85,6 +97,8 @@ void lss_game_exit(LSS_GAME * gp)
 {
 	int i;
 	
+	lss_destroy_song_audio(gp->song_audio);
+	lss_destroy_song(gp->song);
 	for(i = 0; i < 6; i++)
 	{
 		t3f_destroy_resource(gp->note_texture[i]);
@@ -110,8 +124,6 @@ void lss_game_logic(LSS_GAME * gp)
 	}
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || gp->player[0].life <= 0 || gp->current_tick >= gp->song_audio->length * 60.0)
 	{
-		lss_destroy_song_audio(gp->song_audio);
-		lss_destroy_song(gp->song);
 		gp->done = true;
 		lss_game_exit(gp);
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
