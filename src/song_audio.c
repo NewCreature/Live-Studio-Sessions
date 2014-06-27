@@ -66,9 +66,18 @@ LSS_SONG_AUDIO * lss_load_song_audio(ALLEGRO_PATH * pp)
 
 void lss_destroy_song_audio(LSS_SONG_AUDIO * ap)
 {
+	int i;
+
 	if(ap->playing)
 	{
 		lss_set_song_audio_playing(ap, false);
+	}
+	for(i = 0; i < LSS_SONG_AUDIO_MAX_STREAMS; i++)
+	{
+		if(ap->stream[i])
+		{
+			al_destroy_audio_stream(ap->stream[i]);
+		}
 	}
 	free(ap);
 }
@@ -133,10 +142,6 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 		lss_song_audio_callback_counter = 0;
 		while(lss_song_audio_callback_counter == 0)
 		{
-			if(lss_song_audio_callback_counter)
-			{
-				break;
-			}
 		}
 		for(i = 0; i < LSS_SONG_AUDIO_MAX_STREAMS; i++)
 		{
@@ -154,6 +159,14 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 				}
 			}
 		}
+		if(lss_song_audio_callback_counter > 1)
+		{
+			lss_song_audio_callback_counter = 0;
+			while(lss_song_audio_callback_counter == 0)
+			{
+			}
+			lss_set_song_audio_position(ap, 0.0);
+		}
 		
 		ap->playing = true;
 	}
@@ -166,7 +179,6 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 			{
 				al_set_audio_stream_playing(ap->stream[i], false);
 				al_detach_audio_stream(ap->stream[i]);
-				al_destroy_audio_stream(ap->stream[i]);
 			}
 		}
 //		al_detach_mixer(ap->mixer);
@@ -194,8 +206,6 @@ void lss_set_song_audio_position(LSS_SONG_AUDIO * ap, double pos)
 {
 	int i;
 
-	lss_set_song_audio_playing(ap, false);
-	
 	for(i = 0; i < LSS_SONG_AUDIO_MAX_STREAMS; i++)
 	{
 		if(ap->stream[i])
