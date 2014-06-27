@@ -92,6 +92,7 @@ void lss_game_exit(LSS_GAME * gp)
 	t3f_destroy_resource(gp->studio_image);
 	t3f_destroy_resource(gp->fret_board_image);
 	t3f_destroy_resource(gp->beat_line_image);
+	t3f_destroy_atlas(gp->atlas);
 }
 
 void lss_game_logic(LSS_GAME * gp)
