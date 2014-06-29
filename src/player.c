@@ -188,6 +188,7 @@ void lss_initialize_player(LSS_GAME * gp, int player)
 	gp->player[0].next_note[0] = -1;
 	gp->player[0].next_notes = 1;
 	gp->player[0].hit_notes = 0;
+	gp->player[0].missed_notes = 0;
 	gp->player[0].streak = 0;
 	gp->player[0].life = 100;
 	gp->player[0].miss_streak = 0;
@@ -385,6 +386,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 	{
 		gp->player[0].streak = 0;
 		gp->player[0].miss_streak++;
+		gp->player[0].missed_notes++;
 		gp->player[0].life -= gp->player[0].miss_streak;
 	}
 }

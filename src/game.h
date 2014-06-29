@@ -28,7 +28,7 @@ typedef struct
 	int life;
 	int miss_streak;
 	
-	int hit_notes;
+	int hit_notes, missed_notes;
 
 	int next_note[32];
 	int next_notes;
