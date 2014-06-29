@@ -213,6 +213,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 	bool missed = false;
 	int points = 0;
 	int stream;
+	int life_add;
 	
 	/* handle player logic */
 	lss_read_controller(gp->player[0].controller);
@@ -262,8 +263,13 @@ void lss_player_logic(LSS_GAME * gp, int player)
 				points = gp->player[0].playing_notes * LSS_GAME_NOTE_BASE_POINTS * m;
 				gp->player[0].score += points;
 				gp->player[0].streak++;
+				life_add = gp->player[0].streak;
+				if(life_add > 4)
+				{
+					life_add = 4;
+				}
 				gp->player[0].miss_streak = 0;
-				gp->player[0].life += gp->player[0].streak;
+				gp->player[0].life += life_add;
 				if(gp->player[0].life > 100)
 				{
 					gp->player[0].life = 100;
@@ -385,8 +391,12 @@ void lss_player_logic(LSS_GAME * gp, int player)
 	if(missed)
 	{
 		gp->player[0].streak = 0;
-		gp->player[0].miss_streak++;
 		gp->player[0].missed_notes++;
+		gp->player[0].miss_streak++;
+		if(gp->player[0].miss_streak > 4)
+		{
+			gp->player[0].miss_streak = 4;
+		}
 		gp->player[0].life -= gp->player[0].miss_streak;
 	}
 }
