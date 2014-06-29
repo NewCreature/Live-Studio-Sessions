@@ -44,6 +44,8 @@ typedef struct
 	/* cache some values for optimization purposes */
 	int first_visible_note;
 	int last_visible_note;
+	int first_visible_beat;
+	int last_visible_beat;
 
 } LSS_PLAYER;
 

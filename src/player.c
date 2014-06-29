@@ -65,12 +65,8 @@ static bool lss_player_check_notes(LSS_SONG * sp, LSS_PLAYER * pp, int note[], i
 	return false;
 }
 
-static int lss_player_note_visible(LSS_GAME * gp, int player, int note)
+static int lss_player_check_visibility(double z, double end_z)
 {
-	double z, end_z;
-	
-	z = ((gp->song->track[gp->player[player].selected_track][gp->player[player].selected_difficulty].note[note]->tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
-	end_z = ((gp->song->track[gp->player[player].selected_track][gp->player[player].selected_difficulty].note[note]->tick + gp->song->track[gp->player[player].selected_track][gp->player[player].selected_difficulty].note[note]->length - (gp->current_tick - gp->av_delay))) * gp->board_speed;
 	if(z <= 2048.0 + 128.0 && end_z > -640.0)
 	{
 		return 0;
@@ -80,6 +76,23 @@ static int lss_player_note_visible(LSS_GAME * gp, int player, int note)
 		return 1;
 	}
 	return -1;
+}
+
+static int lss_player_note_visible(LSS_GAME * gp, int player, int note)
+{
+	double z, end_z;
+	
+	z = ((gp->song->track[gp->player[player].selected_track][gp->player[player].selected_difficulty].note[note]->tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
+	end_z = ((gp->song->track[gp->player[player].selected_track][gp->player[player].selected_difficulty].note[note]->tick + gp->song->track[gp->player[player].selected_track][gp->player[player].selected_difficulty].note[note]->length - (gp->current_tick - gp->av_delay))) * gp->board_speed;
+	return lss_player_check_visibility(z, end_z);
+}
+
+static int lss_player_beat_visible(LSS_GAME * gp, int beat)
+{
+	double z;
+	
+	z = ((gp->song->beat[beat]->tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
+	return lss_player_check_visibility(z, z);
 }
 
 static void lss_player_detect_visible_notes(LSS_GAME * gp, int player)
@@ -124,6 +137,48 @@ static void lss_player_detect_visible_notes(LSS_GAME * gp, int player)
 	}
 }
 
+static void lss_player_detect_visible_beats(LSS_GAME * gp, int player)
+{
+	/* no visible notes yet, so keep checking first note until it is visible */
+	if(gp->player[player].first_visible_beat < 0)
+	{
+		if(!lss_player_beat_visible(gp, 0))
+		{
+			gp->player[player].first_visible_beat = 0;
+			gp->player[player].last_visible_beat = 0;
+			while(!lss_player_beat_visible(gp, gp->player[player].last_visible_beat))
+			{
+				gp->player[player].last_visible_beat++;
+			}
+		}
+	}
+	else
+	{
+		if(gp->player[player].first_visible_beat < gp->song->beats - 1)
+		{
+			while(lss_player_beat_visible(gp, gp->player[player].first_visible_beat) < 0)
+			{
+				gp->player[player].first_visible_beat++;
+				if(gp->player[player].first_visible_beat >= gp->song->beats - 1)
+				{
+					break;
+				}
+			}
+		}
+		if(gp->player[player].last_visible_beat < gp->song->beats - 1)
+		{
+			while(!lss_player_beat_visible(gp, gp->player[player].last_visible_beat))
+			{
+				gp->player[player].last_visible_beat++;
+				if(gp->player[player].last_visible_beat >= gp->song->beats - 1)
+				{
+					break;
+				}
+			}
+		}
+	}
+}
+
 void lss_initialize_player(LSS_GAME * gp, int player)
 {
 	const char * val;
@@ -146,6 +201,8 @@ void lss_initialize_player(LSS_GAME * gp, int player)
 	}
 	gp->player[0].first_visible_note = -1;
 	gp->player[0].last_visible_note = -1;
+	gp->player[0].first_visible_beat = -1;
+	gp->player[0].last_visible_beat = -1;
 	lss_player_get_next_notes(gp->song, &gp->player[0]);
 }
 
@@ -159,6 +216,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 	/* handle player logic */
 	lss_read_controller(gp->player[0].controller);
 	lss_player_detect_visible_notes(gp, 0);
+	lss_player_detect_visible_beats(gp, 0);
 	gp->player[0].hittable_notes = 0;
 	for(i = gp->player[0].first_visible_note; i < gp->player[0].last_visible_note; i++)
 	{
@@ -415,7 +473,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	al_hold_bitmap_drawing(true);
 	al_draw_bitmap(gp->fret_board_image, 200, 320, 0);
 	t3f_draw_bitmap(gp->beat_line_image, t3f_color_white, 280, 420 + 4, 0, 0);
-	for(i = 0; i < gp->song->beats; i++)
+	for(i = gp->player[0].first_visible_beat; i <= gp->player[0].last_visible_beat; i++)
 	{
 		z = ((gp->song->beat[i]->tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
 		a = 1.0;
