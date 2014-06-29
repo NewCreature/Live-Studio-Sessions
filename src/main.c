@@ -133,6 +133,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	app->selected_song = 0;
 	app->game.player[0].selected_track = 0;
 	app->game.player[0].selected_difficulty = 0;
+	app->title.current_menu = LSS_MENU_MAIN;
 	return true;
 }
 
