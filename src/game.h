@@ -40,6 +40,10 @@ typedef struct
 	/* list of notes that can be hit */
 	int hittable_note[32];
 	int hittable_notes;
+	
+	/* cache some values for optimization purposes */
+	int first_visible_note;
+	int last_visible_note;
 
 } LSS_PLAYER;
 
