@@ -63,20 +63,20 @@ void lss_title_logic(LSS_TITLE_DATA * dp, APP_INSTANCE * app)
 	{
 		t3f_process_gui(dp->menu[dp->current_menu], app);
 		lss_read_controller(&app->controller[0]);
-		if(t3f_key[ALLEGRO_KEY_UP] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].pressed)
-		{
-			t3f_select_previous_gui_element(dp->menu[dp->current_menu]);
-			t3f_key[ALLEGRO_KEY_UP] = 0;
-		}
-		if(t3f_key[ALLEGRO_KEY_DOWN] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed)
-		{
-			t3f_select_next_gui_element(dp->menu[dp->current_menu]);
-			t3f_key[ALLEGRO_KEY_DOWN] = 0;
-		}
 		if(t3f_key[ALLEGRO_KEY_ENTER] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_GREEN].pressed)
 		{
 			t3f_activate_selected_gui_element(dp->menu[dp->current_menu], app);
 			t3f_key[ALLEGRO_KEY_ENTER] = 0;
+		}
+		else if(t3f_key[ALLEGRO_KEY_UP] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].pressed)
+		{
+			t3f_select_previous_gui_element(dp->menu[dp->current_menu]);
+			t3f_key[ALLEGRO_KEY_UP] = 0;
+		}
+		else if(t3f_key[ALLEGRO_KEY_DOWN] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed)
+		{
+			t3f_select_next_gui_element(dp->menu[dp->current_menu]);
+			t3f_key[ALLEGRO_KEY_DOWN] = 0;
 		}
 	}
 }
