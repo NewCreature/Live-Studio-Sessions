@@ -592,7 +592,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 				if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->hopo)
 				{
 	//				a *= 0.5;
-					note_type = 5;
+					note_type = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val + 5;
 				}
 				else
 				{

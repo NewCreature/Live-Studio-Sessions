@@ -21,33 +21,53 @@ void lss_add_bitmap_to_atlas(T3F_ATLAS * ap, ALLEGRO_BITMAP ** bp, int type)
 
 bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 {
-	gp->note_texture[0] = t3f_load_resource((void *)(&gp->note_texture[0]), T3F_RESOURCE_TYPE_BITMAP, "data/note_green.png", 0, 0, 0);
+	gp->note_texture[0] = t3f_load_resource((void *)(&gp->note_texture[0]), T3F_RESOURCE_TYPE_BITMAP, "data/note_green_strum.png", 0, 0, 0);
 	if(!gp->note_texture[0])
 	{
 		return false;
 	}
-	gp->note_texture[1] = t3f_load_resource((void *)(&gp->note_texture[1]), T3F_RESOURCE_TYPE_BITMAP, "data/note_red.png", 0, 0, 0);
+	gp->note_texture[1] = t3f_load_resource((void *)(&gp->note_texture[1]), T3F_RESOURCE_TYPE_BITMAP, "data/note_red_strum.png", 0, 0, 0);
 	if(!gp->note_texture[1])
 	{
 		return false;
 	}
-	gp->note_texture[2] = t3f_load_resource((void *)(&gp->note_texture[2]), T3F_RESOURCE_TYPE_BITMAP, "data/note_yellow.png", 0, 0, 0);
+	gp->note_texture[2] = t3f_load_resource((void *)(&gp->note_texture[2]), T3F_RESOURCE_TYPE_BITMAP, "data/note_yellow_strum.png", 0, 0, 0);
 	if(!gp->note_texture[2])
 	{
 		return false;
 	}
-	gp->note_texture[3] = t3f_load_resource((void *)(&gp->note_texture[3]), T3F_RESOURCE_TYPE_BITMAP, "data/note_blue.png", 0, 0, 0);
+	gp->note_texture[3] = t3f_load_resource((void *)(&gp->note_texture[3]), T3F_RESOURCE_TYPE_BITMAP, "data/note_blue_strum.png", 0, 0, 0);
 	if(!gp->note_texture[3])
 	{
 		return false;
 	}
-	gp->note_texture[4] = t3f_load_resource((void *)(&gp->note_texture[4]), T3F_RESOURCE_TYPE_BITMAP, "data/note_orange.png", 0, 0, 0);
+	gp->note_texture[4] = t3f_load_resource((void *)(&gp->note_texture[4]), T3F_RESOURCE_TYPE_BITMAP, "data/note_orange_strum.png", 0, 0, 0);
 	if(!gp->note_texture[4])
 	{
 		return false;
 	}
-	gp->note_texture[5] = t3f_load_resource((void *)(&gp->note_texture[5]), T3F_RESOURCE_TYPE_BITMAP, "data/note_tap.png", 0, 0, 0);
+	gp->note_texture[5] = t3f_load_resource((void *)(&gp->note_texture[5]), T3F_RESOURCE_TYPE_BITMAP, "data/note_green.png", 0, 0, 0);
 	if(!gp->note_texture[5])
+	{
+		return false;
+	}
+	gp->note_texture[6] = t3f_load_resource((void *)(&gp->note_texture[6]), T3F_RESOURCE_TYPE_BITMAP, "data/note_red.png", 0, 0, 0);
+	if(!gp->note_texture[6])
+	{
+		return false;
+	}
+	gp->note_texture[7] = t3f_load_resource((void *)(&gp->note_texture[7]), T3F_RESOURCE_TYPE_BITMAP, "data/note_yellow.png", 0, 0, 0);
+	if(!gp->note_texture[7])
+	{
+		return false;
+	}
+	gp->note_texture[8] = t3f_load_resource((void *)(&gp->note_texture[8]), T3F_RESOURCE_TYPE_BITMAP, "data/note_blue.png", 0, 0, 0);
+	if(!gp->note_texture[8])
+	{
+		return false;
+	}
+	gp->note_texture[9] = t3f_load_resource((void *)(&gp->note_texture[9]), T3F_RESOURCE_TYPE_BITMAP, "data/note_orange.png", 0, 0, 0);
+	if(!gp->note_texture[9])
 	{
 		return false;
 	}
@@ -73,6 +93,10 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[3], T3F_ATLAS_SPRITE);
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[4], T3F_ATLAS_SPRITE);
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[5], T3F_ATLAS_SPRITE);
+	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[6], T3F_ATLAS_SPRITE);
+	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[7], T3F_ATLAS_SPRITE);
+	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[8], T3F_ATLAS_SPRITE);
+	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[9], T3F_ATLAS_SPRITE);
 	gp->current_tick = 0;
 	gp->song_audio = lss_load_song_audio(song_path);
 	if(!gp->song_audio)
@@ -99,7 +123,7 @@ void lss_game_exit(LSS_GAME * gp)
 	
 	lss_destroy_song_audio(gp->song_audio);
 	lss_destroy_song(gp->song);
-	for(i = 0; i < 6; i++)
+	for(i = 0; i < 10; i++)
 	{
 		t3f_destroy_resource(gp->note_texture[i]);
 	}
