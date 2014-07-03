@@ -219,6 +219,7 @@ void lss_state_logic(APP_INSTANCE * app)
 			if(t3f_key[ALLEGRO_KEY_ESCAPE])
 			{
 				app->state = LSS_STATE_SONG_SELECT;
+				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 			}
 			break;
 		}
