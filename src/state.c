@@ -58,7 +58,8 @@ void lss_state_logic(APP_INSTANCE * app)
 		}
 		case LSS_STATE_SONG_SELECT:
 		{
-			if(t3f_key[ALLEGRO_KEY_UP])
+			lss_read_controller(&app->controller[0]);
+			if(t3f_key[ALLEGRO_KEY_UP] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].pressed)
 			{
 				app->selected_song--;
 				if(app->selected_song < 0)
@@ -67,7 +68,7 @@ void lss_state_logic(APP_INSTANCE * app)
 				}
 				t3f_key[ALLEGRO_KEY_UP] = 0;
 			}
-			if(t3f_key[ALLEGRO_KEY_DOWN])
+			if(t3f_key[ALLEGRO_KEY_DOWN] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed)
 			{
 				app->selected_song++;
 				if(app->selected_song >= app->song_list->entries)
@@ -94,7 +95,7 @@ void lss_state_logic(APP_INSTANCE * app)
 				}
 				t3f_key[ALLEGRO_KEY_PGDN] = 0;
 			}
-			if(t3f_key[ALLEGRO_KEY_ENTER])
+			if(t3f_key[ALLEGRO_KEY_ENTER] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_GREEN].pressed)
 			{
 				app->game.song = lss_load_song(app->song_list->entry[app->selected_song]->path);
 				lss_enumerate_tracks(app->game.song);
@@ -102,7 +103,7 @@ void lss_state_logic(APP_INSTANCE * app)
 				app->state = LSS_STATE_SONG_SELECT_TRACK;
 				t3f_key[ALLEGRO_KEY_ENTER] = 0;
 			}
-			else if(t3f_key[ALLEGRO_KEY_ESCAPE])
+			else if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
 			{
 				app->state = LSS_STATE_TITLE;
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
@@ -111,13 +112,14 @@ void lss_state_logic(APP_INSTANCE * app)
 		}
 		case LSS_STATE_SONG_SELECT_TRACK:
 		{
-			if(t3f_key[ALLEGRO_KEY_ESCAPE])
+			lss_read_controller(&app->controller[0]);
+			if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
 			{
 				lss_destroy_song(app->game.song);
 				app->state = LSS_STATE_SONG_SELECT;
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 			}
-			if(t3f_key[ALLEGRO_KEY_UP])
+			if(t3f_key[ALLEGRO_KEY_UP] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].pressed)
 			{
 				app->game.player[0].selected_track--;
 				if(app->game.player[0].selected_track < 0)
@@ -126,7 +128,7 @@ void lss_state_logic(APP_INSTANCE * app)
 				}
 				t3f_key[ALLEGRO_KEY_UP] = 0;
 			}
-			if(t3f_key[ALLEGRO_KEY_DOWN])
+			if(t3f_key[ALLEGRO_KEY_DOWN] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed)
 			{
 				app->game.player[0].selected_track++;
 				if(app->game.player[0].selected_track >= lss_tracks)
@@ -135,7 +137,7 @@ void lss_state_logic(APP_INSTANCE * app)
 				}
 				t3f_key[ALLEGRO_KEY_DOWN] = 0;
 			}
-			if(t3f_key[ALLEGRO_KEY_ENTER])
+			if(t3f_key[ALLEGRO_KEY_ENTER] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_GREEN].pressed)
 			{
 				lss_enumerate_difficulties(app->game.song, lss_track[app->game.player[0].selected_track]);
 				app->game.player[0].selected_difficulty = 0;
@@ -146,12 +148,13 @@ void lss_state_logic(APP_INSTANCE * app)
 		}
 		case LSS_STATE_SONG_SELECT_DIFFICULTY:
 		{
-			if(t3f_key[ALLEGRO_KEY_ESCAPE])
+			lss_read_controller(&app->controller[0]);
+			if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
 			{
 				app->state = LSS_STATE_SONG_SELECT_TRACK;
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 			}
-			if(t3f_key[ALLEGRO_KEY_UP])
+			if(t3f_key[ALLEGRO_KEY_UP] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].pressed)
 			{
 				app->game.player[0].selected_difficulty--;
 				if(app->game.player[0].selected_difficulty < 0)
@@ -160,7 +163,7 @@ void lss_state_logic(APP_INSTANCE * app)
 				}
 				t3f_key[ALLEGRO_KEY_UP] = 0;
 			}
-			if(t3f_key[ALLEGRO_KEY_DOWN])
+			if(t3f_key[ALLEGRO_KEY_DOWN] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed)
 			{
 				app->game.player[0].selected_difficulty++;
 				if(app->game.player[0].selected_difficulty > lss_diffs - 1)
@@ -169,7 +172,7 @@ void lss_state_logic(APP_INSTANCE * app)
 				}
 				t3f_key[ALLEGRO_KEY_DOWN] = 0;
 			}
-			if(t3f_key[ALLEGRO_KEY_ENTER])
+			if(t3f_key[ALLEGRO_KEY_ENTER] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_GREEN].pressed)
 			{
 				app->game.song_id = app->song_list->entry[app->selected_song]->id;
 				app->game.player[0].selected_track = lss_track[app->game.player[0].selected_track];
@@ -216,7 +219,8 @@ void lss_state_logic(APP_INSTANCE * app)
 		case LSS_STATE_GAME_RESULTS:
 		{
 			lss_game_results_logic(&app->game);
-			if(t3f_key[ALLEGRO_KEY_ESCAPE])
+			lss_read_controller(&app->controller[0]);
+			if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
 			{
 				app->state = LSS_STATE_SONG_SELECT;
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
