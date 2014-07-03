@@ -50,5 +50,9 @@ Live Studio Sessions Issues
    that moment, we should have enough time to start the streams before the next
    buffer fill is required and get more conistent timing as a result.
 
-[ ]Allow HOPO notes to be played more sloppily by allowing lower fret buttons to
-   be ignored.
+[ ]Improve note hit detection.
+
+   [ ]Hit closest matching note among hittable notes.
+
+   [ ]Allow HOPO notes to be played more sloppily by allowing lower fret buttons to
+      be ignored.
