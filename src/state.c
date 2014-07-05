@@ -154,7 +154,6 @@ void lss_state_logic(APP_INSTANCE * app)
 				app->game.song_id = app->song_list->entry[app->selected_song]->id;
 				app->game.player[0].selected_track = lss_track[app->game.player[0].selected_track];
 				app->game.player[0].selected_difficulty = lss_diff[app->game.player[0].selected_difficulty];
-				app->game.player[0].profile = &app->profiles->entry[0];
 				app->game.player[0].controller = &app->controller[0];
 				if(lss_game_initialize(&app->game, app->song_list->entry[app->selected_song]->path))
 				{
