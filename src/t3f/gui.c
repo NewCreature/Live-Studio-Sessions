@@ -357,7 +357,7 @@ void t3f_activate_selected_gui_element(T3F_GUI * pp, void * data)
 	{
 		if(pp->element[pp->hover_element].proc)
 		{
-			pp->element[pp->hover_element].proc(data, 0, pp);
+			pp->element[pp->hover_element].proc(data, pp->hover_element, pp);
 		}
 	}
 }
