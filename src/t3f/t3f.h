@@ -123,7 +123,7 @@ float t3f_distance(float x1, float y1, float x2, float y2);
 /* keyboard */
 void t3f_clear_keys(void);
 bool t3f_add_key(int key);
-char t3f_read_key(int flags);
+int t3f_read_key(int flags);
 
 /* mouse */
 void t3f_get_mouse_mickeys(int * x, int * y, int * z);

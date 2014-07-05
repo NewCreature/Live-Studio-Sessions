@@ -921,9 +921,9 @@ bool t3f_add_key(int key)
 	return false;
 }
 
-char t3f_read_key(int flags)
+int t3f_read_key(int flags)
 {
-	char rkey = 0;
+	int rkey = 0;
 	if(t3f_key_buffer_keys > 0)
 	{
 		t3f_key_buffer_keys--;
