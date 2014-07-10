@@ -2,6 +2,7 @@
 #include "t3f/resource.h"
 #include "t3f/view.h"
 #include "t3f/draw.h"
+#include "t3f/primitives.h"
 
 #include "resources.h"
 #include "game.h"
@@ -103,6 +104,11 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 	{
 		return false;
 	}
+	gp->primitives = t3f_create_primitives_cache(1024);
+	if(!gp->primitives)
+	{
+		return false;
+	}
 	gp->board_y = 420.0;
 	gp->board_speed = 12.0;
 	lss_initialize_player(gp, 0);
@@ -121,6 +127,7 @@ void lss_game_exit(LSS_GAME * gp)
 {
 	int i;
 	
+	t3f_destroy_primitives_cache(gp->primitives);
 	lss_destroy_song_audio(gp->song_audio);
 	lss_destroy_song(gp->song);
 	for(i = 0; i < 10; i++)

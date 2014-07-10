@@ -2,6 +2,7 @@
 #define LSS_GAME_H
 
 #include "t3f/t3f.h"
+#include "t3f/primitives.h"
 
 #include "controller.h"
 #include "song.h"
@@ -61,6 +62,7 @@ typedef struct
 	ALLEGRO_BITMAP * fret_board_image;
 	ALLEGRO_BITMAP * beat_line_image;
 	T3F_ATLAS * atlas;
+	T3F_PRIMITIVES_CACHE * primitives;
 
 	LSS_PLAYER player[LSS_MAX_PLAYERS];
 	int current_tick;

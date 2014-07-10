@@ -566,10 +566,15 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 					v[4].y = t3f_project_y(420 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], end_z);
 					v[4].z = 0;
 					v[4].color = color;
-					al_draw_prim(v, NULL, NULL, 0, 5, ALLEGRO_PRIM_TRIANGLE_FAN);
+					v[5].x = t3f_project_x(320 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80 - 8, z);
+					v[5].y = t3f_project_y(420 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z);
+					v[5].z = 0;
+					v[5].color = color;
+					t3f_cache_primitive(gp->primitives, v, 6);
 				}
 			}
 		}
+		t3f_flush_cached_primitives(gp->primitives, NULL, ALLEGRO_PRIM_TRIANGLE_LIST);
 		
 		/* render notes */
 		al_hold_bitmap_drawing(true);
