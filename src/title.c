@@ -318,7 +318,7 @@ void lss_title_logic(LSS_TITLE_DATA * dp, APP_INSTANCE * app)
 				t3f_select_next_gui_element(dp->menu[dp->current_menu]);
 				t3f_key[ALLEGRO_KEY_DOWN] = 0;
 			}
-			else if(t3f_key[ALLEGRO_KEY_ESCAPE])
+			else if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
 			{
 				dp->menu[dp->current_menu]->hover_element = 0;
 				t3f_select_previous_gui_element(dp->menu[dp->current_menu]);
