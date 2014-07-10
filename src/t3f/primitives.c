@@ -10,6 +10,7 @@ T3F_PRIMITIVES_CACHE * t3f_create_primitives_cache(int max)
 		cp->vertex = malloc(sizeof(ALLEGRO_VERTEX) * max);
 		if(cp->vertex)
 		{
+			cp->max_vertices = max;
 			cp->vertices = 0;
 		}
 		else
