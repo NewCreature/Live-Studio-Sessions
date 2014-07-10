@@ -17,7 +17,7 @@ Live Studio Sessions Issues
    info under a header using its unique ID. The scores should be stored using
    the same obfuscation technique used by the leaderboard code.
 
-[ ]Make controls configurable.
+[X]Make controls configurable.
 
 [ ]Add a way to adjust AV Delay.
 
