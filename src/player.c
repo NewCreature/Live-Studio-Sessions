@@ -401,38 +401,25 @@ void lss_player_logic(LSS_GAME * gp, int player)
 	}
 }
 
-void lss_player_render_board(LSS_GAME * gp, int player)
+static void lss_player_render_primitive_fretboard(LSS_GAME * gp, int player)
 {
-	float rotate[5] = {-0.06, -0.03, 0.0, 0.03, 0.06};
 	float oy[5] = {3.0 - 4.0, 1.0 - 4.0, 0.0 - 4.0, 1.0 - 4.0, 3.0 - 4.0};
+	float c, cy, z, end_z;
 	ALLEGRO_VERTEX v[32];
-	ALLEGRO_COLOR color;
-	ALLEGRO_COLOR color_chart[5];
-	double a, c, cy, z, end_z;
-	int i, j;
-	bool playing;
-	int note_type;
-
+	
 	c = al_get_bitmap_width(gp->note_texture[0]) / 2;
-	cy = c + c / 4;
-	color_chart[0] = al_map_rgb(0, 150, 0);
-	color_chart[1] = al_map_rgb(139, 0, 0);
-	color_chart[2] = al_map_rgb(192, 192, 0);
-	color_chart[3] = al_map_rgb(0, 0, 204);
-	color_chart[4] = al_map_rgb(215, 78, 0);
-
-	al_hold_bitmap_drawing(false);
-/*	z = -480;
+	cy = c + c / 4 - 2;
+	z = -480;
 	end_z = 2048;
-	v[0].x = t3f_project_x(320 - 32, z);
+	v[0].x = t3f_project_x(320 - 40, z);
 	v[0].y = t3f_project_y(420 + cy + oy[0] + 2.0, z);
 	v[0].z = 0;
 	v[0].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
-	v[1].x = t3f_project_x(320 + 4 * 80 + 32, z);
+	v[1].x = t3f_project_x(320 + 4 * 80 + 40, z);
 	v[1].y = t3f_project_y(420 + cy + oy[0] + 2.0, z);
 	v[1].z = 0;
 	v[1].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
-	v[2].x = t3f_project_x(320 + 4 * 80 + 32, end_z);
+	v[2].x = t3f_project_x(320 + 4 * 80 + 40, end_z);
 	v[2].y = t3f_project_y(420 + cy + oy[0] + 2.0, end_z);
 	v[2].z = 0;
 	v[2].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
@@ -468,23 +455,54 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	v[12].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
 
 	memcpy(&v[13], &v[12], sizeof(ALLEGRO_VERTEX));
-	v[14].x = t3f_project_x(320 + 0 * 80 - 32, end_z);
+	v[14].x = t3f_project_x(320 + 0 * 80 - 40, end_z);
 	v[14].y = t3f_project_y(420 + cy + oy[0] + 2.0, end_z);
 	v[14].z = 0;
 	v[14].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
 
-	al_draw_prim(v, NULL, NULL, 0, 15, ALLEGRO_PRIM_TRIANGLE_FAN); */
+	al_draw_prim(v, NULL, NULL, 0, 15, ALLEGRO_PRIM_TRIANGLE_FAN);
+}
+
+static void lss_player_render_primitive_beat_line(LSS_GAME * gp, int player, double z)
+{
+	float oy[5] = {3.0 - 4.0, 1.0 - 4.0, 0.0 - 4.0, 1.0 - 4.0, 3.0 - 4.0};
+	float c, cy;
 	
-/*	al_draw_line(320 + 0 * 80 - 32, 420 + cy + oy[0] + 2.0, 320 + 0 * 80, 420 + cy + oy[0], t3f_color_white, 2.0);
-	al_draw_line(320 + 0 * 80, 420 + cy + oy[0], 320 + 1 * 80, 420 + cy + oy[1], t3f_color_white, 2.0);
-	al_draw_line(320 + 1 * 80, 420 + cy + oy[1], 320 + 2 * 80, 420 + cy + oy[2], t3f_color_white, 2.0);
-	al_draw_line(320 + 2 * 80, 420 + cy + oy[2], 320 + 3 * 80, 420 + cy + oy[3], t3f_color_white, 2.0);
-	al_draw_line(320 + 3 * 80, 420 + cy + oy[3], 320 + 4 * 80, 420 + cy + oy[4], t3f_color_white, 2.0);
-	al_draw_line(320 + 4 * 80, 420 + cy + oy[4], 320 + 4 * 80 + 32, 420 + cy + oy[4] + 2.0, t3f_color_white, 2.0); */
-	
+	c = al_get_bitmap_width(gp->note_texture[0]) / 2;
+	cy = c + c / 4 - 2;
+	al_draw_line(t3f_project_x(320 + 0 * 80 - 36, z), t3f_project_y(420 + cy + oy[0] + 2.0, z), t3f_project_x(320 + 0 * 80, z), t3f_project_y(420 + cy + oy[0], z), t3f_color_white, 2.0);
+	al_draw_line(t3f_project_x(320 + 0 * 80, z), t3f_project_y(420 + cy + oy[0], z), t3f_project_x(320 + 1 * 80, z), t3f_project_y(420 + cy + oy[1], z), t3f_color_white, 2.0);
+	al_draw_line(t3f_project_x(320 + 1 * 80, z), t3f_project_y(420 + cy + oy[1], z), t3f_project_x(320 + 2 * 80, z), t3f_project_y(420 + cy + oy[2], z), t3f_color_white, 2.0);
+	al_draw_line(t3f_project_x(320 + 2 * 80, z), t3f_project_y(420 + cy + oy[2], z), t3f_project_x(320 + 3 * 80, z), t3f_project_y(420 + cy + oy[3], z), t3f_color_white, 2.0);
+	al_draw_line(t3f_project_x(320 + 3 * 80, z), t3f_project_y(420 + cy + oy[3], z), t3f_project_x(320 + 4 * 80, z), t3f_project_y(420 + cy + oy[4], z), t3f_color_white, 2.0);
+	al_draw_line(t3f_project_x(320 + 4 * 80, z), t3f_project_y(420 + cy + oy[4], z), t3f_project_x(320 + 4 * 80 + 36, z), t3f_project_y(420 + cy + oy[4] + 2.0, z), t3f_color_white, 2.0);
+}
+
+void lss_player_render_board(LSS_GAME * gp, int player)
+{
+	float rotate[5] = {-0.06, -0.03, 0.0, 0.03, 0.06};
+	float oy[5] = {3.0 - 4.0, 1.0 - 4.0, 0.0 - 4.0, 1.0 - 4.0, 3.0 - 4.0};
+	ALLEGRO_VERTEX v[32];
+	ALLEGRO_COLOR color;
+	ALLEGRO_COLOR color_chart[5];
+	double a, c, cy, z, end_z;
+	int i, j;
+	bool playing;
+	int note_type;
+
+	c = al_get_bitmap_width(gp->note_texture[0]) / 2;
+	cy = c + c / 4 - 2;
+	color_chart[0] = al_map_rgb(0, 150, 0);
+	color_chart[1] = al_map_rgb(139, 0, 0);
+	color_chart[2] = al_map_rgb(192, 192, 0);
+	color_chart[3] = al_map_rgb(0, 0, 204);
+	color_chart[4] = al_map_rgb(215, 78, 0);
+
 	al_hold_bitmap_drawing(true);
+//	lss_player_render_primitive_fretboard(gp, player);
 	al_draw_bitmap(gp->fret_board_image, 200, 320, 0);
-	t3f_draw_bitmap(gp->beat_line_image, t3f_color_white, 280, 420 + 4, 0, 0);
+//	lss_player_render_primitive_beat_line(gp, player, 0);
+	t3f_draw_bitmap(gp->beat_line_image, t3f_color_white, 280, 420 + 8, 0, 0);
 	for(i = gp->player[0].first_visible_beat; i <= gp->player[0].last_visible_beat; i++)
 	{
 		z = ((gp->song->beat[i]->tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
@@ -497,7 +515,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 				a = 0.0;
 			}
 		}
-		t3f_draw_bitmap(gp->beat_line_image, al_map_rgba_f(a, a, a, a), 280, 420 + 4, z, 0);
+		t3f_draw_bitmap(gp->beat_line_image, al_map_rgba_f(a, a, a, a), 280, 420 + 8, z, 0);
 		if(z > 1984 + 128.0)
 		{
 			break;
