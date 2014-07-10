@@ -30,11 +30,6 @@ void app_render(void * data)
 
 static bool lss_setup_default_controllers(APP_INSTANCE * app)
 {
-	app->controller[0].controller = t3f_create_controller(8);
-	if(!app->controller[0].controller)
-	{
-		return false;
-	}
 	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_GREEN].type = T3F_CONTROLLER_BINDING_KEY;
 	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_GREEN].button = ALLEGRO_KEY_F1;
 	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_RED].type = T3F_CONTROLLER_BINDING_KEY;
@@ -68,10 +63,15 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Error initializing T3F\n");
 		return false;
 	}
-	if(!lss_setup_default_controllers(app))
+	app->controller[0].controller = t3f_create_controller(8);
+	if(!app->controller[0].controller)
 	{
 		printf("Could not set up controllers!\n");
 		return false;
+	}
+	if(!t3f_read_controller_config(t3f_config, "LSS Guitar", app->controller[0].controller))
+	{
+		lss_setup_default_controllers(app);
 	}
 	if(!lss_load_global_resources(&app->resources))
 	{

@@ -128,6 +128,12 @@ static bool lss_new_profile_entry_callback(void * data, int c)
 /* options menu */
 int lss_menu_proc_options_controllers(void * data, int i, void * p)
 {
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	if(lss_create_controller_menu(app))
+	{
+		lss_select_menu(&app->title, LSS_MENU_CONTROLLER);
+	}
 	return 1;
 }
 
@@ -141,6 +147,29 @@ int lss_menu_proc_options_back(void * data, int i, void * p)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	lss_select_menu(&app->title, LSS_MENU_MAIN);
+	return 1;
+}
+
+/* controllers menu */
+int lss_menu_proc_options_controller_set(void * data, int i, void * p)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	al_stop_timer(t3f_timer);
+	t3f_bind_controller(app->controller[0].controller, i - 1);
+	t3f_write_controller_config(t3f_config, "LSS Guitar", app->controller[0].controller);
+	t3f_destroy_gui(app->title.menu[LSS_MENU_CONTROLLER]);
+	lss_create_controller_menu(app);
+	app->title.menu[LSS_MENU_CONTROLLER]->hover_element = i;
+	al_start_timer(t3f_timer);
+	return 1;
+}
+
+int lss_menu_proc_options_controller_back(void * data, int i, void * p)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	lss_select_menu(&app->title, LSS_MENU_OPTIONS);
 	return 1;
 }
 
@@ -169,6 +198,45 @@ bool lss_create_profiles_menu(APP_INSTANCE * app)
 		pos += 24;
 	}
 	t3f_add_gui_text_element(app->title.menu[LSS_MENU_PROFILES], lss_menu_proc_profiles_back, "Back", app->resources.font[LSS_FONT_SMALL], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	return true;
+}
+
+bool lss_create_controller_menu(APP_INSTANCE * app)
+{
+	int pos;
+	char buf[256];
+
+	/* controllers menu */
+	app->title.menu[LSS_MENU_CONTROLLER] = t3f_create_gui(0, 0);
+	if(!app->title.menu[LSS_MENU_CONTROLLER])
+	{
+		return false;
+	}
+	pos = 0;
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], NULL, "Live Studio Sessions - Controller Setup", app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
+	pos += 48;
+	sprintf(buf, "Green Fret (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_GREEN), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_GREEN));
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, app->resources.font[LSS_FONT_SMALL], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	pos += 24;
+	sprintf(buf, "Red Fret (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_RED), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_RED));
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, app->resources.font[LSS_FONT_SMALL], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	pos += 24;
+	sprintf(buf, "Yellow Fret (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_YELLOW), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_YELLOW));
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, app->resources.font[LSS_FONT_SMALL], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	pos += 24;
+	sprintf(buf, "Blue Fret (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_BLUE), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_BLUE));
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, app->resources.font[LSS_FONT_SMALL], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	pos += 24;
+	sprintf(buf, "Orange Fret (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_ORANGE), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_ORANGE));
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, app->resources.font[LSS_FONT_SMALL], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	pos += 24;
+	sprintf(buf, "Strum Down (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN));
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, app->resources.font[LSS_FONT_SMALL], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	pos += 24;
+	sprintf(buf, "Strum Up (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP));
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, app->resources.font[LSS_FONT_SMALL], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	pos += 24;
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_back, "Back", app->resources.font[LSS_FONT_SMALL], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 	return true;
 }
 
