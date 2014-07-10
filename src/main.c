@@ -128,6 +128,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		return false;
 	}
+	app->title.block_count = 0;
 	app->state = LSS_STATE_TITLE;
 	app->game.av_delay = 15;
 	app->selected_song = 0;

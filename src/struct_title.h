@@ -10,6 +10,7 @@ typedef struct
 	
 	T3F_GUI * menu[LSS_MAX_MENUS];
 	int current_menu;
+	int block_count;
 	
 } LSS_TITLE_DATA;
 
