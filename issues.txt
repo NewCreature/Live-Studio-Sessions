@@ -23,9 +23,9 @@ Live Studio Sessions Issues
 
 [ ]Add touch screen controls.
 
-[ ]Fix beat lines.
+[X]Fix beat lines.
 
-   [ ]When two beat markers are sufficiently close, they should be merged.
+   [X]When two beat markers are sufficiently close, they should be merged.
    
    [ ]Make beat line generation code more robust so it can handle "non-standard"
       positioning of tempo changes.
