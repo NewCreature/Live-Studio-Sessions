@@ -19,7 +19,7 @@ Live Studio Sessions Issues
 
 [X]Make controls configurable.
 
-[ ]Add a way to adjust AV Delay.
+[X]Add a way to adjust AV Delay.
 
 [ ]Add touch screen controls.
 
