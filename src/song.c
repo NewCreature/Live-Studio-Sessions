@@ -260,7 +260,7 @@ bool lss_song_mark_beats(LSS_SONG * sp, double total_length)
 			/* get new BPM if we are sitting on a tempo change */
 			if(current_beat_event < sp->source_midi->tempo_events)
 			{
-				if(current_time >= sp->source_midi->tempo_event[current_beat_event]->pos_sec)
+				if(current_time >= sp->source_midi->tempo_event[current_beat_event]->pos_sec - 0.05)
 				{
 					current_time = sp->source_midi->tempo_event[current_beat_event]->pos_sec;
 					current_beat_event++;
