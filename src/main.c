@@ -131,6 +131,11 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	app->title.block_count = 0;
 	app->state = LSS_STATE_TITLE;
 	app->game.av_delay = 15;
+	val = al_get_config_value(t3f_config, "Live Studio Sessions", "av_delay");
+	if(val)
+	{
+		app->game.av_delay = atoi(val);
+	}
 	app->selected_song = 0;
 	app->game.player[0].selected_track = 0;
 	app->game.player[0].selected_difficulty = 0;

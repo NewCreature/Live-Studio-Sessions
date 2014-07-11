@@ -137,8 +137,35 @@ int lss_menu_proc_options_controllers(void * data, int i, void * p)
 	return 1;
 }
 
-int lss_menu_proc_options_av_setup(void * data, int i, void * p)
+int lss_menu_proc_options_av_setup(void * data, int ip, void * p)
 {
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int i, j;
+
+	app->game.song = lss_load_song(app->song_list->entry[0]->path);
+	if(app->game.song)
+	{
+		for(i = 0; i < app->game.song->source_midi->tracks; i++)
+		{
+			for(j = 0; j < 4; j++)
+			{
+				if(app->game.song->track[i][j].notes > 5)
+				{
+					app->game.player[0].selected_track = i;
+					app->game.player[0].selected_difficulty = j;
+					i = 100;
+					break;
+				}
+			}
+		}
+		app->game.song_id = app->song_list->entry[0]->id;
+		app->game.player[0].profile = &app->profiles->entry[0];
+		app->game.player[0].controller = &app->controller[0];
+		if(lss_game_initialize(&app->game, app->song_list->entry[0]->path))
+		{
+			app->state = LSS_STATE_AV_SETUP;
+		}
+	}
 	return 1;
 }
 

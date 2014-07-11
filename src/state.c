@@ -5,6 +5,7 @@
 #include "game_results.h"
 #include "title.h"
 #include "obfuscate.h"
+#include "state_av_setup.h"
 
 static int lss_track[16];
 static int lss_tracks = 0;
@@ -226,6 +227,15 @@ void lss_state_logic(APP_INSTANCE * app)
 			}
 			break;
 		}
+		case LSS_STATE_AV_SETUP:
+		{
+			lss_state_av_setup_logic(app);
+			if(app->game.done)
+			{
+				app->state = LSS_STATE_TITLE;
+			}
+			break;
+		}
 	}
 }
 
@@ -302,6 +312,11 @@ void lss_state_render(APP_INSTANCE * app)
 		case LSS_STATE_GAME_RESULTS:
 		{
 			lss_game_results_render(&app->game, &app->resources);
+			break;
+		}
+		case LSS_STATE_AV_SETUP:
+		{
+			lss_state_av_setup_render(app);
 			break;
 		}
 	}
