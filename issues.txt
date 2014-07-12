@@ -23,6 +23,10 @@ Live Studio Sessions Issues
 
 [ ]Add touch screen controls.
 
+   [ ]Add on-screen display of controller layout.
+   
+   [ ]Allow song list to be navigated with touch.
+
 [X]Fix beat lines.
 
    [X]When two beat markers are sufficiently close, they should be merged.
