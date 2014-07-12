@@ -9,6 +9,9 @@
 #define LSS_CONTROLLER_TYPE_KEYBOARD 1
 #define LSS_CONTROLLER_TYPE_MIDI     2
 
+#define LSS_CONTROLLER_SOURCE_CONTROLLER 0
+#define LSS_CONTROLLER_SOURCE_TOUCH      1
+
 #define LSS_CONTROLLER_BINDING_GUITAR_GREEN      0
 #define LSS_CONTROLLER_BINDING_GUITAR_RED        1
 #define LSS_CONTROLLER_BINDING_GUITAR_YELLOW     2
@@ -22,7 +25,11 @@ typedef struct
 {
 
 	T3F_CONTROLLER * controller;
-	int type;
+	int type, source;
+	
+	/* touch-specific info */
+	float old_strum_pos;
+	int strum_touch;
 
 } LSS_CONTROLLER;
 

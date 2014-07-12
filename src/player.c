@@ -200,6 +200,10 @@ void lss_initialize_player(LSS_GAME * gp, int player)
 	{
 		gp->player[0].high_score = lss_unobfuscate_value(atoi(val));
 	}
+	if(gp->player[0].controller->source == LSS_CONTROLLER_SOURCE_TOUCH)
+	{
+		gp->player[0].controller->strum_touch = -1;
+	}
 	gp->player[0].first_visible_note = -1;
 	gp->player[0].last_visible_note = -1;
 	gp->player[0].first_visible_beat = -1;

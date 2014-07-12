@@ -69,10 +69,16 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Could not set up controllers!\n");
 		return false;
 	}
-	if(!t3f_read_controller_config(t3f_config, "LSS Guitar", app->controller[0].controller))
-	{
-		lss_setup_default_controllers(app);
-	}
+	app->controller[0].type = LSS_CONTROLLER_TYPE_GUITAR;
+	#ifndef T3F_ANDROID
+		app->controller[0].source = LSS_CONTROLLER_SOURCE_CONTROLLER;
+		if(!t3f_read_controller_config(t3f_config, "LSS Guitar", app->controller[0].controller))
+		{
+			lss_setup_default_controllers(app);
+		}
+	#else
+		app->controller[0].source = LSS_CONTROLLER_SOURCE_TOUCH;
+	#endif
 	if(!lss_load_global_resources(&app->resources))
 	{
 		printf("Could not load global resources!\n");
