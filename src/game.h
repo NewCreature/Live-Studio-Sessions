@@ -18,6 +18,14 @@
 typedef struct
 {
 
+	int note[32];
+	int notes;
+
+} LSS_PLAYER_NOTE_GROUP;
+
+typedef struct
+{
+
 	LSS_PROFILE * profile;
 	LSS_CONTROLLER * controller; //pointer to controller used by player
 	
@@ -31,17 +39,10 @@ typedef struct
 	
 	int hit_notes, missed_notes;
 
-	int next_note[32];
-	int next_notes;
+	LSS_PLAYER_NOTE_GROUP next_notes;
+	LSS_PLAYER_NOTE_GROUP playing_notes;
+	LSS_PLAYER_NOTE_GROUP hittable_notes[16];
 
-	/* list of currently playing notes */
-	int playing_note[32];
-	int playing_notes;
-	
-	/* list of notes that can be hit */
-	int hittable_note[32];
-	int hittable_notes;
-	
 	/* cache some values for optimization purposes */
 	int first_visible_note;
 	int last_visible_note;
