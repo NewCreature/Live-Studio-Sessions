@@ -65,6 +65,30 @@ static bool lss_player_check_notes(LSS_SONG * sp, LSS_PLAYER * pp, int note[], i
 	return false;
 }
 
+static bool lss_player_check_notes_lenient(LSS_SONG * sp, LSS_PLAYER * pp, int note[], int notes)
+{
+	int lane = 0;
+	int tap_lane = 0;
+	int i;
+
+	for(i = 0; i < notes; i++)
+	{
+		lane |= (1 << sp->track[pp->selected_track][pp->selected_difficulty].note[note[i]]->val);
+	}
+	for(i = 0; i < 5; i++)
+	{
+		if(pp->controller->controller->state[i].held)
+		{
+			tap_lane |= (1 << i);
+		}
+	}
+	if((lane & tap_lane) == lane && (lane | tap_lane) <= (lane << 1))
+	{
+		return true;
+	}
+	return false;
+}
+
 static int lss_player_check_visibility(double z, double end_z)
 {
 	if(z <= 2048.0 + 128.0 && end_z > -640.0)
@@ -215,6 +239,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 {
 	int i, d, m, t;
 	bool missed = false;
+	bool dropped = false;
 	int points = 0;
 	int stream;
 	int life_add;
@@ -305,7 +330,21 @@ void lss_player_logic(LSS_GAME * gp, int player)
 			/* continue sustain */
 			else
 			{
-				if(!lss_player_check_notes(gp->song, &gp->player[0], gp->player[0].playing_note, gp->player[0].playing_notes))
+				if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_note[0]]->hopo)
+				{
+					if(!lss_player_check_notes_lenient(gp->song, &gp->player[0], gp->player[0].playing_note, gp->player[0].playing_notes))
+					{
+						dropped = true;
+					}
+				}
+				else
+				{
+					if(!lss_player_check_notes(gp->song, &gp->player[0], gp->player[0].playing_note, gp->player[0].playing_notes))
+					{
+						dropped = true;
+					}
+				}
+				if(dropped)
 				{
 					if(gp->song_audio->streams > 1)
 					{
@@ -337,7 +376,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 		/* see if we are hitting a HOPO note */
 		if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_note[0]]->hopo && gp->player[0].streak > 0)
 		{
-			if(lss_player_check_notes(gp->song, &gp->player[0], gp->player[0].next_note, gp->player[0].next_notes))
+			if(lss_player_check_notes_lenient(gp->song, &gp->player[0], gp->player[0].next_note, gp->player[0].next_notes))
 			{
 				if(gp->song_audio->streams > 1)
 				{
