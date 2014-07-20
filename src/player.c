@@ -43,22 +43,22 @@ static bool lss_player_get_next_notes(LSS_SONG * sp, LSS_PLAYER * pp)
 
 static bool lss_player_check_notes(LSS_SONG * sp, LSS_PLAYER * pp, int note[], int notes)
 {
-	int lane[8] = {0};
-	int tap_lane[8] = {0};
+	int lane = 0;
+	int tap_lane = 0;
 	int i;
 
 	for(i = 0; i < notes; i++)
 	{
-		lane[sp->track[pp->selected_track][pp->selected_difficulty].note[note[i]]->val] = 1;
+		lane |= (1 << sp->track[pp->selected_track][pp->selected_difficulty].note[note[i]]->val);
 	}
 	for(i = 0; i < 5; i++)
 	{
 		if(pp->controller->controller->state[i].held)
 		{
-			tap_lane[i] = 1;
+			tap_lane |= (1 << i);
 		}
 	}
-	if(!memcmp(lane, tap_lane, sizeof(int) * 8))
+	if(lane == tap_lane)
 	{
 		return true;
 	}
