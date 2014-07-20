@@ -42,6 +42,7 @@ typedef struct
 	LSS_PLAYER_NOTE_GROUP next_notes;
 	LSS_PLAYER_NOTE_GROUP playing_notes;
 	LSS_PLAYER_NOTE_GROUP hittable_notes[16];
+	int hittable_notes_groups;
 
 	/* cache some values for optimization purposes */
 	int first_visible_note;
