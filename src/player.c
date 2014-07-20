@@ -6,6 +6,20 @@
 #include "player.h"
 #include "obfuscate.h"
 
+static bool lss_player_set_next_notes(LSS_SONG * sp, LSS_PLAYER * pp, int cur_note)
+{
+	int cur_tick = sp->track[pp->selected_track][pp->selected_difficulty].note[cur_note]->tick;
+
+	pp->next_notes = 0;
+	while(cur_note < sp->track[pp->selected_track][pp->selected_difficulty].notes && sp->track[pp->selected_track][pp->selected_difficulty].note[cur_note]->tick == cur_tick)
+	{
+		pp->next_note[pp->next_notes] = cur_note;
+		pp->next_notes++;
+		cur_note++;
+	}
+	return true;
+}
+
 static bool lss_player_get_next_notes(LSS_SONG * sp, LSS_PLAYER * pp)
 {
 	int cur_note = pp->next_note[pp->next_notes - 1];
@@ -27,14 +41,7 @@ static bool lss_player_get_next_notes(LSS_SONG * sp, LSS_PLAYER * pp)
 		/* found next note */
 		if(sp->track[pp->selected_track][pp->selected_difficulty].note[cur_note]->tick != cur_tick)
 		{
-			cur_tick = sp->track[pp->selected_track][pp->selected_difficulty].note[cur_note]->tick;
-			while(cur_note < sp->track[pp->selected_track][pp->selected_difficulty].notes && sp->track[pp->selected_track][pp->selected_difficulty].note[cur_note]->tick == cur_tick)
-			{
-				pp->next_note[pp->next_notes] = cur_note;
-				pp->next_notes++;
-				cur_note++;
-			}
-			return true;
+			return lss_player_set_next_notes(sp, pp, cur_note);
 		}
 		cur_note++;
 	}
