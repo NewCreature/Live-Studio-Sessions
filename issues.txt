@@ -21,11 +21,37 @@ Live Studio Sessions Issues
 
 [X]Add a way to adjust AV Delay.
 
+[X]Improve note hit detection.
+
+   [X]Hit closest matching note among hittable notes.
+
+   [X]Allow HOPO notes to be played more sloppily by allowing lower fret buttons to
+      be ignored.
+
 [ ]Add touch screen controls.
 
    [ ]Add on-screen display of controller layout.
    
    [ ]Allow song list to be navigated with touch.
+
+[ ]Figure out why last note cannot be played.
+
+[ ]Add support for forced HOPO.
+
+[ ]Adjust board scroll speed and note positioning according to BPM.
+
+   All the game's logic will operate in ticks. Only the rendering will be
+   affected by these proposed changes.
+
+   [ ]Store note z-coordinates at init and use those during rendering.
+   
+   [ ]Add camera so we can traverse the board.
+   
+   [ ]Change camera speed when crossing a tempo event.
+   
+      [ ]Store tempo events in LSS_SONG. We want to keep real-time calculations
+         to a minimum so we should store a copy of each tempo event with time
+         converted to in-game ticks.
 
 [X]Fix beat lines.
 
@@ -54,9 +80,3 @@ Live Studio Sessions Issues
    that moment, we should have enough time to start the streams before the next
    buffer fill is required and get more conistent timing as a result.
 
-[ ]Improve note hit detection.
-
-   [ ]Hit closest matching note among hittable notes.
-
-   [ ]Allow HOPO notes to be played more sloppily by allowing lower fret buttons to
-      be ignored.
