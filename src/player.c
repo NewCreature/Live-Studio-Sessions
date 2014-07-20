@@ -365,17 +365,20 @@ void lss_player_logic(LSS_GAME * gp, int player)
 				}
 				else
 				{
-					for(i = 0; i < gp->player[0].playing_notes; i++)
+					if(gp->current_tick - gp->av_delay >= gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_note[0]]->tick)
 					{
-						gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_note[i]]->play_tick = gp->current_tick - gp->av_delay;
+						for(i = 0; i < gp->player[0].playing_notes; i++)
+						{
+							gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_note[i]]->play_tick = gp->current_tick - gp->av_delay;
+						}
+						m = gp->player[0].streak / 8 + 1;
+						if(m > 4)
+						{
+							m = 4;
+						}
+						points = gp->player[0].playing_notes * LSS_GAME_NOTE_SUSTAIN_BASE_POINTS * m;
+						gp->player[0].score += points;
 					}
-					m = gp->player[0].streak / 8 + 1;
-					if(m > 4)
-					{
-						m = 4;
-					}
-					points = gp->player[0].playing_notes * LSS_GAME_NOTE_SUSTAIN_BASE_POINTS * m;
-					gp->player[0].score += points;
 				}
 			}
 		}
