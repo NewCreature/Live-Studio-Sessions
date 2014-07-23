@@ -30,13 +30,13 @@ Live Studio Sessions Issues
 
 [X]Figure out why last note cannot be played.
 
+[X]Add support for forced HOPO.
+
 [ ]Add touch screen controls.
 
    [ ]Add on-screen display of controller layout.
    
    [ ]Allow song list to be navigated with touch.
-
-[ ]Add support for forced HOPO.
 
 [ ]Adjust board scroll speed and note positioning according to BPM.
 
