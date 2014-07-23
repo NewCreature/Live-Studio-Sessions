@@ -28,6 +28,61 @@ static int lss_song_get_event_difficulty(LSS_SONG * sp, int track, int event)
 	return difficulty;
 }
 
+/* backtrack to first event at this position in this difficulty and see if there
+ * are any forced-HOPO markings, return 0 for no forced status, 1 for on, and 2 for off */
+static int lss_song_get_note_forced_hopo_status(LSS_SONG * sp, int track, int event)
+{
+	int difficulty;
+	int current_event = event;
+	int last_event;
+	int mark;
+	
+	difficulty = lss_song_get_event_difficulty(sp, track, event);
+	/* find first event that occurs at the same tick as 'event' */
+	while(sp->source_midi->track[track]->event[current_event]->tick == sp->source_midi->track[track]->event[event]->tick)
+	{
+		last_event = current_event;
+		current_event--;
+		if(current_event < 0)
+		{
+			current_event = 0;
+			break;
+		}
+	}
+	current_event = last_event;
+	
+	/* check all events that occur at the same tick as 'event' to see if any of
+	 * them are forced-HOPO marks */
+	while(sp->source_midi->track[track]->event[current_event]->tick == sp->source_midi->track[track]->event[event]->tick)
+	{
+		if(lss_song_get_event_difficulty(sp, track, current_event) == difficulty)
+		{
+			if(sp->source_midi->track[track]->event[current_event]->type == RTK_MIDI_EVENT_TYPE_NOTE_ON && sp->source_midi->track[track]->event[current_event]->data_i[1] != 0)
+			{
+				mark = sp->source_midi->track[track]->event[current_event]->data_i[0] - lss_song_difficulty_range_start[difficulty];
+
+				/* found forced HOPO on */
+				if(mark == 5)
+				{
+					return 1;
+				}
+				
+				/* found forced HOPO off */
+				else if(mark == 6)
+				{
+					return 2;
+				}
+			}
+		}
+		current_event++;
+		if(current_event >= sp->source_midi->track[track]->events)
+		{
+			break;
+		}
+	}
+	return 0;
+}
+
 static bool lss_song_allocate_notes(LSS_SONG * sp)
 {
 	int i, j, k;
@@ -101,7 +156,7 @@ static bool lss_song_populate_tracks(LSS_SONG * sp)
 	int note_off_event;
 	int previous_note_tick[16] = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
 	bool chord[16] = {false};
-	int hopo_threshold;
+	int hopo_threshold, hopo_forced;
 	int stream;
 
 	hopo_threshold = sp->source_midi->raw_data->divisions / 3; // 12th note
@@ -150,6 +205,8 @@ static bool lss_song_populate_tracks(LSS_SONG * sp)
 						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->active = true;
 						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->visible = true;
 						
+						hopo_forced = lss_song_get_note_forced_hopo_status(sp, i, j);
+
 						/* check for auto HOPO status (12th note or shorter) */
 						if(previous_note_tick[difficulty] >= 0)
 						{
@@ -170,7 +227,7 @@ static bool lss_song_populate_tracks(LSS_SONG * sp)
 								}
 								chord[difficulty] = false;
 							}
-							else
+							else if(hopo_forced == 0)
 							{
 								sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->hopo = false;
 								
@@ -181,6 +238,15 @@ static bool lss_song_populate_tracks(LSS_SONG * sp)
 								}
 								chord[difficulty] = true;
 							}
+						}
+						/* override autodetected HOPO status if forced HOPO detected */
+						if(hopo_forced == 1)
+						{
+							sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->hopo = true;
+						}
+						else if(hopo_forced == 2)
+						{
+							sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->hopo = false;
 						}
 						sp->track[i][difficulty].note_count++;
 					}
