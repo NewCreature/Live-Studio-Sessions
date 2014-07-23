@@ -261,7 +261,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 	/* find all hittable notes */
 	if(gp->player[0].next_notes.notes > 0)
 	{
-		for(i = gp->player[0].first_visible_note; i < gp->player[0].last_visible_note; i++)
+		for(i = gp->player[0].first_visible_note; i <= gp->player[0].last_visible_note; i++)
 		{
 			/* only allow notes at or past current note to be hittable */
 			if(i >= gp->player[0].next_notes.note[0])
