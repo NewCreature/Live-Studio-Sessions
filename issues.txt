@@ -28,13 +28,13 @@ Live Studio Sessions Issues
    [X]Allow HOPO notes to be played more sloppily by allowing lower fret buttons to
       be ignored.
 
+[X]Figure out why last note cannot be played.
+
 [ ]Add touch screen controls.
 
    [ ]Add on-screen display of controller layout.
    
    [ ]Allow song list to be navigated with touch.
-
-[ ]Figure out why last note cannot be played.
 
 [ ]Add support for forced HOPO.
 
