@@ -2,6 +2,7 @@
 
 #include "instance.h"
 #include "state.h"
+#include "state_game.h"
 
 static int lss_track[16];
 static int lss_tracks = 0;

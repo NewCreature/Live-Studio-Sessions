@@ -1,4 +1,4 @@
-#include "game.h"
+#include "state_game.h"
 
 void lss_game_results_logic(LSS_GAME * gp)
 {

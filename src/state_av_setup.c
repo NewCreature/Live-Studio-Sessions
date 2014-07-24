@@ -1,5 +1,5 @@
 #include "instance.h"
-#include "player.h"
+#include "state_game_player.h"
 
 void lss_state_av_setup_logic(APP_INSTANCE * app)
 {

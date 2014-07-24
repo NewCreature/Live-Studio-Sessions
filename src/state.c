@@ -1,10 +1,11 @@
 #include "t3net/t3net.h"
 
 #include "instance.h"
-#include "state.h"
-#include "game_results.h"
-#include "title.h"
 #include "obfuscate.h"
+#include "state.h"
+#include "state_game.h"
+#include "state_game_results.h"
+#include "state_title.h"
 #include "state_av_setup.h"
 #include "state_song_list.h"
 

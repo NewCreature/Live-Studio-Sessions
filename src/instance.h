@@ -5,7 +5,7 @@
 #include "controller.h"
 #include "song_list.h"
 #include "profile.h"
-#include "game.h"
+#include "struct_game.h"
 #include "struct_title.h"
 #include "defines_title.h"
 

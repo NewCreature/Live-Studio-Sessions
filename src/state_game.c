@@ -5,8 +5,8 @@
 #include "t3f/primitives.h"
 
 #include "resources.h"
-#include "game.h"
-#include "player.h"
+#include "state_game.h"
+#include "state_game_player.h"
 
 void lss_add_bitmap_to_atlas(T3F_ATLAS * ap, ALLEGRO_BITMAP ** bp, int type)
 {

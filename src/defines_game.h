@@ -1,0 +1,9 @@
+#ifndef LSS_DEFINES_GAME_H
+#define LSS_DEFINES_GAME_H
+
+#define LSS_MAX_PLAYERS 8
+
+#define LSS_GAME_NOTE_BASE_POINTS          50
+#define LSS_GAME_NOTE_SUSTAIN_BASE_POINTS   5
+
+#endif

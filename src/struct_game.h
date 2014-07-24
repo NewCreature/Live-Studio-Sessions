@@ -1,19 +1,14 @@
-#ifndef LSS_GAME_H
-#define LSS_GAME_H
+#ifndef LSS_STRUCT_GAME_H
+#define LSS_STRUCT_GAME_H
 
-#include "t3f/t3f.h"
 #include "t3f/primitives.h"
 
-#include "controller.h"
-#include "song.h"
+#include "defines_game.h"
+
 #include "song_audio.h"
-#include "resources.h"
+#include "song.h"
 #include "profile.h"
-
-#define LSS_MAX_PLAYERS 8
-
-#define LSS_GAME_NOTE_BASE_POINTS          50
-#define LSS_GAME_NOTE_SUSTAIN_BASE_POINTS   5
+#include "controller.h"
 
 typedef struct
 {
@@ -76,10 +71,5 @@ typedef struct
 	double board_speed;
 
 } LSS_GAME;
-
-bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path);
-void lss_game_exit(LSS_GAME * gp);
-void lss_game_logic(LSS_GAME * gp);
-void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp);
 
 #endif

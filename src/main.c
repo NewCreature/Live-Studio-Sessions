@@ -10,11 +10,10 @@
 #include "song_list.h"
 #include "song_audio.h"
 #include "song.h"
-#include "player.h"
-#include "game.h"
+#include "state_game.h"
 #include "resources.h"
 #include "controller.h"
-#include "title.h"
+#include "state_title.h"
 
 /* main logic routine */
 void app_logic(void * data)
