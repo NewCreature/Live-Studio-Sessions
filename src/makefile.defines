@@ -14,7 +14,7 @@ APP_PUBLISHER = T\^3\ Software
 APP_COPYRIGHT = Copyright\ (C)\ 2013\ T\^3\ Software
 APP_ANDROID_PACKAGE = com.t3i.livestudiosessions
 APP_URL = http://www.t3-i.com
-APP_OBJECTS = rtk/io.o rtk/midi.o t3net/t3net.o main.o state.o song_list.o song_audio.o song.o game.o game_results.o resources.o controller.o player.o profile.o title.o obfuscate.o text_entry.o state_av_setup.o
+APP_OBJECTS = rtk/io.o rtk/midi.o t3net/t3net.o main.o state.o song_list.o song_audio.o song.o game.o game_results.o resources.o controller.o player.o profile.o title.o obfuscate.o text_entry.o state_av_setup.o state_song_list.o
 APP_LIBS = -lmxml
 #APP_CFLAGS = 
 
