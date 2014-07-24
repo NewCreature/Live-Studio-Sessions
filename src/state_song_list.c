@@ -9,6 +9,10 @@ static int lss_tracks = 0;
 static int lss_diff[4];
 static int lss_diffs = 0;
 
+static double lss_song_list_scroll_pos = 0.0;
+static double lss_song_list_touch_pos = 0.0;
+static int lss_song_list_touch_id = -1;
+
 static void lss_enumerate_tracks(LSS_SONG * sp)
 {
 	int i, j;
@@ -43,8 +47,45 @@ static void lss_enumerate_difficulties(LSS_SONG * sp, int track)
 	}
 }
 
+/* detect touch screen scroll */
+static void lss_state_song_list_touch_scroll_logic(APP_INSTANCE * app)
+{
+	int i;
+
+	if(lss_song_list_touch_id < 0)
+	{
+		for(i = 0; i < T3F_MAX_TOUCHES; i++)
+		{
+			if(t3f_touch[i].active)
+			{
+				lss_song_list_touch_pos = t3f_touch[i].y;
+				lss_song_list_touch_id = i;
+				break;
+			}
+		}
+	}
+	
+	if(lss_song_list_touch_id >= 0)
+	{
+		if(t3f_touch[lss_song_list_touch_id].active)
+		{
+			lss_song_list_scroll_pos -= t3f_touch[lss_song_list_touch_id].y - lss_song_list_touch_pos;
+			lss_song_list_touch_pos = t3f_touch[lss_song_list_touch_id].y;
+		}
+		else
+		{
+			lss_song_list_touch_id = -1;
+		}
+	}
+	if(lss_song_list_scroll_pos < 0)
+	{
+		lss_song_list_scroll_pos = 0;
+	}
+}
+
 void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 {
+	lss_state_song_list_touch_scroll_logic(app);
 	lss_read_controller(&app->controller[0]);
 	if(t3f_key[ALLEGRO_KEY_ENTER] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_GREEN].pressed)
 	{
@@ -101,8 +142,9 @@ void lss_state_song_list_song_select_render(APP_INSTANCE * app)
 {
 	ALLEGRO_COLOR color;
 	int i;
+	int start_song = lss_song_list_scroll_pos / 20;
 
-	for(i = 0; i < 20 && i + app->selected_song < app->song_list->entries; i++)
+	for(i = start_song; i < start_song + 20 && i + app->selected_song < app->song_list->entries; i++)
 	{
 		if(i == 0)
 		{
@@ -112,7 +154,7 @@ void lss_state_song_list_song_select_render(APP_INSTANCE * app)
 		{
 			color = al_map_rgba_f(0.5, 0.5, 0.5, 1.0);
 		}
-		al_draw_textf(app->resources.font[LSS_FONT_SMALL], color, 0, i * 20, 0, "%s - %s", app->song_list->entry[app->selected_song + i]->artist, app->song_list->entry[app->selected_song + i]->title);
+		al_draw_textf(app->resources.font[LSS_FONT_SMALL], color, 0, i * 20 - lss_song_list_scroll_pos, 0, "%s - %s", app->song_list->entry[app->selected_song + i]->artist, app->song_list->entry[app->selected_song + i]->title);
 	}
 }
 
