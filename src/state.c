@@ -1,7 +1,8 @@
 #include "t3net/t3net.h"
 
+#include "modules/obfuscate.h"
+
 #include "instance.h"
-#include "obfuscate.h"
 #include "state.h"
 #include "state_game.h"
 #include "state_game_results.h"

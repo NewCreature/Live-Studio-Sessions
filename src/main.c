@@ -4,15 +4,16 @@
 #include "t3f/view.h"
 
 #include "rtk/midi.h"
+#include "modules/song_list.h"
+#include "modules/song_audio.h"
+#include "modules/song.h"
+#include "modules/controller.h"
 
 #include "instance.h"
-#include "state.h"
-#include "song_list.h"
-#include "song_audio.h"
-#include "song.h"
-#include "state_game.h"
 #include "resources.h"
-#include "controller.h"
+
+#include "state.h"
+#include "state_game.h"
 #include "state_title.h"
 
 /* main logic routine */

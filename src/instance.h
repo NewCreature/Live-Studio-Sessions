@@ -2,9 +2,9 @@
 #define LSS_INSTANCE_H
 
 #include "resources.h"
-#include "controller.h"
-#include "song_list.h"
-#include "profile.h"
+#include "modules/controller.h"
+#include "modules/song_list.h"
+#include "modules/profile.h"
 #include "struct_game.h"
 #include "struct_title.h"
 #include "defines_title.h"

@@ -2,9 +2,9 @@
 #include "t3f/view.h"
 #include "t3f/draw.h"
 
-#include "struct_game.h"
+#include "modules/obfuscate.h"
 
-#include "obfuscate.h"
+#include "struct_game.h"
 
 static bool lss_player_set_next_notes(LSS_SONG * sp, LSS_PLAYER * pp, int cur_note)
 {

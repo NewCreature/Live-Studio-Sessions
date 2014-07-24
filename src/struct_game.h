@@ -5,10 +5,10 @@
 
 #include "defines_game.h"
 
-#include "song_audio.h"
-#include "song.h"
-#include "profile.h"
-#include "controller.h"
+#include "modules/song_audio.h"
+#include "modules/song.h"
+#include "modules/profile.h"
+#include "modules/controller.h"
 
 typedef struct
 {

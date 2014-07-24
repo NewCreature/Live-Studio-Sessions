@@ -1,10 +1,12 @@
 #include "t3f/gui.h"
 
+#include "modules/text_entry.h"
+
 #include "instance.h"
-#include "state_title.h"
 #include "resources.h"
+
 #include "state.h"
-#include "text_entry.h"
+#include "state_title.h"
 #include "state_game.h"
 
 static char lss_new_profile_buffer[256] = {0};
