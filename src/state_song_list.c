@@ -65,7 +65,7 @@ static int lss_song_list_proc_select_difficulty(void * data, int i, void * p)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	t3f_destroy_gui(lss_song_list_difficulty_menu);
-	app->game.player[0].selected_difficulty = i - 1;
+	app->game.player[0].selected_difficulty = i - 2;
 	app->game.song_id = app->song_list->entry[app->selected_song]->id;
 	app->game.player[0].selected_track = lss_track[app->game.player[0].selected_track];
 	app->game.player[0].selected_difficulty = lss_diff[app->game.player[0].selected_difficulty];
