@@ -50,6 +50,7 @@ int lss_menu_proc_profiles_select(void * data, int i, void * p)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	
 	app->game.player[0].profile = &app->profiles->entry[i - 1];
+	t3f_clear_touch_data();
 	app->state = LSS_STATE_SONG_SELECT;
 	return 1;
 }
