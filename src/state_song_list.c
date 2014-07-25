@@ -10,6 +10,7 @@ static int lss_diff[4];
 static int lss_diffs = 0;
 
 static double lss_song_list_scroll_pos = 0.0;
+static double lss_song_list_scroll_velocity = 0.0;
 static double lss_song_list_touch_pos = 0.0;
 static int lss_song_list_touch_id = -1;
 
@@ -69,12 +70,32 @@ static void lss_state_song_list_touch_scroll_logic(APP_INSTANCE * app)
 	{
 		if(t3f_touch[lss_song_list_touch_id].active)
 		{
-			lss_song_list_scroll_pos -= t3f_touch[lss_song_list_touch_id].y - lss_song_list_touch_pos;
+			lss_song_list_scroll_velocity = lss_song_list_touch_pos - t3f_touch[lss_song_list_touch_id].y;
 			lss_song_list_touch_pos = t3f_touch[lss_song_list_touch_id].y;
 		}
 		else
 		{
 			lss_song_list_touch_id = -1;
+		}
+	}
+	lss_song_list_scroll_pos += lss_song_list_scroll_velocity;
+	if(lss_song_list_touch_id < 0)
+	{
+		if(lss_song_list_scroll_velocity < 0.0)
+		{
+			lss_song_list_scroll_velocity += 0.25;
+			if(lss_song_list_scroll_velocity > 0.0)
+			{
+				lss_song_list_scroll_velocity = 0.0;
+			}
+		}
+		else if(lss_song_list_scroll_velocity > 0.0)
+		{
+			lss_song_list_scroll_velocity -= 0.25;
+			if(lss_song_list_scroll_velocity < 0.0)
+			{
+				lss_song_list_scroll_velocity = 0.0;
+			}
 		}
 	}
 	if(lss_song_list_scroll_pos < 0)
