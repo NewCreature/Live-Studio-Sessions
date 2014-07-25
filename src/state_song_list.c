@@ -318,21 +318,21 @@ void lss_state_song_list_song_select_render(APP_INSTANCE * app)
 
 static void lss_song_list_process_menu(APP_INSTANCE * app, T3F_GUI * menu)
 {
-	t3f_process_gui(lss_song_list_track_menu, app);
+	t3f_process_gui(menu, app);
 	lss_read_controller(&app->controller[0]);
 	if(t3f_key[ALLEGRO_KEY_ENTER] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_GREEN].pressed)
 	{
-		t3f_activate_selected_gui_element(lss_song_list_track_menu, app);
+		t3f_activate_selected_gui_element(menu, app);
 		t3f_key[ALLEGRO_KEY_ENTER] = 0;
 	}
 	else if(t3f_key[ALLEGRO_KEY_UP] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].pressed)
 	{
-		t3f_select_previous_gui_element(lss_song_list_track_menu);
+		t3f_select_previous_gui_element(menu);
 		t3f_key[ALLEGRO_KEY_UP] = 0;
 	}
 	else if(t3f_key[ALLEGRO_KEY_DOWN] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed)
 	{
-		t3f_select_next_gui_element(lss_song_list_track_menu);
+		t3f_select_next_gui_element(menu);
 		t3f_key[ALLEGRO_KEY_DOWN] = 0;
 	}
 }
