@@ -21,6 +21,7 @@ bool lss_begin_text_entry(void * data, const char * initial, char * buffer, int 
 	lss_entering_text_data = data;
 	lss_entering_text_proc = proc;
 	al_ustr_to_buffer(lss_entered_text_ustr, lss_entered_text, max_length * 4);
+	lss_entering_text_pos = 0;
 	lss_entering_text = 1;
 	return true;
 }
