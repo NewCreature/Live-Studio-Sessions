@@ -351,13 +351,13 @@ void lss_title_logic(LSS_TITLE_DATA * dp, APP_INSTANCE * app)
 	{
 		dp->block_count--;
 	}
-	if(!lss_process_text_entry())
+	if(dp->current_menu >= 0)
 	{
-		if(dp->current_menu >= 0)
+		t3f_process_gui(dp->menu[dp->current_menu], app);
+		lss_read_controller(&app->controller[0]);
+		if(!dp->block_count)
 		{
-			t3f_process_gui(dp->menu[dp->current_menu], app);
-			lss_read_controller(&app->controller[0]);
-			if(!dp->block_count)
+			if(!lss_process_text_entry())
 			{
 				if(t3f_key[ALLEGRO_KEY_ENTER] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_GREEN].pressed)
 				{
@@ -374,13 +374,13 @@ void lss_title_logic(LSS_TITLE_DATA * dp, APP_INSTANCE * app)
 					t3f_select_next_gui_element(dp->menu[dp->current_menu]);
 					t3f_key[ALLEGRO_KEY_DOWN] = 0;
 				}
-				else if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
-				{
-					dp->menu[dp->current_menu]->hover_element = 0;
-					t3f_select_previous_gui_element(dp->menu[dp->current_menu]);
-					t3f_activate_selected_gui_element(dp->menu[dp->current_menu], app);
-					t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-				}
+			}
+			if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
+			{
+				dp->menu[dp->current_menu]->hover_element = 0;
+				t3f_select_previous_gui_element(dp->menu[dp->current_menu]);
+				t3f_activate_selected_gui_element(dp->menu[dp->current_menu], app);
+				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 			}
 		}
 	}
