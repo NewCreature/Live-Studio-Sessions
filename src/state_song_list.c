@@ -241,7 +241,7 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 	lss_read_controller(&app->controller[0]);
 	if(t3f_key[ALLEGRO_KEY_ENTER] ||
 	   app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_GREEN].pressed ||
-	   (lss_song_list_tap_frames > 15))
+	   lss_song_list_tap_frames > 15)
 	{
 		app->game.song = lss_load_song(app->song_list->entry[app->selected_song]->path);
 		lss_enumerate_tracks(app->game.song);
@@ -250,6 +250,7 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 			app->game.player[0].selected_track = 0;
 			app->state = LSS_STATE_SONG_SELECT_TRACK;
 		}
+		lss_song_list_tap_frames = 0;
 		t3f_key[ALLEGRO_KEY_ENTER] = 0;
 	}
 	else if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
