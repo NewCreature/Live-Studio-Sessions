@@ -32,11 +32,19 @@ Live Studio Sessions Issues
 
 [X]Add support for forced HOPO.
 
-[ ]Add touch screen controls.
+[X]Add touch screen controls.
 
-   [ ]Add on-screen display of controller layout.
+   [X]Add on-screen display of controller layout.
    
    [X]Allow song list to be navigated with touch.
+
+[ ]Get Android port up and running.
+
+   [ ]Figure out why AV Setup isn't working.
+   
+   [ ]Figure out why game crashes when trying to start a song.
+   
+[ ]Prevent song list from scrolling past the end of the list.
 
 [ ]Adjust board scroll speed and note positioning according to BPM.
 
