@@ -86,7 +86,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 	
 	/* create song database */
-	included_songs_path = al_create_path("data/songs");
+	included_songs_path = al_create_path("data/songs_copyright");
 	if(!included_songs_path)
 	{
 		return false;
