@@ -4,14 +4,33 @@
 void lss_state_av_setup_logic(APP_INSTANCE * app)
 {
 	char buf[64];
+	bool touch_up = false, touch_down = false;
+	int i;
 
+	/* check touch controls */
+	for(i = 0; i < T3F_MAX_TOUCHES; i++)
+	{
+		if(t3f_touch[i].active)
+		{
+			if(t3f_touch[i].y < 270)
+			{
+				touch_up = true;
+			}
+			else
+			{
+				touch_down = true;
+			}
+			t3f_touch[i].active = 0;
+		}
+	}
+	
 	lss_player_logic(&app->game, 0);
-	if(t3f_key[ALLEGRO_KEY_UP])
+	if(t3f_key[ALLEGRO_KEY_UP] || touch_up)
 	{
 		app->game.av_delay++;
 		t3f_key[ALLEGRO_KEY_UP] = 0;
 	}
-	if(t3f_key[ALLEGRO_KEY_DOWN])
+	if(t3f_key[ALLEGRO_KEY_DOWN] || touch_down)
 	{
 		app->game.av_delay--;
 		t3f_key[ALLEGRO_KEY_DOWN] = 0;
