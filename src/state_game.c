@@ -87,6 +87,16 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 	{
 		return false;
 	}
+	gp->fret_button_image = t3f_load_resource((void *)(&gp->fret_button_image), T3F_RESOURCE_TYPE_BITMAP, "data/fret_button.png", 0, 0, 0);
+	if(!gp->fret_button_image)
+	{
+		return false;
+	}
+	gp->strum_bar_image = t3f_load_resource((void *)(&gp->strum_bar_image), T3F_RESOURCE_TYPE_BITMAP, "data/strum_bar.png", 0, 0, 0);
+	if(!gp->strum_bar_image)
+	{
+		return false;
+	}
 	gp->atlas = t3f_create_atlas(1024, 1024);
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[0], T3F_ATLAS_SPRITE);
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[1], T3F_ATLAS_SPRITE);
@@ -98,6 +108,8 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[7], T3F_ATLAS_SPRITE);
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[8], T3F_ATLAS_SPRITE);
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[9], T3F_ATLAS_SPRITE);
+	lss_add_bitmap_to_atlas(gp->atlas, &gp->fret_button_image, T3F_ATLAS_SPRITE);
+	lss_add_bitmap_to_atlas(gp->atlas, &gp->strum_bar_image, T3F_ATLAS_SPRITE);
 	gp->current_tick = 0;
 	gp->song_audio = lss_load_song_audio(song_path);
 	if(!gp->song_audio)
@@ -137,6 +149,8 @@ void lss_game_exit(LSS_GAME * gp)
 	t3f_destroy_resource(gp->studio_image);
 	t3f_destroy_resource(gp->fret_board_image);
 	t3f_destroy_resource(gp->beat_line_image);
+	t3f_destroy_resource(gp->fret_button_image);
+	t3f_destroy_resource(gp->strum_bar_image);
 	t3f_destroy_atlas(gp->atlas);
 }
 

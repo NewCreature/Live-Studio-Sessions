@@ -566,6 +566,14 @@ static void lss_player_render_primitive_beat_line(LSS_GAME * gp, int player, dou
 	al_draw_line(t3f_project_x(320 + 4 * 80, z), t3f_project_y(420 + cy + oy[4], z), t3f_project_x(320 + 4 * 80 + 36, z), t3f_project_y(420 + cy + oy[4] + 2.0, z), t3f_color_white, 2.0);
 }
 
+static ALLEGRO_COLOR lss_alpha_color(ALLEGRO_COLOR c1, float alpha)
+{
+	float r1, g1, b1, a1;
+	
+	al_unmap_rgba_f(c1, &r1, &g1, &b1, &a1);
+	return al_map_rgba_f(r1 * alpha, g1 * alpha, b1 * alpha, a1 * alpha);
+}
+
 void lss_player_render_board(LSS_GAME * gp, int player)
 {
 	float rotate[5] = {-0.06, -0.03, 0.0, 0.03, 0.06};
@@ -727,5 +735,23 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 			a = 0.5;
 		}
 		t3f_draw_rotated_bitmap(gp->note_texture[i], al_map_rgba_f(a, a, a, a), c, cy, 320 + i * 80, 420 + cy + oy[i], 0, rotate[i], 0);
+	}
+	
+	/* render on-screen control helpers when using touch */
+	if(gp->player[0].controller->type == LSS_CONTROLLER_SOURCE_TOUCH)
+	{
+		for(i = 0; i < 5; i++)
+		{
+			if(gp->player[0].controller->controller->state[i].down)
+			{
+				a = 1.0;
+			}
+			else
+			{
+				a = 0.25;
+			}
+			t3f_draw_bitmap(gp->fret_button_image, lss_alpha_color(color_chart[i], a), i * 64, 0, 0, 0);
+		}
+		t3f_draw_bitmap(gp->strum_bar_image, al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 960 - 64 - 64, 270 - 4, 0, 0);
 	}
 }

@@ -58,6 +58,8 @@ typedef struct
 	ALLEGRO_BITMAP * studio_image;
 	ALLEGRO_BITMAP * fret_board_image;
 	ALLEGRO_BITMAP * beat_line_image;
+	ALLEGRO_BITMAP * fret_button_image;
+	ALLEGRO_BITMAP * strum_bar_image;
 	T3F_ATLAS * atlas;
 	T3F_PRIMITIVES_CACHE * primitives;
 
