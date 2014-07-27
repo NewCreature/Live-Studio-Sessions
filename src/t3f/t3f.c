@@ -1058,15 +1058,18 @@ unsigned long t3f_checksum_file(const char * fn)
 	int c;
 	
 	fp = al_fopen(fn, "rb");
-	while(!al_feof(fp))
+	if(fp)
 	{
-		c = al_fgetc(fp);
-		if(c != EOF)
+		while(!al_feof(fp))
 		{
-			sum += c;
+			c = al_fgetc(fp);
+			if(c != EOF)
+			{
+				sum += c;
+			}
 		}
+		al_fclose(fp);
 	}
-	al_fclose(fp);
 	return sum;
 }
 
