@@ -105,13 +105,16 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		}
 		else
 		{
-			printf("Could not get library path!\n");
-			return false;
+			songs_path = al_create_path("data/songs");
 		}
 	}
 	f = lss_song_list_count_files(al_path_cstr(included_songs_path, '/'), 0);
 	f += lss_song_list_count_files(al_path_cstr(songs_path, '/'), 0);
-	printf("Found %d songs!\n", f);
+	if(f <= 0)
+	{
+		printf("No songs found!\n");
+		return false;
+	}
 	app->song_list = lss_create_song_list(t3f_get_filename(t3f_data_path, "song_list.cache"), f);
 	if(!app->song_list)
 	{
