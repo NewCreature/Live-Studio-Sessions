@@ -213,8 +213,12 @@ void lss_song_list_add_file(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int fla
 				{
 					/* get checksum from notes.mid file */
 					midi_path = al_clone_path(pp);
-					al_set_path_filename(midi_path, "notes.mid");
-					dp->entry[dp->entries]->checksum = t3f_checksum_file(al_path_cstr(midi_path, '/'));
+					if(midi_path)
+					{
+						al_set_path_filename(midi_path, "notes.mid");
+						dp->entry[dp->entries]->checksum = t3f_checksum_file(al_path_cstr(midi_path, '/'));
+						al_destroy_path(midi_path);
+					}
 					
 					/* create ID from checksum and song info */
 					sprintf(dp->entry[dp->entries]->id, "%s%lu", lss_song_list_encode_artist_title(buf, dp->entry[dp->entries]->artist, dp->entry[dp->entries]->title), dp->entry[dp->entries]->checksum);
