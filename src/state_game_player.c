@@ -580,11 +580,11 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 
 	c = al_get_bitmap_width(gp->note_texture[0]) / 2;
 	cy = c + c / 4 - 2;
-	color_chart[0] = al_map_rgb(0, 150, 0);
-	color_chart[1] = al_map_rgb(139, 0, 0);
-	color_chart[2] = al_map_rgb(192, 192, 0);
-	color_chart[3] = al_map_rgb(0, 0, 204);
-	color_chart[4] = al_map_rgb(215, 78, 0);
+	color_chart[0] = LSS_NOTE_COLOR_0;
+	color_chart[1] = LSS_NOTE_COLOR_1;
+	color_chart[2] = LSS_NOTE_COLOR_2;
+	color_chart[3] = LSS_NOTE_COLOR_3;
+	color_chart[4] = LSS_NOTE_COLOR_4;
 
 	al_hold_bitmap_drawing(true);
 //	lss_player_render_primitive_fretboard(gp, player);
