@@ -392,7 +392,7 @@ T3NET_LEADERBOARD * t3net_get_leaderboard(char * url, char * game, char * versio
 		free(lp->entry);
 		return NULL;
 	}
-	lp->entries = entries;
+	lp->max_entries = entries;
 	strcpy(lp->url, url);
 	strcpy(lp->game, game);
 	strcpy(lp->version, version);
@@ -440,7 +440,7 @@ int t3net_update_leaderboard(T3NET_LEADERBOARD * lp)
 		free(data);
 		return 0;
 	}
-	sprintf(url_w_arg, "%s?game=%s&version=%s&mode=%s&option=%s%s&limit=%d", lp->url, lp->game, lp->version, lp->mode, lp->option, lp->ascend ? "&ascend=true" : "", lp->entries);
+	sprintf(url_w_arg, "%s?game=%s&version=%s&mode=%s&option=%s%s&limit=%d", lp->url, lp->game, lp->version, lp->mode, lp->option, lp->ascend ? "&ascend=true" : "", lp->max_entries);
 	curl_easy_setopt(curl, CURLOPT_URL, url_w_arg);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, t3net_internal_write_function);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, data);
@@ -588,7 +588,7 @@ int t3net_update_leaderboard_2(T3NET_LEADERBOARD * lp)
 		free(data);
 		return 0;
 	}
-	sprintf(url_w_arg, "%s?game=%s&version=%s&mode=%s&option=%s%s&limit=%d", lp->url, lp->game, lp->version, lp->mode, lp->option, lp->ascend ? "&ascend=true" : "", lp->entries);
+	sprintf(url_w_arg, "%s?game=%s&version=%s&mode=%s&option=%s%s&limit=%d", lp->url, lp->game, lp->version, lp->mode, lp->option, lp->ascend ? "&ascend=true" : "", lp->max_entries);
 	curl_easy_setopt(curl, CURLOPT_URL, url_w_arg);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, t3net_internal_write_function);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, data);
@@ -602,46 +602,48 @@ int t3net_update_leaderboard_2(T3NET_LEADERBOARD * lp)
     curl_easy_cleanup(curl);
 
 	text_pos = 0;
-	while(ecount < lp->entries)
+	while(ecount < lp->max_entries)
 	{
-		/* read the name */
-		text_char = 0;
-		text_fill_pos = 0;
-		while(text_char != '\n')
+		if(text_pos < strlen(data))
 		{
-			text_char = data[text_pos];
-			lp->entry[ecount]->name[text_fill_pos] = text_char;
-			text_fill_pos++;
-			text_pos++;
-		}
-		if(text_fill_pos > 0)
-		{
-			lp->entry[ecount]->name[text_fill_pos - 1] = '\0';
-		}
-		
-		/* read the score */
-		text_char = 0;
-		text_fill_pos = 0;
-		strncpy(text, "", 256);
-		while(text_char != '\n')
-		{
-			text_char = data[text_pos];
-			if(text_char != '\t')
+			/* read the name */
+			text_char = 0;
+			text_fill_pos = 0;
+			while(text_char != '\n')
 			{
-				text[text_fill_pos] = text_char;
+				text_char = data[text_pos];
+				lp->entry[ecount]->name[text_fill_pos] = text_char;
 				text_fill_pos++;
+				text_pos++;
 			}
-			text_pos++;
+			if(text_fill_pos > 0)
+			{
+				lp->entry[ecount]->name[text_fill_pos - 1] = '\0';
+			}
+			
+			/* read the score */
+			text_char = 0;
+			text_fill_pos = 0;
+			strncpy(text, "", 256);
+			while(text_char != '\n')
+			{
+				text_char = data[text_pos];
+				if(text_char != '\t')
+				{
+					text[text_fill_pos] = text_char;
+					text_fill_pos++;
+				}
+				text_pos++;
+			}
+			if(text_fill_pos > 0)
+			{
+				text[text_fill_pos - 1] = '\0';
+			}
+			lp->entry[ecount]->score = atoi(text);
+			ecount++;
 		}
-		if(text_fill_pos > 0)
-		{
-			text[text_fill_pos - 1] = '\0';
-		}
-		lp->entry[ecount]->score = atoi(text);
-		ecount++;
-		
 		/* get out if we've reached the end of the data */
-		if(text_pos >= strlen(data))
+		else
 		{
 			break;
 		}
@@ -660,7 +662,7 @@ void t3net_destroy_leaderboard(T3NET_LEADERBOARD * lp)
 {
 	int i;
 	
-	for(i = 0; i < lp->entries; i++)
+	for(i = 0; i < lp->max_entries; i++)
 	{
 		free(lp->entry[i]);
 	}

@@ -44,6 +44,8 @@ typedef struct
 	int ascend;
 	
 	T3NET_LEADERBOARD_ENTRY ** entry;
+	int max_entries;
+	
 	int entries;
 	
 } T3NET_LEADERBOARD;
