@@ -1,3 +1,6 @@
+#include "t3f/t3f.h"
+#include "t3f/draw.h"
+
 #include "modules/obfuscate.h"
 
 #include "instance.h"
@@ -50,7 +53,7 @@ void lss_game_results_render(APP_INSTANCE * app)
 	{
 		t3f_draw_bitmap(app->resources.platinum_bitmap, t3f_color_white, 480 + i * 32, 0, 0, 0);
 	}
-	al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Results for %s (%d, %d)", app->game.player[0].profile->name, total_notes, app->game.song->track[app->game.player[0].selected_track][app->game.player[0].selected_difficulty].notes);
+	al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Results for %s", app->game.player[0].profile->name);
 	pos += 48;
 	al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Score: %d", app->game.player[0].score); 
 	pos += 24;
