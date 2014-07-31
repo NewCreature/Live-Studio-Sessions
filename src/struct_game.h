@@ -32,7 +32,7 @@ typedef struct
 	int life;
 	int miss_streak;
 	
-	int hit_notes, missed_notes;
+	int hit_notes, missed_notes, perfect_notes, bad_notes;
 
 	LSS_PLAYER_NOTE_GROUP next_notes;
 	LSS_PLAYER_NOTE_GROUP playing_notes;
