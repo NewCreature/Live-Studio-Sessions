@@ -170,7 +170,6 @@ void lss_game_logic(LSS_GAME * gp)
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || gp->player[0].life <= 0 || gp->current_tick >= gp->song_audio->length * 60.0)
 	{
 		gp->done = true;
-		lss_game_exit(gp);
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 	}
 	gp->current_tick++;
@@ -178,10 +177,13 @@ void lss_game_logic(LSS_GAME * gp)
 
 void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)
 {
+	int n;
+
 	al_draw_bitmap(gp->studio_image, 0, 0, 0);
 	lss_player_render_board(gp, 0);
 	al_hold_bitmap_drawing(true);
-	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 0, 0, "%d/%d", gp->player[0].hit_notes, gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes);
+	n = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes;
+	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 0, 0, "%d/%d (%d, %d, %d)", gp->player[0].hit_notes, n, gp->player[0].perfect_notes, gp->player[0].hit_notes - (gp->player[0].perfect_notes + gp->player[0].bad_notes), gp->player[0].bad_notes);
 	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 24, 0, "%d", gp->player[0].life);
 	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 480, 0, ALLEGRO_ALIGN_CENTRE, "Score: %d", gp->player[0].score);
 	al_hold_bitmap_drawing(false);
