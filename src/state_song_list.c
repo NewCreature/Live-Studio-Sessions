@@ -5,8 +5,7 @@
 #include "state.h"
 #include "state_game.h"
 
-static T3F_GUI * lss_song_list_track_menu = NULL;
-static T3F_GUI * lss_song_list_difficulty_menu = NULL;
+static T3F_GUI * lss_song_list_menu = NULL;
 static int lss_track[16];
 static int lss_tracks = 0;
 static int lss_diff[4];
@@ -64,7 +63,7 @@ static int lss_song_list_proc_select_difficulty(void * data, int i, void * p)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	t3f_destroy_gui(lss_song_list_difficulty_menu);
+	t3f_destroy_gui(lss_song_list_menu);
 	app->game.player[0].selected_difficulty = i - 2;
 	app->game.song_id = app->song_list->entry[app->selected_song]->id;
 	app->game.player[0].selected_track = lss_track[app->game.player[0].selected_track];
@@ -87,21 +86,23 @@ static bool lss_create_difficulty_menu(APP_INSTANCE * app)
 	char buf[256] = {0};
 	int i, pos = 0;
 
-	lss_song_list_difficulty_menu = t3f_create_gui(0, 0);
-	if(!lss_song_list_difficulty_menu)
+	lss_song_list_menu = t3f_create_gui(0, 0);
+	if(!lss_song_list_menu)
 	{
 		return false;
 	}
 	sprintf(buf, "%s - %s", app->song_list->entry[app->selected_song]->artist, app->song_list->entry[app->selected_song]->title);
-	t3f_add_gui_text_element(lss_song_list_difficulty_menu, NULL, buf, app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	t3f_add_gui_text_element(lss_song_list_menu, NULL, buf, app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += lss_song_list_space;
-	t3f_add_gui_text_element(lss_song_list_difficulty_menu, NULL, app->game.song->source_midi->track[lss_track[app->game.player[0].selected_track]]->name, app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	t3f_add_gui_text_element(lss_song_list_menu, NULL, app->game.song->source_midi->track[lss_track[app->game.player[0].selected_track]]->name, app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += lss_song_list_space * 2;
 	for(i = 0; i < lss_diffs; i++)
 	{
-		t3f_add_gui_text_element(lss_song_list_difficulty_menu, lss_song_list_proc_select_difficulty, difficulty_text[lss_diff[i]], app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+		t3f_add_gui_text_element(lss_song_list_menu, lss_song_list_proc_select_difficulty, difficulty_text[lss_diff[i]], app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 		pos += lss_song_list_space;
 	}
+	lss_song_list_menu->hover_element = -1;
+	t3f_select_next_gui_element(lss_song_list_menu);
 	return true;
 }
 
@@ -109,7 +110,7 @@ static int lss_song_list_proc_select_track(void * data, int i, void * p)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	t3f_destroy_gui(lss_song_list_track_menu);
+	t3f_destroy_gui(lss_song_list_menu);
 	app->game.player[0].selected_track = i - 1;
 	lss_enumerate_difficulties(app->game.song, lss_track[app->game.player[0].selected_track]);
 	lss_create_difficulty_menu(app);
@@ -123,19 +124,21 @@ static bool lss_create_track_list_menu(APP_INSTANCE * app)
 	char buf[256] = {0};
 	int i, pos = 0;
 
-	lss_song_list_track_menu = t3f_create_gui(0, 0);
-	if(!lss_song_list_track_menu)
+	lss_song_list_menu = t3f_create_gui(0, 0);
+	if(!lss_song_list_menu)
 	{
 		return false;
 	}
 	sprintf(buf, "%s - %s", app->song_list->entry[app->selected_song]->artist, app->song_list->entry[app->selected_song]->title);
-	t3f_add_gui_text_element(lss_song_list_track_menu, NULL, buf, app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	t3f_add_gui_text_element(lss_song_list_menu, NULL, buf, app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += lss_song_list_space * 2;
 	for(i = 0; i < lss_tracks; i++)
 	{
-		t3f_add_gui_text_element(lss_song_list_track_menu, lss_song_list_proc_select_track, app->game.song->source_midi->track[lss_track[i]]->name, app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+		t3f_add_gui_text_element(lss_song_list_menu, lss_song_list_proc_select_track, app->game.song->source_midi->track[lss_track[i]]->name, app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 		pos += lss_song_list_space;
 	}
+	lss_song_list_menu->hover_element = -1;
+	t3f_select_next_gui_element(lss_song_list_menu);
 	return true;
 }
 
@@ -339,11 +342,11 @@ static void lss_song_list_process_menu(APP_INSTANCE * app, T3F_GUI * menu)
 
 void lss_state_song_list_track_select_logic(APP_INSTANCE * app)
 {
-	lss_song_list_process_menu(app, lss_song_list_track_menu);
+	lss_song_list_process_menu(app, lss_song_list_menu);
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
 	{
-		t3f_destroy_gui(lss_song_list_track_menu);
-		lss_song_list_track_menu = NULL;
+		t3f_destroy_gui(lss_song_list_menu);
+		lss_song_list_menu = NULL;
 		lss_destroy_song(app->game.song);
 		lss_song_list_tap_frames = 0;
 		app->state = LSS_STATE_SONG_SELECT;
@@ -353,15 +356,15 @@ void lss_state_song_list_track_select_logic(APP_INSTANCE * app)
 
 void lss_state_song_list_track_select_render(APP_INSTANCE * app)
 {
-	t3f_render_gui(lss_song_list_track_menu);
+	t3f_render_gui(lss_song_list_menu);
 }
 
 void lss_state_song_list_difficulty_select_logic(APP_INSTANCE * app)
 {
-	lss_song_list_process_menu(app, lss_song_list_difficulty_menu);
+	lss_song_list_process_menu(app, lss_song_list_menu);
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
 	{
-		t3f_destroy_gui(lss_song_list_difficulty_menu);
+		t3f_destroy_gui(lss_song_list_menu);
 		lss_create_track_list_menu(app);
 		app->state = LSS_STATE_SONG_SELECT_TRACK;
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
@@ -370,5 +373,5 @@ void lss_state_song_list_difficulty_select_logic(APP_INSTANCE * app)
 
 void lss_state_song_list_difficulty_select_render(APP_INSTANCE * app)
 {
-	t3f_render_gui(lss_song_list_difficulty_menu);
+	t3f_render_gui(lss_song_list_menu);
 }
