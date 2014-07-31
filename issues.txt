@@ -38,6 +38,10 @@ Live Studio Sessions Issues
    
    [X]Allow song list to be navigated with touch.
 
+[X]Add song results screen.
+
+[X]Add online leaderboard support.
+
 [ ]Get Android port up and running.
 
    [ ]Figure out why AV Setup isn't working.
@@ -68,14 +72,10 @@ Live Studio Sessions Issues
    [ ]Make beat line generation code more robust so it can handle "non-standard"
       positioning of tempo changes.
 
-[ ]Add online leaderboard support.
-
 [ ]Implement "perfect" bonus for hitting the notes sufficiently accurately.
 
    [ ]This should play into the awards system. We might require getting all 
       perfect hits to qualify for a multiplatinum award.
-
-[ ]Add song results screen.
 
 [ ]Adjust balance of failing mechanism. It is way too hard at the moment.
 
