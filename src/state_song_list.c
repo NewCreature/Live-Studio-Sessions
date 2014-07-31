@@ -145,6 +145,7 @@ static bool lss_create_track_list_menu(APP_INSTANCE * app)
 /* detect touch screen scroll */
 static void lss_state_song_list_touch_scroll_logic(APP_INSTANCE * app)
 {
+	int max;
 	int i;
 
 	lss_song_list_selected = false;
@@ -211,9 +212,14 @@ static void lss_state_song_list_touch_scroll_logic(APP_INSTANCE * app)
 			}
 		}
 	}
+	max = app->song_list->entries * lss_song_list_space - lss_song_list_visible * lss_song_list_space + lss_song_list_space;
 	if(lss_song_list_scroll_pos < 0)
 	{
 		lss_song_list_scroll_pos = 0;
+	}
+	else if(lss_song_list_scroll_pos >= max)
+	{
+		lss_song_list_scroll_pos = max;
 	}
 
 	/* detect which song was tapped */
