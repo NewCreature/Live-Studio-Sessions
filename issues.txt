@@ -42,6 +42,9 @@ Live Studio Sessions Issues
 
 [X]Add online leaderboard support.
 
+[ ]Figure out why results screen is giving 0 platinums even when completing
+   song.
+
 [ ]Get Android port up and running.
 
    [ ]Figure out why AV Setup isn't working.
