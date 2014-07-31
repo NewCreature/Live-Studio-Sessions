@@ -145,7 +145,6 @@ static bool lss_create_track_list_menu(APP_INSTANCE * app)
 /* detect touch screen scroll */
 static void lss_state_song_list_touch_scroll_logic(APP_INSTANCE * app)
 {
-	int max;
 	int i;
 
 	lss_song_list_selected = false;
@@ -212,15 +211,6 @@ static void lss_state_song_list_touch_scroll_logic(APP_INSTANCE * app)
 			}
 		}
 	}
-	max = app->song_list->entries * lss_song_list_space - lss_song_list_visible * lss_song_list_space + lss_song_list_space;
-	if(lss_song_list_scroll_pos < 0)
-	{
-		lss_song_list_scroll_pos = 0;
-	}
-	else if(lss_song_list_scroll_pos >= max)
-	{
-		lss_song_list_scroll_pos = max;
-	}
 
 	/* detect which song was tapped */
 	if(lss_song_list_selected)
@@ -242,8 +232,15 @@ static void lss_state_song_list_touch_scroll_logic(APP_INSTANCE * app)
 	}
 }
 
+static void lss_state_song_list_center(APP_INSTANCE * app)
+{
+	lss_song_list_scroll_pos = (app->selected_song + 1 - lss_song_list_visible / 2) * lss_song_list_space;
+}
+
 void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 {
+	int max;
+
 	lss_song_list_space = al_get_font_line_height(app->resources.font[lss_song_list_font]);
 	lss_song_list_visible = 540 / lss_song_list_space + 1;
 	lss_state_song_list_touch_scroll_logic(app);
@@ -274,6 +271,7 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 		{
 			app->selected_song = app->song_list->entries - 1;
 		}
+		lss_state_song_list_center(app);
 		t3f_key[ALLEGRO_KEY_UP] = 0;
 	}
 	else if(t3f_key[ALLEGRO_KEY_DOWN] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed)
@@ -283,6 +281,7 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 		{
 			app->selected_song = 0;
 		}
+		lss_state_song_list_center(app);
 		t3f_key[ALLEGRO_KEY_DOWN] = 0;
 	}
 	else if(t3f_key[ALLEGRO_KEY_PGUP])
@@ -292,6 +291,7 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 		{
 			app->selected_song = app->song_list->entries - 1;
 		}
+		lss_state_song_list_center(app);
 		t3f_key[ALLEGRO_KEY_PGUP] = 0;
 	}
 	else if(t3f_key[ALLEGRO_KEY_PGDN])
@@ -301,7 +301,17 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 		{
 			app->selected_song = 0;
 		}
+		lss_state_song_list_center(app);
 		t3f_key[ALLEGRO_KEY_PGDN] = 0;
+	}
+	max = app->song_list->entries * lss_song_list_space - lss_song_list_visible * lss_song_list_space + lss_song_list_space;
+	if(lss_song_list_scroll_pos < 0)
+	{
+		lss_song_list_scroll_pos = 0;
+	}
+	else if(lss_song_list_scroll_pos >= max)
+	{
+		lss_song_list_scroll_pos = max;
 	}
 }
 
