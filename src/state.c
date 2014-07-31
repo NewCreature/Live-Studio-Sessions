@@ -41,6 +41,7 @@ void lss_state_logic(APP_INSTANCE * app)
 			lss_game_logic(&app->game);
 			if(app->game.done)
 			{
+				/* store high score */
 				if(app->game.player[0].score > app->game.player[0].high_score)
 				{
 					app->game.player[0].high_score = app->game.player[0].score;
@@ -48,6 +49,15 @@ void lss_state_logic(APP_INSTANCE * app)
 					sprintf(buf[1], "%d", lss_obfuscate_value(app->game.player[0].high_score));
 					al_set_config_value(app->game.player[0].profile->config, app->game.song_id, buf[0], buf[1]);
 				}
+				
+				/* store results */
+				sprintf(buf[0], "platinum_%d_%d", app->game.player[0].selected_track, app->game.player[0].selected_difficulty);
+				sprintf(buf[1], "%d", app->game.player[0].stars);
+				al_set_config_value(app->game.player[0].profile->config, app->game.song_id, buf[0], buf[1]);
+				sprintf(buf[0], "accuracy_%d_%d", app->game.player[0].selected_track, app->game.player[0].selected_difficulty);
+				sprintf(buf[1], "%5.2f", app->game.player[0].accuracy);
+				al_set_config_value(app->game.player[0].profile->config, app->game.song_id, buf[0], buf[1]);
+				
 				sprintf(buf[0], "%d%d", app->game.player[0].selected_track, app->game.player[0].selected_difficulty);
 				sprintf(buf[1], "%s", app->game.player[0].profile->name);
 				if(app->game.player[0].score > 0)
