@@ -146,6 +146,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		app->game.av_delay = atoi(val);
 	}
 	app->selected_song = 0;
+	app->leaderboard = NULL;
 	app->game.player[0].selected_track = 0;
 	app->game.player[0].selected_difficulty = 0;
 	lss_select_menu(&app->title, LSS_MENU_MAIN);

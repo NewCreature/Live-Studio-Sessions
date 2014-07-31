@@ -1,6 +1,8 @@
 #ifndef LSS_INSTANCE_H
 #define LSS_INSTANCE_H
 
+#include "t3net/t3net.h"
+
 #include "resources.h"
 #include "modules/controller.h"
 #include "modules/song_list.h"
@@ -20,6 +22,8 @@ typedef struct
 	LSS_SONG_LIST * song_list;
 	
 	LSS_PROFILES * profiles;
+	
+	T3NET_LEADERBOARD * leaderboard;
 	
 	/* menu data */
 	int selected_song;
