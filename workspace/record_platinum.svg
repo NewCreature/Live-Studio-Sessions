@@ -13,8 +13,11 @@
    height="72"
    id="svg3044"
    version="1.1"
-   inkscape:version="0.47 r22583"
-   sodipodi:docname="record_gold.svg">
+   inkscape:version="0.48.2 r9819"
+   sodipodi:docname="record_platinum.svg"
+   inkscape:export-filename="/Users/toddcope/T3/Projects/Games/Live Studio Sessions/bin/data/platinum_record.png"
+   inkscape:export-xdpi="80"
+   inkscape:export-ydpi="80">
   <defs
      id="defs3046">
     <inkscape:perspective
@@ -215,8 +218,8 @@
      showgrid="false"
      borderlayer="true"
      inkscape:showpageshadow="false"
-     inkscape:window-width="1440"
-     inkscape:window-height="825"
+     inkscape:window-width="1680"
+     inkscape:window-height="1002"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1" />

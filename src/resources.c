@@ -14,6 +14,11 @@ bool lss_load_global_resources(LSS_RESOURCES * rp)
 	{
 		return false;
 	}
+	rp->platinum_bitmap = t3f_load_resource((void *)(&rp->platinum_bitmap), T3F_RESOURCE_TYPE_BITMAP, "data/platinum_record.png", 0, 0, 0);
+	if(!rp->platinum_bitmap)
+	{
+		return false;
+	}
 	return true;
 }
 
@@ -25,4 +30,5 @@ void lss_free_global_resources(LSS_RESOURCES * rp)
 	{
 		t3f_destroy_resource(rp->font[i]);
 	}
+	t3f_destroy_resource(rp->platinum_bitmap);
 }

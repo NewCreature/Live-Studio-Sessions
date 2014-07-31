@@ -220,6 +220,8 @@ void lss_initialize_player(LSS_GAME * gp, int player)
 	gp->player[0].next_notes.notes = 1;
 	gp->player[0].hit_notes = 0;
 	gp->player[0].missed_notes = 0;
+	gp->player[0].perfect_notes = 0;
+	gp->player[0].bad_notes = 0;
 	gp->player[0].streak = 0;
 	gp->player[0].life = 100;
 	gp->player[0].miss_streak = 0;
@@ -321,6 +323,14 @@ void lss_player_logic(LSS_GAME * gp, int player)
 					}
 					gp->player[0].playing_notes.notes = gp->player[0].hittable_notes[i].notes;
 					gp->player[0].hit_notes += gp->player[0].playing_notes.notes;
+					if(d >= -1.0 && d <= 1.0)
+					{
+						gp->player[0].perfect_notes += gp->player[0].playing_notes.notes;
+					}
+					else if(d < -5.0 || d > 5.0)
+					{
+						gp->player[0].bad_notes += gp->player[0].playing_notes.notes;
+					}
 					m = gp->player[0].streak / 8 + 1;
 					if(m > 4)
 					{
@@ -433,7 +443,15 @@ void lss_player_logic(LSS_GAME * gp, int player)
 						gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[i]]->play_tick = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[i]]->tick;
 					}
 					gp->player[0].playing_notes.notes = gp->player[0].next_notes.notes;
-					gp->player[0].hit_notes++;
+					gp->player[0].hit_notes += gp->player[0].playing_notes.notes;
+					if(d >= -1.0 && d <= 1.0)
+					{
+						gp->player[0].perfect_notes += gp->player[0].playing_notes.notes;
+					}
+					else if(d < -5.0 && d > 5.0)
+					{
+						gp->player[0].bad_notes += gp->player[0].playing_notes.notes;
+					}
 					m = gp->player[0].streak / 8 + 1;
 					if(m > 4)
 					{
