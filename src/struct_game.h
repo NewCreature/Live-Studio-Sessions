@@ -44,6 +44,10 @@ typedef struct
 	int last_visible_note;
 	int first_visible_beat;
 	int last_visible_beat;
+	
+	/* cache game results so we only need to calculate them once */
+	int stars;
+	double accuracy;
 
 } LSS_PLAYER;
 

@@ -14,42 +14,11 @@ void lss_game_results_render(APP_INSTANCE * app)
 {
 	int total_notes;
 	int pos = 0;
-	int stars = 0;
 	int i;
 	
 	total_notes = app->game.player[0].hit_notes + app->game.player[0].missed_notes;
-	
-	/* give one star for completing the song */
-	if(total_notes >= app->game.song->track[app->game.player[0].selected_track][app->game.player[0].selected_difficulty].notes)
-	{
-		stars++;
-	}
-	
-	/* give one star for hitting half of the notes */
-	if(stars && (app->game.player[0].hit_notes * 100) / total_notes >= 50)
-	{
-		stars++;
-	}
-	
-	/* give one star for hitting three quarters of the notes */
-	if(stars && (app->game.player[0].hit_notes * 100) / total_notes >= 75)
-	{
-		stars++;
-	}
-	
-	/* give one star for hitting all of the notes */
-	if(stars && (app->game.player[0].hit_notes * 100) / total_notes >= 100)
-	{
-		stars++;
-	}
-	
-	/* give one star for no bad notes */
-	if(stars >= 4 && app->game.player[0].bad_notes <= 0)
-	{
-		stars++;
-	}
 	al_hold_bitmap_drawing(true);
-	for(i = 0; i < stars; i++)
+	for(i = 0; i < app->game.player[0].stars; i++)
 	{
 		t3f_draw_bitmap(app->resources.platinum_bitmap, t3f_color_white, 480 + i * 32, 0, 0, 0);
 	}
@@ -59,7 +28,7 @@ void lss_game_results_render(APP_INSTANCE * app)
 	pos += 24;
 	if(total_notes > 0)
 	{
-		al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Accuracy: %d", (app->game.player[0].hit_notes * 100) / total_notes);
+		al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Accuracy: %3.2f", app->game.player[0].accuracy);
 	}
 	else
 	{

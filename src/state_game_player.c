@@ -242,6 +242,7 @@ void lss_initialize_player(LSS_GAME * gp, int player)
 	gp->player[0].first_visible_beat = -1;
 	gp->player[0].last_visible_beat = -1;
 	lss_player_get_next_notes(gp->song, &gp->player[0]);
+	gp->player[0].stars = 0;
 }
 
 void lss_player_logic(LSS_GAME * gp, int player)

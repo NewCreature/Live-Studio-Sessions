@@ -154,6 +154,45 @@ void lss_game_exit(LSS_GAME * gp)
 	t3f_destroy_atlas(gp->atlas);
 }
 
+static void lss_game_get_player_results(LSS_GAME * gp, int player)
+{
+	int total_notes = gp->player[0].hit_notes + gp->player[0].missed_notes;
+	
+	gp->player[0].stars = 0;
+	/* give one star for completing the song */
+	if(total_notes >= gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes)
+	{
+		gp->player[0].stars++;
+	}
+	
+	/* give one star for hitting half of the notes */
+	if(gp->player[0].stars && (gp->player[0].hit_notes * 100) / total_notes >= 50)
+	{
+		gp->player[0].stars++;
+	}
+	
+	/* give one star for hitting three quarters of the notes */
+	if(gp->player[0].stars && (gp->player[0].hit_notes * 100) / total_notes >= 75)
+	{
+		gp->player[0].stars++;
+	}
+	
+	/* give one star for hitting all of the notes */
+	if(gp->player[0].stars && (gp->player[0].hit_notes * 100) / total_notes >= 100)
+	{
+		gp->player[0].stars++;
+	}
+	
+	/* give one star for no bad notes */
+	if(gp->player[0].stars >= 4 && gp->player[0].bad_notes <= 0)
+	{
+		gp->player[0].stars++;
+	}
+	
+	/* calculate accuracy */
+	gp->player[0].accuracy = ((double)(gp->player[0].hit_notes) * 100.0) / (double)total_notes;
+}
+
 void lss_game_logic(LSS_GAME * gp)
 {
 	lss_player_logic(gp, 0);
@@ -169,6 +208,7 @@ void lss_game_logic(LSS_GAME * gp)
 	}
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || gp->player[0].life <= 0 || gp->current_tick >= gp->song_audio->length * 60.0)
 	{
+		lss_game_get_player_results(gp, 0);
 		gp->done = true;
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 	}
