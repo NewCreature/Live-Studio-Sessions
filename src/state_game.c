@@ -208,6 +208,7 @@ void lss_game_logic(LSS_GAME * gp)
 	}
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || gp->player[0].life <= 0 || gp->current_tick >= gp->song_audio->length * 60.0)
 	{
+		lss_set_song_audio_playing(gp->song_audio, false);
 		lss_game_get_player_results(gp, 0);
 		gp->done = true;
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
