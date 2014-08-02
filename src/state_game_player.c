@@ -261,37 +261,55 @@ void lss_player_logic(LSS_GAME * gp, int player)
 	lss_player_detect_visible_notes(gp, 0);
 	lss_player_detect_visible_beats(gp, 0);
 	
+	/* move on to next note if we missed this one, do this first because logic
+	 * below assumes next_notes is current */
+	if(gp->player[0].next_notes.notes)
+	{
+		d = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[0]]->tick - (gp->current_tick - gp->av_delay)));
+		if(d < -8)
+		{
+			if(gp->song_audio->streams > 1)
+			{
+				stream = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].stream;
+				if(stream >= 0 && gp->song_audio->stream[stream])
+				{
+					al_set_audio_stream_gain(gp->song_audio->stream[stream], 0.0);
+				}
+			}
+			missed_notes = gp->player[0].next_notes.notes;
+			missed_groups = 1;
+			lss_player_get_next_notes(gp->song, &gp->player[0]);
+		}
+	}
+
 	/* find all hittable notes */
 	if(gp->player[0].next_notes.notes > 0)
 	{
-		for(i = gp->player[0].first_visible_note; i <= gp->player[0].last_visible_note; i++)
+		/* only allow notes at or past current note to be hittable */
+		for(i = gp->player[0].next_notes.note[0]; i <= gp->player[0].last_visible_note; i++)
 		{
-			/* only allow notes at or past current note to be hittable */
-			if(i >= gp->player[0].next_notes.note[0])
+			d = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick - (gp->current_tick - gp->av_delay)));
+			if(d >= -8 && d <= 8)
 			{
-				d = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick - (gp->current_tick - gp->av_delay)));
-				if(d >= -8 && d <= 8)
+				/* first hittable note */
+				if(cur_tick < 0)
 				{
-					/* first hittable note */
-					if(cur_tick < 0)
-					{
-						cur_tick = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick;
-						group = 0;
-						gp->player[0].hittable_notes[group].notes = 0;
-					}
-					
-					/* move on to next group */
-					else if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick != cur_tick)
-					{
-						group++;
-						gp->player[0].hittable_notes[group].notes = 0;
-						cur_tick = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick;
-					}
-					
-					/* add note to current group */
-					gp->player[0].hittable_notes[group].note[gp->player[0].hittable_notes[group].notes] = i;
-					gp->player[0].hittable_notes[group].notes++;
+					cur_tick = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick;
+					group = 0;
+					gp->player[0].hittable_notes[group].notes = 0;
 				}
+				
+				/* move on to next group */
+				else if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick != cur_tick)
+				{
+					group++;
+					gp->player[0].hittable_notes[group].notes = 0;
+					cur_tick = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick;
+				}
+				
+				/* add note to current group */
+				gp->player[0].hittable_notes[group].note[gp->player[0].hittable_notes[group].notes] = i;
+				gp->player[0].hittable_notes[group].notes++;
 			}
 		}
 	}
@@ -304,59 +322,56 @@ void lss_player_logic(LSS_GAME * gp, int player)
 		{
 			/* if note is within hit window */
 			d = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].hittable_notes[i].note[0]]->tick - (gp->current_tick - gp->av_delay)));
-			if(d >= -8.0 && d <= 8.0)
+			if(lss_player_check_notes(gp->song, &gp->player[0], gp->player[0].hittable_notes[i].note, gp->player[0].hittable_notes[i].notes))
 			{
-				if(lss_player_check_notes(gp->song, &gp->player[0], gp->player[0].hittable_notes[i].note, gp->player[0].hittable_notes[i].notes))
+				if(gp->song_audio->streams > 1)
 				{
-					if(gp->song_audio->streams > 1)
+					stream = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].stream;
+					if(stream >= 0 && gp->song_audio->stream[stream])
 					{
-						stream = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].stream;
-						if(stream >= 0 && gp->song_audio->stream[stream])
-						{
-							al_set_audio_stream_gain(gp->song_audio->stream[stream], 1.0);
-						}
+						al_set_audio_stream_gain(gp->song_audio->stream[stream], 1.0);
 					}
-					for(j = 0; j < gp->player[0].hittable_notes[i].notes; j++)
-					{
-						gp->player[0].playing_notes.note[j] = gp->player[0].hittable_notes[i].note[j];
-						gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].hittable_notes[i].note[j]]->visible = false;
-						gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].hittable_notes[i].note[j]]->play_tick = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].hittable_notes[i].note[j]]->tick;
-					}
-					gp->player[0].playing_notes.notes = gp->player[0].hittable_notes[i].notes;
-					gp->player[0].hit_notes += gp->player[0].playing_notes.notes;
-					if(d >= -1.0 && d <= 1.0)
-					{
-						gp->player[0].perfect_notes += gp->player[0].playing_notes.notes;
-					}
-					else if(d < -5.0 || d > 5.0)
-					{
-						gp->player[0].bad_notes += gp->player[0].playing_notes.notes;
-					}
-					m = gp->player[0].streak / 8 + 1;
-					if(m > 4)
-					{
-						m = 4;
-					}
-					points = gp->player[0].playing_notes.notes * LSS_GAME_NOTE_BASE_POINTS * m;
-					gp->player[0].score += points;
-					gp->player[0].streak++;
-					life_add = gp->player[0].streak;
-					if(life_add > 4)
-					{
-						life_add = 4;
-					}
-					gp->player[0].miss_streak = 0;
-					gp->player[0].life += life_add;
-					if(gp->player[0].life > 100)
-					{
-						gp->player[0].life = 100;
-					}
-					missed_notes = gp->player[0].hittable_notes[i].note[0] - gp->player[0].next_notes.note[0];
-					missed_groups = i;
-					lss_player_set_next_notes(gp->song, &gp->player[0], gp->player[0].hittable_notes[i].note[0]);
-					lss_player_get_next_notes(gp->song, &gp->player[0]);
-					break;
 				}
+				for(j = 0; j < gp->player[0].hittable_notes[i].notes; j++)
+				{
+					gp->player[0].playing_notes.note[j] = gp->player[0].hittable_notes[i].note[j];
+					gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].hittable_notes[i].note[j]]->visible = false;
+					gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].hittable_notes[i].note[j]]->play_tick = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].hittable_notes[i].note[j]]->tick;
+				}
+				gp->player[0].playing_notes.notes = gp->player[0].hittable_notes[i].notes;
+				gp->player[0].hit_notes += gp->player[0].playing_notes.notes;
+				if(d >= -1.0 && d <= 1.0)
+				{
+					gp->player[0].perfect_notes += gp->player[0].playing_notes.notes;
+				}
+				else if(d < -5.0 || d > 5.0)
+				{
+					gp->player[0].bad_notes += gp->player[0].playing_notes.notes;
+				}
+				m = gp->player[0].streak / 8 + 1;
+				if(m > 4)
+				{
+					m = 4;
+				}
+				points = gp->player[0].playing_notes.notes * LSS_GAME_NOTE_BASE_POINTS * m;
+				gp->player[0].score += points;
+				gp->player[0].streak++;
+				life_add = gp->player[0].streak;
+				if(life_add > 4)
+				{
+					life_add = 4;
+				}
+				gp->player[0].miss_streak = 0;
+				gp->player[0].life += life_add;
+				if(gp->player[0].life > 100)
+				{
+					gp->player[0].life = 100;
+				}
+				missed_notes += gp->player[0].hittable_notes[i].note[0] - gp->player[0].next_notes.note[0];
+				missed_groups += i;
+				lss_player_set_next_notes(gp->song, &gp->player[0], gp->player[0].hittable_notes[i].note[0]);
+				lss_player_get_next_notes(gp->song, &gp->player[0]);
+				break;
 			}
 		}
 	}
@@ -425,7 +440,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 		if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[0]]->hopo && gp->player[0].streak > 0)
 		{
 			d = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[0]]->tick - (gp->current_tick - gp->av_delay)));
-			if(d >= -8.0 && d <= 8.0)
+			if(d >= -8 && d <= 8)
 			{
 				if(lss_player_check_notes_lenient(gp->song, &gp->player[0], gp->player[0].next_notes.note, gp->player[0].next_notes.notes))
 				{
@@ -469,26 +484,6 @@ void lss_player_logic(LSS_GAME * gp, int player)
 					}
 					lss_player_get_next_notes(gp->song, &gp->player[0]);
 				}
-			}
-		}
-		
-		/* move on to next note if we missed this one */
-		if(gp->player[0].next_notes.notes)
-		{
-			d = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[0]]->tick - (gp->current_tick - gp->av_delay)));
-			if(d < -8)
-			{
-				if(gp->song_audio->streams > 1)
-				{
-					stream = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].stream;
-					if(stream >= 0 && gp->song_audio->stream[stream])
-					{
-						al_set_audio_stream_gain(gp->song_audio->stream[stream], 0.0);
-					}
-				}
-				missed_notes = gp->player[0].next_notes.notes;
-				missed_groups = 1;
-				lss_player_get_next_notes(gp->song, &gp->player[0]);
 			}
 		}
 	}
