@@ -1,6 +1,8 @@
 #include "t3f/t3f.h"
 #include "t3f/gui.h"
 
+#include "modules/gui.h"
+
 #include "instance.h"
 #include "state.h"
 #include "state_game.h"
@@ -318,21 +320,28 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 void lss_state_song_list_song_select_render(APP_INSTANCE * app)
 {
 	ALLEGRO_COLOR color;
-	int i;
+	int i, offset;
 	int start_song = (int)lss_song_list_scroll_pos / lss_song_list_space;
 
+	al_clear_to_color(LSS_TITLE_COLOR_BG);
+	al_draw_tinted_bitmap(app->title.logo_bitmap, al_map_rgba_f(0.0, 0.0, 0.0, 0.125), 480 - al_get_bitmap_width(app->title.logo_bitmap) / 2, 270 - al_get_bitmap_height(app->title.logo_bitmap) / 2, 0);
+	al_hold_bitmap_drawing(true);
 	for(i = start_song; i < start_song + lss_song_list_visible && i < app->song_list->entries; i++)
 	{
 		if(i == app->selected_song)
 		{
 			color = t3f_color_white;
+			offset = 0;
 		}
 		else
 		{
-			color = al_map_rgba_f(0.5, 0.5, 0.5, 1.0);
+			color = al_map_rgba_f(0.75, 0.75, 0.75, 1.0);
+			offset = 2;
 		}
-		al_draw_textf(app->resources.font[lss_song_list_font], color, 0, i * lss_song_list_space - lss_song_list_scroll_pos, 0, "%s - %s", app->song_list->entry[i]->artist, app->song_list->entry[i]->title);
+		al_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 4, i * lss_song_list_space - lss_song_list_scroll_pos + 4, 0, "%s - %s", app->song_list->entry[i]->artist, app->song_list->entry[i]->title);
+		al_draw_textf(app->resources.font[lss_song_list_font], color, 0 + offset, i * lss_song_list_space - lss_song_list_scroll_pos + offset, 0, "%s - %s", app->song_list->entry[i]->artist, app->song_list->entry[i]->title);
 	}
+	al_hold_bitmap_drawing(false);
 }
 
 static void lss_song_list_process_menu(APP_INSTANCE * app, T3F_GUI * menu)
@@ -354,6 +363,7 @@ static void lss_song_list_process_menu(APP_INSTANCE * app, T3F_GUI * menu)
 		t3f_select_next_gui_element(menu);
 		t3f_key[ALLEGRO_KEY_DOWN] = 0;
 	}
+	lss_update_gui_colors(menu, LSS_TITLE_COLOR_HEADER, LSS_TITLE_COLOR_SELECTED, LSS_TITLE_COLOR_NORMAL);
 }
 
 void lss_state_song_list_track_select_logic(APP_INSTANCE * app)
@@ -372,7 +382,11 @@ void lss_state_song_list_track_select_logic(APP_INSTANCE * app)
 
 void lss_state_song_list_track_select_render(APP_INSTANCE * app)
 {
+	al_clear_to_color(LSS_TITLE_COLOR_BG);
+	al_draw_tinted_bitmap(app->title.logo_bitmap, al_map_rgba_f(0.0, 0.0, 0.0, 0.125), 480 - al_get_bitmap_width(app->title.logo_bitmap) / 2, 270 - al_get_bitmap_height(app->title.logo_bitmap) / 2, 0);
+	al_hold_bitmap_drawing(true);
 	t3f_render_gui(lss_song_list_menu);
+	al_hold_bitmap_drawing(false);
 }
 
 void lss_state_song_list_difficulty_select_logic(APP_INSTANCE * app)
@@ -389,5 +403,9 @@ void lss_state_song_list_difficulty_select_logic(APP_INSTANCE * app)
 
 void lss_state_song_list_difficulty_select_render(APP_INSTANCE * app)
 {
+	al_clear_to_color(LSS_TITLE_COLOR_BG);
+	al_draw_tinted_bitmap(app->title.logo_bitmap, al_map_rgba_f(0.0, 0.0, 0.0, 0.125), 480 - al_get_bitmap_width(app->title.logo_bitmap) / 2, 270 - al_get_bitmap_height(app->title.logo_bitmap) / 2, 0);
+	al_hold_bitmap_drawing(true);
 	t3f_render_gui(lss_song_list_menu);
+	al_hold_bitmap_drawing(false);
 }

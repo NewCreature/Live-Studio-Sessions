@@ -17,6 +17,7 @@ void lss_game_results_render(APP_INSTANCE * app)
 	int i;
 	
 	total_notes = app->game.player[0].hit_notes + app->game.player[0].missed_notes;
+	al_clear_to_color(t3f_color_black);
 	al_hold_bitmap_drawing(true);
 	for(i = 0; i < app->game.player[0].stars; i++)
 	{

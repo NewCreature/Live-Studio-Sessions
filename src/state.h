@@ -10,6 +10,7 @@
 #define LSS_STATE_GAME                   4
 #define LSS_STATE_GAME_RESULTS           5
 #define LSS_STATE_AV_SETUP               6
+#define LSS_STATE_TITLE_LOGO             7
 
 void lss_state_logic(APP_INSTANCE * app);
 void lss_state_render(APP_INSTANCE * app);

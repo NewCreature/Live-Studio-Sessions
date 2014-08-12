@@ -13,9 +13,33 @@
 void lss_state_logic(APP_INSTANCE * app)
 {
 	char buf[2][64];
+	bool touched = false;
+	int i;
 
 	switch(app->state)
 	{
+		case LSS_STATE_TITLE_LOGO:
+		{
+			for(i = 0; i < T3F_MAX_TOUCHES; i++)
+			{
+				if(t3f_touch[i].active)
+				{
+					touched = true;
+					t3f_touch[i].active = false;
+					break;
+				}
+			}
+			if(t3f_read_key(0))
+			{
+				touched = true;
+				t3f_clear_keys();
+			}
+			if(touched)
+			{
+				app->state = LSS_STATE_TITLE;
+			}
+			break;
+		}
 		case LSS_STATE_TITLE:
 		{
 			lss_title_logic(&app->title, app);
@@ -102,9 +126,15 @@ void lss_state_logic(APP_INSTANCE * app)
 
 void lss_state_render(APP_INSTANCE * app)
 {
-	al_clear_to_color(t3f_color_black);
 	switch(app->state)
 	{
+		case LSS_STATE_TITLE_LOGO:
+		{
+			al_clear_to_color(al_map_rgba_f(0.5, 0.25, 0.25, 1.0));
+			al_draw_tinted_bitmap(app->title.logo_bitmap, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 480 - al_get_bitmap_width(app->title.logo_bitmap) / 2 + 4, 270 - al_get_bitmap_height(app->title.logo_bitmap) / 2 + 4, 0);
+			al_draw_bitmap(app->title.logo_bitmap, 480 - al_get_bitmap_width(app->title.logo_bitmap) / 2, 270 - al_get_bitmap_height(app->title.logo_bitmap) / 2, 0);
+			break;
+		}
 		case LSS_STATE_TITLE:
 		{
 			lss_title_render(&app->title, &app->resources);

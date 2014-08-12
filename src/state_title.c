@@ -1,6 +1,8 @@
 #include "t3f/gui.h"
+#include "t3f/resource.h"
 
 #include "modules/text_entry.h"
+#include "modules/gui.h"
 
 #include "instance.h"
 #include "resources.h"
@@ -283,6 +285,12 @@ bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp)
 	
 	space = al_get_font_line_height(rp->font[LSS_FONT_LARGE]);
 
+	dp->logo_bitmap = t3f_load_resource((void *)(&dp->logo_bitmap), T3F_RESOURCE_TYPE_BITMAP, "data/lss_logo.png", 0, 0, 0);
+	if(!dp->logo_bitmap)
+	{
+		return false;
+	}
+
 	/* main menu */
 	dp->menu[LSS_MENU_MAIN] = t3f_create_gui(0, 0);
 	if(!dp->menu[LSS_MENU_MAIN])
@@ -335,6 +343,7 @@ void lss_title_exit(LSS_TITLE_DATA * dp)
 {
 	int i;
 	
+	al_destroy_bitmap(dp->logo_bitmap);
 	for(i = 0; i < LSS_MAX_MENUS; i++)
 	{
 		if(dp->menu[i])
@@ -383,11 +392,14 @@ void lss_title_logic(LSS_TITLE_DATA * dp, APP_INSTANCE * app)
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 			}
 		}
+		lss_update_gui_colors(dp->menu[dp->current_menu], LSS_TITLE_COLOR_HEADER, LSS_TITLE_COLOR_SELECTED, LSS_TITLE_COLOR_NORMAL);
 	}
 }
 
 void lss_title_render(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp)
 {
+	al_clear_to_color(LSS_TITLE_COLOR_BG);
+	al_draw_tinted_bitmap(dp->logo_bitmap, al_map_rgba_f(0.0, 0.0, 0.0, 0.125), 480 - al_get_bitmap_width(dp->logo_bitmap) / 2, 270 - al_get_bitmap_height(dp->logo_bitmap) / 2, 0);
 	if(dp->current_menu >= 0)
 	{
 		t3f_render_gui(dp->menu[dp->current_menu]);
