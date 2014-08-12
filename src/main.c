@@ -133,12 +133,12 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 //	app_load_song(app);
 //	app->current_event = 0;
 //	app->current_event_tick = (app->midi->track[1]->event[app->current_event]->pos_sec + app->offset) * 60.0;
-	if(!lss_title_initialize(&app->title, &app->resources))
+	if(!lss_title_initialize(&app->title, &app->resources, app->song_list))
 	{
 		return false;
 	}
 	app->title.block_count = 0;
-	app->state = LSS_STATE_TITLE_LOGO;
+	app->state = LSS_STATE_TITLE;
 	app->game.av_delay = 15;
 	val = al_get_config_value(t3f_config, "Live Studio Sessions", "av_delay");
 	if(val)
