@@ -411,7 +411,12 @@ void lss_title_logic(LSS_TITLE_DATA * dp, APP_INSTANCE * app)
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 			}
 		}
-		lss_update_gui_colors(dp->menu[dp->current_menu], LSS_TITLE_COLOR_HEADER, LSS_TITLE_COLOR_SELECTED, LSS_TITLE_COLOR_NORMAL);
+		
+		/* only update the GUI colors if we are still on the title screen */
+		if(app->state == LSS_STATE_TITLE)
+		{
+			lss_update_gui_colors(dp->menu[dp->current_menu], LSS_TITLE_COLOR_HEADER, LSS_TITLE_COLOR_SELECTED, LSS_TITLE_COLOR_NORMAL);
+		}
 	}
 }
 
