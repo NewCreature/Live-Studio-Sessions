@@ -6,6 +6,7 @@
 #include "instance.h"
 #include "state.h"
 #include "state_game.h"
+#include "state_title.h"
 
 static T3F_GUI * lss_song_list_menu = NULL;
 static int lss_track[16];
@@ -73,6 +74,7 @@ static int lss_song_list_proc_select_difficulty(void * data, int i, void * p)
 	app->game.player[0].controller = &app->controller[0];
 	if(lss_game_initialize(&app->game, app->song_list->entry[app->selected_song]->path))
 	{
+		lss_title_exit(&app->title);
 		app->state = LSS_STATE_GAME;
 	}
 	else
@@ -263,6 +265,7 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 	}
 	else if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
 	{
+		lss_create_profiles_menu(app);
 		app->state = LSS_STATE_TITLE;
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 	}

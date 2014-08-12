@@ -1,6 +1,7 @@
 #include "t3f/gui.h"
 #include "t3f/resource.h"
 
+#include "modules/song_list.h"
 #include "modules/text_entry.h"
 #include "modules/gui.h"
 
@@ -169,6 +170,7 @@ int lss_menu_proc_options_av_setup(void * data, int ip, void * p)
 		app->game.player[0].controller = &app->controller[0];
 		if(lss_game_initialize(&app->game, app->song_list->entry[0]->path))
 		{
+			lss_title_exit(&app->title);
 			app->state = LSS_STATE_AV_SETUP;
 		}
 	}
@@ -213,6 +215,10 @@ bool lss_create_profiles_menu(APP_INSTANCE * app)
 	char name_buf[256];
 
 	space = al_get_font_line_height(app->resources.font[LSS_FONT_LARGE]);
+	if(app->title.menu[LSS_MENU_PROFILES])
+	{
+		t3f_destroy_gui(app->title.menu[LSS_MENU_PROFILES]);
+	}
 	app->title.menu[LSS_MENU_PROFILES] = t3f_create_gui(0, 0);
 	if(!app->title.menu[LSS_MENU_PROFILES])
 	{
@@ -277,7 +283,7 @@ bool lss_create_controller_menu(APP_INSTANCE * app)
 	return true;
 }
 
-bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp)
+bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp, LSS_SONG_LIST * lp)
 {
 	int pos, space;
 	t3f_set_gui_driver(NULL);
@@ -285,6 +291,7 @@ bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp)
 	
 	space = al_get_font_line_height(rp->font[LSS_FONT_LARGE]);
 
+	t3f_srand(&dp->rng, time(0));
 	dp->logo_bitmap = t3f_load_resource((void *)(&dp->logo_bitmap), T3F_RESOURCE_TYPE_BITMAP, "data/lss_logo.png", 0, 0, 0);
 	if(!dp->logo_bitmap)
 	{
@@ -335,7 +342,14 @@ bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp)
 	t3f_add_gui_text_element(dp->menu[LSS_MENU_OPTIONS], lss_menu_proc_options_av_setup, "A/V Setup", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 	pos += space;
 	t3f_add_gui_text_element(dp->menu[LSS_MENU_OPTIONS], lss_menu_proc_options_back, "Back", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
-
+	
+	/* start song audio */
+	dp->song_audio = lss_load_song_audio(lp->entry[t3f_rand(&dp->rng) & lp->entries]->path);
+	if(dp->song_audio)
+	{
+//		lss_set_song_audio_playing(dp->song_audio, true);
+	}
+	
 	return true;
 }
 
@@ -343,6 +357,11 @@ void lss_title_exit(LSS_TITLE_DATA * dp)
 {
 	int i;
 	
+	if(dp->song_audio)
+	{
+		lss_destroy_song_audio(dp->song_audio);
+		dp->song_audio = NULL;
+	}
 	al_destroy_bitmap(dp->logo_bitmap);
 	for(i = 0; i < LSS_MAX_MENUS; i++)
 	{

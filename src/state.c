@@ -107,6 +107,7 @@ void lss_state_logic(APP_INSTANCE * app)
 			if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
 			{
 				lss_game_exit(&app->game);
+				lss_title_initialize(&app->title, &app->resources, app->song_list);
 				app->state = LSS_STATE_SONG_SELECT;
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 			}
@@ -117,6 +118,7 @@ void lss_state_logic(APP_INSTANCE * app)
 			lss_state_av_setup_logic(app);
 			if(app->game.done)
 			{
+				lss_title_initialize(&app->title, &app->resources, app->song_list);
 				app->state = LSS_STATE_TITLE;
 			}
 			break;
