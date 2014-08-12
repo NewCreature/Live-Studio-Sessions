@@ -45,14 +45,16 @@ Live Studio Sessions Issues
 [X]Figure out why results screen is giving 0 platinums even when completing
    song.
 
+[X]Prevent song list from scrolling past the end of the list.
+
+[ ]Make icon.
+
 [ ]Get Android port up and running.
 
    [ ]Figure out why AV Setup isn't working.
    
    [ ]Figure out why game crashes when trying to start a song.
    
-[ ]Prevent song list from scrolling past the end of the list.
-
 [ ]Adjust board scroll speed and note positioning according to BPM.
 
    All the game's logic will operate in ticks. Only the rendering will be
