@@ -27,6 +27,8 @@ void lss_game_results_render(APP_INSTANCE * app)
 	pos += 48;
 	al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Score: %d", app->game.player[0].score); 
 	pos += 24;
+	al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Completion: %3.2f", ((float)total_notes / (float)app->game.song->track[app->game.player[0].selected_track][app->game.player[0].selected_difficulty].notes) * 100.0); 
+	pos += 24;
 	if(total_notes > 0)
 	{
 		al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Accuracy: %3.2f (%d/%d)%s", app->game.player[0].accuracy, app->game.player[0].hit_notes, total_notes, app->game.player[0].full_combo ? " * Full Combo! *" : "");
