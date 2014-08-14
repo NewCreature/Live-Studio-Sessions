@@ -49,6 +49,11 @@ Live Studio Sessions Issues
 
 [X]Make icon.
 
+[X]Implement "perfect" bonus for hitting the notes sufficiently accurately.
+
+   [X]This should play into the awards system. We might require getting all 
+      perfect hits to qualify for a multiplatinum award.
+
 [ ]Get Android port up and running.
 
    [ ]Figure out why AV Setup isn't working.
@@ -76,11 +81,6 @@ Live Studio Sessions Issues
    
    [ ]Make beat line generation code more robust so it can handle "non-standard"
       positioning of tempo changes.
-
-[ ]Implement "perfect" bonus for hitting the notes sufficiently accurately.
-
-   [ ]This should play into the awards system. We might require getting all 
-      perfect hits to qualify for a multiplatinum award.
 
 [ ]Adjust balance of failing mechanism. It is way too hard at the moment.
 
