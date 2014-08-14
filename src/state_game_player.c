@@ -221,6 +221,7 @@ void lss_initialize_player(LSS_GAME * gp, int player)
 	gp->player[0].hit_notes = 0;
 	gp->player[0].missed_notes = 0;
 	gp->player[0].perfect_notes = 0;
+	gp->player[0].good_notes = 0;
 	gp->player[0].bad_notes = 0;
 	gp->player[0].streak = 0;
 	gp->player[0].life = 100;
@@ -247,7 +248,7 @@ void lss_initialize_player(LSS_GAME * gp, int player)
 
 void lss_player_logic(LSS_GAME * gp, int player)
 {
-	int i, j, d, m, t;
+	int i, j, d, t;
 	bool dropped = false;
 	int points = 0;
 	int stream;
@@ -344,16 +345,20 @@ void lss_player_logic(LSS_GAME * gp, int player)
 				{
 					gp->player[0].perfect_notes += gp->player[0].playing_notes.notes;
 				}
+				else if(d >= -2.0 && d <= 2.0)
+				{
+					gp->player[0].good_notes += gp->player[0].playing_notes.notes;
+				}
 				else if(d < -5.0 || d > 5.0)
 				{
 					gp->player[0].bad_notes += gp->player[0].playing_notes.notes;
 				}
-				m = gp->player[0].streak / 8 + 1;
-				if(m > 4)
+				gp->player[0].multiplier = gp->player[0].streak / 8 + 1;
+				if(gp->player[0].multiplier > 4)
 				{
-					m = 4;
+					gp->player[0].multiplier = 4;
 				}
-				points = gp->player[0].playing_notes.notes * LSS_GAME_NOTE_BASE_POINTS * m;
+				points = gp->player[0].playing_notes.notes * LSS_GAME_NOTE_BASE_POINTS * gp->player[0].multiplier;
 				gp->player[0].score += points;
 				gp->player[0].streak++;
 				life_add = gp->player[0].streak;
@@ -424,12 +429,12 @@ void lss_player_logic(LSS_GAME * gp, int player)
 						{
 							gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_notes.note[i]]->play_tick = gp->current_tick - gp->av_delay;
 						}
-						m = gp->player[0].streak / 8 + 1;
-						if(m > 4)
+						gp->player[0].multiplier = gp->player[0].streak / 8 + 1;
+						if(gp->player[0].multiplier > 4)
 						{
-							m = 4;
+							gp->player[0].multiplier = 4;
 						}
-						points = gp->player[0].playing_notes.notes * LSS_GAME_NOTE_SUSTAIN_BASE_POINTS * m;
+						points = gp->player[0].playing_notes.notes * LSS_GAME_NOTE_SUSTAIN_BASE_POINTS * gp->player[0].multiplier;
 						gp->player[0].score += points;
 					}
 				}
@@ -464,16 +469,20 @@ void lss_player_logic(LSS_GAME * gp, int player)
 					{
 						gp->player[0].perfect_notes += gp->player[0].playing_notes.notes;
 					}
+					else if(d >= -2.0 && d <= 2.0)
+					{
+						gp->player[0].good_notes += gp->player[0].playing_notes.notes;
+					}
 					else if(d < -5.0 && d > 5.0)
 					{
 						gp->player[0].bad_notes += gp->player[0].playing_notes.notes;
 					}
-					m = gp->player[0].streak / 8 + 1;
-					if(m > 4)
+					gp->player[0].multiplier = gp->player[0].streak / 8 + 1;
+					if(gp->player[0].multiplier > 4)
 					{
-						m = 4;
+						gp->player[0].multiplier = 4;
 					}
-					points = gp->player[0].playing_notes.notes * LSS_GAME_NOTE_BASE_POINTS * m;
+					points = gp->player[0].playing_notes.notes * LSS_GAME_NOTE_BASE_POINTS * gp->player[0].multiplier;
 					gp->player[0].score += points;
 					gp->player[0].streak++;
 					gp->player[0].miss_streak = 0;

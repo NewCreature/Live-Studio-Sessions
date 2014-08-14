@@ -224,8 +224,13 @@ void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)
 	lss_player_render_board(gp, 0);
 	al_hold_bitmap_drawing(true);
 	n = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes;
-	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 0, 0, "%d/%d (%d, %d, %d)", gp->player[0].hit_notes, n, gp->player[0].perfect_notes, gp->player[0].hit_notes - (gp->player[0].perfect_notes + gp->player[0].bad_notes), gp->player[0].bad_notes);
-	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 24, 0, "%d", gp->player[0].life);
+	al_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 2, 0 + 2, 0, "Streak: %d", gp->player[0].streak);
+	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 0, 0, "Streak: %d", gp->player[0].streak);
+	al_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 2, 24 + 2, 0, "Multiplier: %d", gp->player[0].multiplier);
+	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 24, 0, "Multiplier: %d", gp->player[0].multiplier);
+	al_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 2, 48 + 2, 0, "Life: %d", gp->player[0].life);
+	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 48, 0, "Life: %d", gp->player[0].life);
+	al_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 480 + 2, 0 + 2, ALLEGRO_ALIGN_CENTRE, "Score: %d", gp->player[0].score);
 	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 480, 0, ALLEGRO_ALIGN_CENTRE, "Score: %d", gp->player[0].score);
 	al_hold_bitmap_drawing(false);
 }
