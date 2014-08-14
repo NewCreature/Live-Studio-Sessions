@@ -47,7 +47,7 @@ Live Studio Sessions Issues
 
 [X]Prevent song list from scrolling past the end of the list.
 
-[ ]Make icon.
+[X]Make icon.
 
 [ ]Get Android port up and running.
 
