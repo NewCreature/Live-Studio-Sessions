@@ -226,6 +226,7 @@ void lss_initialize_player(LSS_GAME * gp, int player)
 	gp->player[0].streak = 0;
 	gp->player[0].life = 100;
 	gp->player[0].miss_streak = 0;
+	gp->player[0].full_combo = true;
 	gp->player[0].score = 0;
 	gp->player[0].high_score = 0;
 	sprintf(buf, "high_score_%d_%d", gp->player[0].selected_track, gp->player[0].selected_difficulty);
@@ -382,6 +383,14 @@ void lss_player_logic(LSS_GAME * gp, int player)
 				break;
 			}
 		}
+		
+		/* no note matches means we should kill the combo */
+		if(i == gp->player[0].hittable_notes_groups)
+		{
+			gp->player[0].streak = 0;
+			gp->player[0].multiplier = 0;
+			gp->player[0].full_combo = false;
+		}
 	}
 	else
 	{
@@ -505,7 +514,9 @@ void lss_player_logic(LSS_GAME * gp, int player)
 	if(missed_groups)
 	{
 		gp->player[0].streak = 0;
+		gp->player[0].multiplier = 0;
 		gp->player[0].missed_notes += missed_notes;
+		gp->player[0].full_combo = false;
 		for(i = 0; i < missed_groups; i++)
 		{
 			gp->player[0].miss_streak++;

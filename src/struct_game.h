@@ -34,6 +34,7 @@ typedef struct
 	int multiplier;
 	
 	int hit_notes, missed_notes, perfect_notes, good_notes, bad_notes;
+	bool full_combo;
 
 	LSS_PLAYER_NOTE_GROUP next_notes;
 	LSS_PLAYER_NOTE_GROUP playing_notes;

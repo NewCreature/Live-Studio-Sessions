@@ -29,12 +29,14 @@ void lss_game_results_render(APP_INSTANCE * app)
 	pos += 24;
 	if(total_notes > 0)
 	{
-		al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Accuracy: %3.2f", app->game.player[0].accuracy);
+		al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Accuracy: %3.2f (%d/%d)%s", app->game.player[0].accuracy, app->game.player[0].hit_notes, total_notes, app->game.player[0].full_combo ? " * Full Combo! *" : "");
 	}
 	else
 	{
 		al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Accuracy: N/A");
 	}
+	pos += 24;
+	al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Note Timing: Perfect %d, Good %d, Okay %d, Bad %d", app->game.player[0].perfect_notes, app->game.player[0].good_notes, app->game.player[0].hit_notes - app->game.player[0].perfect_notes - app->game.player[0].good_notes - app->game.player[0].bad_notes, app->game.player[0].bad_notes); 
 	pos += 24;
 	al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "High Score: %d", app->game.player[0].high_score);
 	if(app->leaderboard)

@@ -191,6 +191,12 @@ static void lss_game_get_player_results(LSS_GAME * gp, int player)
 	
 	/* calculate accuracy */
 	gp->player[0].accuracy = ((double)(gp->player[0].hit_notes) * 100.0) / (double)total_notes;
+
+	/* full combo only awarded if song is completed */
+	if(!gp->player[0].stars)
+	{
+		gp->player[0].full_combo = false;
+	}
 }
 
 void lss_game_logic(LSS_GAME * gp)
