@@ -3,7 +3,7 @@
 
 #define LSS_MAX_PLAYERS 8
 
-#define LSS_GAME_NOTE_BASE_POINTS          50
+#define LSS_GAME_NOTE_BASE_POINTS          10
 #define LSS_GAME_NOTE_SUSTAIN_BASE_POINTS   5
 
 #define LSS_NOTE_COLOR_0 al_map_rgb(0, 150, 0)

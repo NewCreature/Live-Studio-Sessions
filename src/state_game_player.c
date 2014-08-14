@@ -248,7 +248,7 @@ void lss_initialize_player(LSS_GAME * gp, int player)
 
 void lss_player_logic(LSS_GAME * gp, int player)
 {
-	int i, j, d, t;
+	int i, j, d, t, accuracy = 2;
 	bool dropped = false;
 	int points = 0;
 	int stream;
@@ -344,21 +344,24 @@ void lss_player_logic(LSS_GAME * gp, int player)
 				if(d >= -1.0 && d <= 1.0)
 				{
 					gp->player[0].perfect_notes += gp->player[0].playing_notes.notes;
+					accuracy = 4;
 				}
 				else if(d >= -2.0 && d <= 2.0)
 				{
 					gp->player[0].good_notes += gp->player[0].playing_notes.notes;
+					accuracy = 3;
 				}
 				else if(d < -5.0 || d > 5.0)
 				{
 					gp->player[0].bad_notes += gp->player[0].playing_notes.notes;
+					accuracy = 1;
 				}
 				gp->player[0].multiplier = gp->player[0].streak / 8 + 1;
 				if(gp->player[0].multiplier > 4)
 				{
 					gp->player[0].multiplier = 4;
 				}
-				points = gp->player[0].playing_notes.notes * LSS_GAME_NOTE_BASE_POINTS * gp->player[0].multiplier;
+				points = gp->player[0].playing_notes.notes * (LSS_GAME_NOTE_BASE_POINTS * accuracy) * gp->player[0].multiplier;
 				gp->player[0].score += points;
 				gp->player[0].streak++;
 				life_add = gp->player[0].streak;
@@ -468,21 +471,24 @@ void lss_player_logic(LSS_GAME * gp, int player)
 					if(d >= -1.0 && d <= 1.0)
 					{
 						gp->player[0].perfect_notes += gp->player[0].playing_notes.notes;
+						accuracy = 4;
 					}
 					else if(d >= -2.0 && d <= 2.0)
 					{
 						gp->player[0].good_notes += gp->player[0].playing_notes.notes;
+						accuracy = 3;
 					}
 					else if(d < -5.0 && d > 5.0)
 					{
 						gp->player[0].bad_notes += gp->player[0].playing_notes.notes;
+						accuracy = 1;
 					}
 					gp->player[0].multiplier = gp->player[0].streak / 8 + 1;
 					if(gp->player[0].multiplier > 4)
 					{
 						gp->player[0].multiplier = 4;
 					}
-					points = gp->player[0].playing_notes.notes * LSS_GAME_NOTE_BASE_POINTS * gp->player[0].multiplier;
+					points = gp->player[0].playing_notes.notes * (LSS_GAME_NOTE_BASE_POINTS * accuracy) * gp->player[0].multiplier;
 					gp->player[0].score += points;
 					gp->player[0].streak++;
 					gp->player[0].miss_streak = 0;
