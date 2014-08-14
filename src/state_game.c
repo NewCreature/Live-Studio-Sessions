@@ -184,7 +184,7 @@ static void lss_game_get_player_results(LSS_GAME * gp, int player)
 	}
 	
 	/* give one star for no bad notes */
-	if(gp->player[0].stars >= 4 && gp->player[0].bad_notes <= 0)
+	if(gp->player[0].stars >= 4 && gp->player[0].perfect_notes + gp->player[0].good_notes >= total_notes)
 	{
 		gp->player[0].stars++;
 	}
