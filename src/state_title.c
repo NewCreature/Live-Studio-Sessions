@@ -171,6 +171,7 @@ int lss_menu_proc_options_av_setup(void * data, int ip, void * p)
 		if(lss_game_initialize(&app->game, app->song_list->entry[0]->path))
 		{
 			lss_title_exit(&app->title);
+			t3f_clear_touch_data();
 			app->state = LSS_STATE_AV_SETUP;
 		}
 	}
