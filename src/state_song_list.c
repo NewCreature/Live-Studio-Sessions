@@ -72,13 +72,14 @@ static int lss_song_list_proc_select_difficulty(void * data, int i, void * p)
 	app->game.player[0].selected_track = lss_track[app->game.player[0].selected_track];
 	app->game.player[0].selected_difficulty = lss_diff[app->game.player[0].selected_difficulty];
 	app->game.player[0].controller = &app->controller[0];
+	lss_title_exit(&app->title);
 	if(lss_game_initialize(&app->game, app->song_list->entry[app->selected_song]->path))
 	{
-		lss_title_exit(&app->title);
 		app->state = LSS_STATE_GAME;
 	}
 	else
 	{
+		lss_title_initialize(&app->title, &app->resources, app->song_list);
 		printf("failed to initialize game\n");
 	}
 	return 1;
