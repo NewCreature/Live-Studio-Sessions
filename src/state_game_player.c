@@ -639,22 +639,25 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	al_draw_bitmap(gp->fret_board_image, 200, 320, 0);
 //	lss_player_render_primitive_beat_line(gp, player, 0);
 	t3f_draw_bitmap(gp->beat_line_image, t3f_color_white, 280, 420 + 8, 0, 0);
-	for(i = gp->player[0].first_visible_beat; i <= gp->player[0].last_visible_beat; i++)
+	if(gp->player[0].first_visible_beat >= 0)
 	{
-		z = ((gp->song->beat[i]->tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
-		a = 1.0;
-		if(z > 1984)
+		for(i = gp->player[0].first_visible_beat; i <= gp->player[0].last_visible_beat; i++)
 		{
-			a = 1.0 - (z - 1984.0) / 128.0;
-			if(a < 0.0)
+			z = ((gp->song->beat[i]->tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
+			a = 1.0;
+			if(z > 1984)
 			{
-				a = 0.0;
+				a = 1.0 - (z - 1984.0) / 128.0;
+				if(a < 0.0)
+				{
+					a = 0.0;
+				}
 			}
-		}
-		t3f_draw_bitmap(gp->beat_line_image, al_map_rgba_f(a, a, a, a), 280, 420 + 8, z, 0);
-		if(z > 1984 + 128.0)
-		{
-			break;
+			t3f_draw_bitmap(gp->beat_line_image, al_map_rgba_f(a, a, a, a), 280, 420 + 8, z, 0);
+			if(z > 1984 + 128.0)
+			{
+				break;
+			}
 		}
 	}
 	al_hold_bitmap_drawing(false);
