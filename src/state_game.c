@@ -22,6 +22,7 @@ void lss_add_bitmap_to_atlas(T3F_ATLAS * ap, ALLEGRO_BITMAP ** bp, int type)
 
 bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 {
+	al_stop_timer(t3f_timer);
 	gp->note_texture[0] = t3f_load_resource((void *)(&gp->note_texture[0]), T3F_RESOURCE_TYPE_BITMAP, "data/note_green_strum.png", 0, 0, 0);
 	if(!gp->note_texture[0])
 	{
@@ -125,7 +126,6 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 	gp->board_speed = 12.0;
 	lss_initialize_player(gp, 0);
 	lss_song_mark_beats(gp->song, gp->song_audio->length);
-	al_stop_timer(t3f_timer);
 	if(!lss_set_song_audio_playing(gp->song_audio, true))
 	{
 		return false;
