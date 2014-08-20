@@ -342,7 +342,7 @@ bool lss_song_mark_beats(LSS_SONG * sp, double total_length)
 			{
 				for(i = 0; i < 8; i++)
 				{
-					sp->beat[7 - i]->tick = (current_time + sp->offset - (beat_time * (double)i)) * 60.0;
+					sp->beat[7 - i]->tick = (current_time + sp->offset - (beat_time * (double)(i + 1))) * 60.0;
 				}
 			}
 			current_beat++;
