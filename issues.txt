@@ -57,6 +57,9 @@ Live Studio Sessions Issues
 [ ]Select song folder from options screen or the first time the song list is
    displayed.
 
+[ ]Add some sample songs to the game for people without song libraries to play
+   with.
+
 [ ]Get Android port up and running.
 
    [ ]Figure out why AV Setup isn't working.
