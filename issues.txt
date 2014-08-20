@@ -60,6 +60,20 @@ Live Studio Sessions Issues
 [ ]Add some sample songs to the game for people without song libraries to play
    with.
 
+[ ]Use smart logic to determine how many beats to add before the song audio. We
+   should ensure there are at least two measures before the first playable note
+   and we should only add enough beats to make two measure before time to play.
+   
+   We can probably assume the first beat starts a measure and we should count
+   beats in groups of 4. If a note occurs within a measure, we can take note of
+   which measure it is in. If the note occurs before the third measure, we
+   should add the necessary measures worth of beats to get the pre-play measures
+   up to 2.
+   
+   This will ensure that songs with extra delay added will not have excessive
+   delay, while songs that use the original CD audio can work well with the game
+   as well.
+
 [ ]Get Android port up and running.
 
    [ ]Figure out why AV Setup isn't working.
