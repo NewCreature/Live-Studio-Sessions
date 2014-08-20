@@ -292,7 +292,7 @@ bool lss_song_mark_beats(LSS_SONG * sp, double total_length)
 			current_time += beat_time;
 		}
 	}
-	sp->beats += 10;
+	sp->beats += 20;
 
 	/* allocate beats */
 	sp->beat = malloc(sizeof(LSS_SONG_BEAT *) * sp->beats);
@@ -314,6 +314,7 @@ bool lss_song_mark_beats(LSS_SONG * sp, double total_length)
 	beat_time = 60.0 / BPM;
 	current_beat_event = 0;
 	current_time = 0.0;
+	current_beat = 8;
 	if(sp->source_midi->tempo_events)
 	{
 		while(current_time < total_length)
@@ -335,6 +336,14 @@ bool lss_song_mark_beats(LSS_SONG * sp, double total_length)
 			if(current_beat < sp->beats)
 			{
 				sp->beat[current_beat]->tick = (current_time + sp->offset) * 60.0;
+			}
+			/* fill in pre-audio beats */
+			if(current_beat == 8)
+			{
+				for(i = 0; i < 8; i++)
+				{
+					sp->beat[7 - i]->tick = (current_time + sp->offset - (beat_time * (double)i)) * 60.0;
+				}
 			}
 			current_beat++;
 			current_time += beat_time;

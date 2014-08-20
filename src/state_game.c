@@ -111,7 +111,6 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[9], T3F_ATLAS_SPRITE);
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->fret_button_image, T3F_ATLAS_SPRITE);
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->strum_bar_image, T3F_ATLAS_SPRITE);
-	gp->current_tick = 0;
 	gp->song_audio = lss_load_song_audio(song_path);
 	if(!gp->song_audio)
 	{
@@ -126,10 +125,7 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 	gp->board_speed = 12.0;
 	lss_initialize_player(gp, 0);
 	lss_song_mark_beats(gp->song, gp->song_audio->length);
-	if(!lss_set_song_audio_playing(gp->song_audio, true))
-	{
-		return false;
-	}
+	gp->current_tick = gp->song->beat[0]->tick;
 	al_start_timer(t3f_timer);
 	gp->done = false;
 	return true;
@@ -218,6 +214,15 @@ void lss_game_logic(LSS_GAME * gp)
 		lss_game_get_player_results(gp, 0);
 		gp->done = true;
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+	}
+	if(gp->current_tick == 0)
+	{
+		al_stop_timer(t3f_timer);
+		if(!lss_set_song_audio_playing(gp->song_audio, true))
+		{
+//			return false;
+		}
+		al_start_timer(t3f_timer);
 	}
 	gp->current_tick++;
 }

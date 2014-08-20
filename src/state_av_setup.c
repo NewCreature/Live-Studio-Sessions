@@ -43,6 +43,15 @@ void lss_state_av_setup_logic(APP_INSTANCE * app)
 		al_set_config_value(t3f_config, "Live Studio Sessions", "av_delay", buf);
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 	}
+	if(app->game.current_tick == 0)
+	{
+		al_stop_timer(t3f_timer);
+		if(!lss_set_song_audio_playing(app->game.song_audio, true))
+		{
+//			return false;
+		}
+		al_start_timer(t3f_timer);
+	}
 	app->game.current_tick++;
 }
 
