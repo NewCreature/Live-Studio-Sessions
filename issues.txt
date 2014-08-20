@@ -82,7 +82,7 @@ Live Studio Sessions Issues
 
    [X]When two beat markers are sufficiently close, they should be merged.
    
-   [ ]Figure out why beat line accuracy is off for songs with no tempo changes.
+   [X]Figure out why beat line accuracy is off for songs with no tempo changes.
    
    [ ]Make beat line generation code more robust so it can handle "non-standard"
       positioning of tempo changes.
