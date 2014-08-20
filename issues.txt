@@ -54,6 +54,9 @@ Live Studio Sessions Issues
    [X]This should play into the awards system. We might require getting all 
       perfect hits to qualify for a multiplatinum award.
 
+[ ]Select song folder from options screen or the first time the song list is
+   displayed.
+
 [ ]Get Android port up and running.
 
    [ ]Figure out why AV Setup isn't working.
@@ -78,6 +81,8 @@ Live Studio Sessions Issues
 [X]Fix beat lines.
 
    [X]When two beat markers are sufficiently close, they should be merged.
+   
+   [ ]Figure out why beat line accuracy is off for songs with no tempo changes.
    
    [ ]Make beat line generation code more robust so it can handle "non-standard"
       positioning of tempo changes.
