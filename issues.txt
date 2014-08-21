@@ -63,6 +63,12 @@ Live Studio Sessions Issues
 [ ]Figure out why there aren't enough beat markers being generated on some
    songs.
 
+[ ]Figure out why some HOPO notes aren't marked correctly. So far it looks like
+   it might be something to do with being the second note.
+
+[ ]Don't kill streak when strumming a HOPO note. Player should have the option
+   to strum if they want.
+
 [ ]Investigate crash issues.
 
    [ ]Crashes on game init.
