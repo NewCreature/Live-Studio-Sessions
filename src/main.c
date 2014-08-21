@@ -2,6 +2,7 @@
 #include "t3f/draw.h"
 #include "t3f/resource.h"
 #include "t3f/view.h"
+#include <allegro5/allegro_native_dialog.h>
 
 #include "rtk/midi.h"
 #include "modules/song_list.h"
@@ -61,6 +62,11 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	if(!t3f_initialize("Live Studio Sessions", 960, 540, 60.0, app_logic, app_render, T3F_DEFAULT, app))
 	{
 		printf("Error initializing T3F\n");
+		return false;
+	}
+	if(!al_init_native_dialog_addon())
+	{
+		printf("Error initializing native dialog add-on!\n");
 		return false;
 	}
 	app->controller[0].controller = t3f_create_controller(8);

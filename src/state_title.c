@@ -1,5 +1,6 @@
 #include "t3f/gui.h"
 #include "t3f/resource.h"
+#include <allegro5/allegro_native_dialog.h>
 
 #include "modules/song_list.h"
 #include "modules/text_entry.h"
@@ -178,6 +179,54 @@ int lss_menu_proc_options_av_setup(void * data, int ip, void * p)
 	return 1;
 }
 
+int lss_menu_proc_options_library(void * data, int ip, void * p)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	ALLEGRO_FILECHOOSER * fc;
+	ALLEGRO_PATH * pp = NULL, * ipp;
+	const char * pc;
+	int f = 0;
+
+	al_stop_timer(t3f_timer);
+	fc = al_create_native_file_dialog(al_get_config_value(t3f_config, "Live Studio Sessions", "Library Path"), "Choose Song Library Location", "*.*", ALLEGRO_FILECHOOSER_FOLDER);
+	if(fc)
+	{
+		if(al_show_native_file_dialog(t3f_display, fc))
+		{
+			if(al_get_native_file_dialog_count(fc))
+			{
+				pc = al_get_native_file_dialog_path(fc, 0);
+				if(pc)
+				{
+					pp = al_create_path(pc);
+				}
+				if(pp)
+				{
+					ipp = al_create_path("data/songs_copyright");
+					if(ipp)
+					{
+						lss_destroy_song_list(app->song_list);
+						f = lss_song_list_count_files(al_path_cstr(ipp, '/'), 0);
+						f += lss_song_list_count_files(al_path_cstr(pp, '/'), 0);
+						app->song_list = lss_create_song_list(t3f_get_filename(t3f_data_path, "song_list.cache"), f);
+						if(app->song_list)
+						{
+							lss_song_list_add_files(app->song_list, ipp, 0);
+							lss_song_list_add_files(app->song_list, pp, 0);
+						}
+						al_set_config_value(t3f_config, "Live Studio Sessions", "Library Path", al_path_cstr(pp, '/'));
+						al_destroy_path(ipp);
+					}
+					al_destroy_path(pp);
+				}
+			}
+		}
+		al_destroy_native_file_dialog(fc);
+	}
+	al_start_timer(t3f_timer);
+	return 1;
+}
+
 int lss_menu_proc_options_back(void * data, int i, void * p)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -342,6 +391,10 @@ bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp, LSS_SONG_LIST
 	pos += space;
 	t3f_add_gui_text_element(dp->menu[LSS_MENU_OPTIONS], lss_menu_proc_options_av_setup, "A/V Setup", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 	pos += space;
+	#ifndef T3F_ANDROID
+		t3f_add_gui_text_element(dp->menu[LSS_MENU_OPTIONS], lss_menu_proc_options_library, "Select Library Folder", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+		pos += space;
+	#endif
 	t3f_add_gui_text_element(dp->menu[LSS_MENU_OPTIONS], lss_menu_proc_options_back, "Back", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 	
 	/* start song audio */
