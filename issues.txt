@@ -54,7 +54,7 @@ Live Studio Sessions Issues
    [X]This should play into the awards system. We might require getting all 
       perfect hits to qualify for a multiplatinum award.
 
-[ ]Select song folder from options screen or the first time the song list is
+[X]Select song folder from options screen or the first time the song list is
    displayed.
 
 [ ]Add some sample songs to the game for people without song libraries to play
