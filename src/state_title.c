@@ -183,7 +183,7 @@ int lss_menu_proc_options_library(void * data, int ip, void * p)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	ALLEGRO_FILECHOOSER * fc;
-	ALLEGRO_PATH * pp = NULL, * ipp;
+	ALLEGRO_PATH * pp = NULL, * ipp, * fpp;
 	const char * pc;
 	int f = 0;
 
@@ -203,14 +203,17 @@ int lss_menu_proc_options_library(void * data, int ip, void * p)
 				if(pp)
 				{
 					ipp = al_create_path("data/songs_copyright");
-					if(ipp)
+					fpp = al_create_path("data/songs");
+					if(ipp && fpp)
 					{
 						lss_destroy_song_list(app->song_list);
-						f = lss_song_list_count_files(al_path_cstr(ipp, '/'), 0);
+						f = lss_song_list_count_files(al_path_cstr(fpp, '/'), 0);
+						f += lss_song_list_count_files(al_path_cstr(ipp, '/'), 0);
 						f += lss_song_list_count_files(al_path_cstr(pp, '/'), 0);
 						app->song_list = lss_create_song_list(t3f_get_filename(t3f_data_path, "song_list.cache"), f);
 						if(app->song_list)
 						{
+							lss_song_list_add_files(app->song_list, fpp, 0);
 							lss_song_list_add_files(app->song_list, ipp, 0);
 							lss_song_list_add_files(app->song_list, pp, 0);
 						}

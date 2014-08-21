@@ -55,6 +55,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
 	int f;
 	ALLEGRO_PATH * included_songs_path;
+	ALLEGRO_PATH * free_songs_path;
 	ALLEGRO_PATH * songs_path;
 	const char * val;
 	
@@ -92,6 +93,11 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 	
 	/* create song database */
+	free_songs_path = al_create_path("data/songs");
+	if(!free_songs_path)
+	{
+		return false;
+	}
 	included_songs_path = al_create_path("data/songs_copyright");
 	if(!included_songs_path)
 	{
@@ -114,7 +120,8 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 			songs_path = al_create_path("data/songs");
 		}
 	}
-	f = lss_song_list_count_files(al_path_cstr(included_songs_path, '/'), 0);
+	f = lss_song_list_count_files(al_path_cstr(free_songs_path, '/'), 0);
+	f += lss_song_list_count_files(al_path_cstr(included_songs_path, '/'), 0);
 	f += lss_song_list_count_files(al_path_cstr(songs_path, '/'), 0);
 	if(f <= 0)
 	{
@@ -127,6 +134,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Could create song list!\n");
 		return false;
 	}
+	lss_song_list_add_files(app->song_list, free_songs_path, 0);
 	lss_song_list_add_files(app->song_list, included_songs_path, 0);
 	lss_song_list_add_files(app->song_list, songs_path, 0);
 	
