@@ -60,6 +60,15 @@ Live Studio Sessions Issues
 [ ]Add some sample songs to the game for people without song libraries to play
    with.
 
+[ ]Figure out why there aren't enough beat markers being generated on some
+   songs.
+
+[ ]Investigate crash issues.
+
+   [ ]Crashes on game init.
+   
+   [ ]Crashes on song audio start.
+
 [ ]Use smart logic to determine how many beats to add before the song audio. We
    should ensure there are at least two measures before the first playable note
    and we should only add enough beats to make two measure before time to play.
