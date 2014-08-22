@@ -162,6 +162,11 @@ static bool lss_song_populate_tracks(LSS_SONG * sp)
 	hopo_threshold = sp->source_midi->raw_data->divisions / 3; // 12th note
 	for(i = 0; i < sp->source_midi->tracks; i++)
 	{
+		for(j = 0; j < 16; j++)
+		{
+			previous_note_tick[j] = -1;
+			chord[j] = false;
+		}
 		stream = -1;
 		if(!strcmp(sp->source_midi->track[i]->name, "T1 GEMS"))
 		{
@@ -213,7 +218,7 @@ static bool lss_song_populate_tracks(LSS_SONG * sp)
 							d = sp->source_midi->track[i]->event[j]->tick - previous_note_tick[difficulty];
 							if(d > 0)
 							{
-								if(d < hopo_threshold)
+								if(d <= hopo_threshold)
 								{
 									/* previous note wasn't part of a chord */
 									if(!chord[difficulty])
