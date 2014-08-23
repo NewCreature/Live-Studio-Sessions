@@ -67,6 +67,7 @@ static int lss_song_list_proc_select_difficulty(void * data, int i, void * p)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	t3f_destroy_gui(lss_song_list_menu);
+	lss_song_list_menu = NULL;
 	app->game.player[0].selected_difficulty = i - 2;
 	app->game.song_id = app->song_list->entry[app->selected_song]->id;
 	app->game.player[0].selected_track = lss_track[app->game.player[0].selected_track];
@@ -116,6 +117,7 @@ static int lss_song_list_proc_select_track(void * data, int i, void * p)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	t3f_destroy_gui(lss_song_list_menu);
+	lss_song_list_menu = NULL;
 	app->game.player[0].selected_track = i - 1;
 	lss_enumerate_difficulties(app->game.song, lss_track[app->game.player[0].selected_track]);
 	lss_create_difficulty_menu(app);
@@ -367,7 +369,6 @@ static void lss_song_list_process_menu(APP_INSTANCE * app, T3F_GUI * menu)
 		t3f_select_next_gui_element(menu);
 		t3f_key[ALLEGRO_KEY_DOWN] = 0;
 	}
-	lss_update_gui_colors(menu, LSS_TITLE_COLOR_HEADER, LSS_TITLE_COLOR_SELECTED, LSS_TITLE_COLOR_NORMAL);
 }
 
 void lss_state_song_list_track_select_logic(APP_INSTANCE * app)
@@ -381,6 +382,10 @@ void lss_state_song_list_track_select_logic(APP_INSTANCE * app)
 		lss_song_list_tap_frames = 0;
 		app->state = LSS_STATE_SONG_SELECT;
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+	}
+	if(lss_song_list_menu)
+	{
+		lss_update_gui_colors(lss_song_list_menu, LSS_TITLE_COLOR_HEADER, LSS_TITLE_COLOR_SELECTED, LSS_TITLE_COLOR_NORMAL);
 	}
 }
 
@@ -399,9 +404,14 @@ void lss_state_song_list_difficulty_select_logic(APP_INSTANCE * app)
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
 	{
 		t3f_destroy_gui(lss_song_list_menu);
+		lss_song_list_menu = NULL;
 		lss_create_track_list_menu(app);
 		app->state = LSS_STATE_SONG_SELECT_TRACK;
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+	}
+	if(lss_song_list_menu)
+	{
+		lss_update_gui_colors(lss_song_list_menu, LSS_TITLE_COLOR_HEADER, LSS_TITLE_COLOR_SELECTED, LSS_TITLE_COLOR_NORMAL);
 	}
 }
 
