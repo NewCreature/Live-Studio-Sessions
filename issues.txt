@@ -71,7 +71,7 @@ Live Studio Sessions Issues
 
 [ ]Investigate crash issues.
 
-   [ ]Crashes on game init.
+   [X]Crashes on game init.
    
    [ ]Crashes on song audio start.
 
