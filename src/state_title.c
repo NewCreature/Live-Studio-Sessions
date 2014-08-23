@@ -462,9 +462,12 @@ void lss_title_logic(LSS_TITLE_DATA * dp, APP_INSTANCE * app)
 			}
 			if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
 			{
-				dp->menu[dp->current_menu]->hover_element = 0;
-				t3f_select_previous_gui_element(dp->menu[dp->current_menu]);
-				t3f_activate_selected_gui_element(dp->menu[dp->current_menu], app);
+				if(app->state == LSS_STATE_TITLE)
+				{
+					dp->menu[dp->current_menu]->hover_element = 0;
+					t3f_select_previous_gui_element(dp->menu[dp->current_menu]);
+					t3f_activate_selected_gui_element(dp->menu[dp->current_menu], app);
+				}
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 			}
 		}
