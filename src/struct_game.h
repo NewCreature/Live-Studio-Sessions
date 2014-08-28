@@ -15,6 +15,7 @@ typedef struct
 
 	int note[32];
 	int notes;
+	bool hopo;
 
 } LSS_PLAYER_NOTE_GROUP;
 
