@@ -404,6 +404,15 @@ void lss_player_logic(LSS_GAME * gp, int player)
 			/* no note matches means we should kill the combo */
 			if(i == gp->player[0].hittable_notes_groups)
 			{
+				if(gp->song_audio->streams > 1)
+				{
+					stream = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].stream;
+					if(stream >= 0 && gp->song_audio->stream[stream])
+					{
+						al_set_audio_stream_gain(gp->song_audio->stream[stream], 0.0);
+					}
+				}
+				gp->player[0].playing_notes.notes = 0;
 				gp->player[0].streak = 0;
 				gp->player[0].multiplier = 1;
 				gp->player[0].full_combo = false;
