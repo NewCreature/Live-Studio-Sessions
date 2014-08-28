@@ -137,6 +137,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	lss_song_list_add_files(app->song_list, free_songs_path, 0);
 	lss_song_list_add_files(app->song_list, included_songs_path, 0);
 	lss_song_list_add_files(app->song_list, songs_path, 0);
+	lss_song_list_sort(app->song_list, 0, NULL);
 	
 	app->profiles = lss_load_profiles();
 	if(!app->profiles)
