@@ -250,7 +250,7 @@ void lss_initialize_player(LSS_GAME * gp, int player)
 
 void lss_player_logic(LSS_GAME * gp, int player)
 {
-	int i, j, d, t, accuracy = 2;
+	int i, j, d, d2, t, accuracy = 2;
 	bool dropped = false;
 	int points = 0;
 	int stream;
@@ -260,6 +260,8 @@ void lss_player_logic(LSS_GAME * gp, int player)
 	int missed_notes = 0;
 	int missed_groups = 0;
 	bool hopo_strum = false;
+	bool hopo_strum_check = false; // true if we needed to check next_notes for valid strummable note
+	bool hopo_strum_pass = false;
 	
 	lss_read_controller(gp->player[0].controller);
 	lss_player_detect_visible_notes(gp, 0);
@@ -327,9 +329,35 @@ void lss_player_logic(LSS_GAME * gp, int player)
 		{
 			if(lss_player_check_notes(gp->song, &gp->player[0], gp->player[0].playing_notes.note, gp->player[0].playing_notes.notes))
 			{
-				gp->player[0].playing_notes.hopo = false; // prevent extra strums from going unnoticed
-				hopo_strum = true;
+				/* see if we may also be strumming the next note */
+				if(gp->player[0].next_notes.notes && lss_player_check_notes(gp->song, &gp->player[0], gp->player[0].next_notes.note, gp->player[0].next_notes.notes))
+				{
+					hopo_strum_check = true;
+					d = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[0]]->tick - (gp->current_tick - gp->av_delay)));
+				}
+				
+				/* have strummed the next note as well as the previous note,
+				 * only eat strum of the HOPO note is closer than the next note */
+				if(hopo_strum_check)
+				{
+					d2 = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_notes.note[0]]->tick - (gp->current_tick - gp->av_delay)));
+					if(fabs(d2) < fabs(d))
+					{
+						hopo_strum_pass = true;
+					}
+				}
+				
+				/* if the strummed note only matches the HOPO note, eat the strum */
+				else
+				{
+					hopo_strum_pass = true;
+				}
 			}
+		}
+		if(hopo_strum_pass)
+		{
+			gp->player[0].playing_notes.hopo = false; // prevent extra strums from going unnoticed
+			hopo_strum = true;
 		}
 		
 		/* if we have strummed a HOPO note, ignore the rest of the logic so we
