@@ -1,6 +1,7 @@
 #include "t3f/t3f.h"
 #include "t3f/gui.h"
 
+#include <ctype.h>
 #include "modules/gui.h"
 
 #include "instance.h"
@@ -246,7 +247,7 @@ static void lss_state_song_list_center(APP_INSTANCE * app)
 
 void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 {
-	int max;
+	int max, k, i;
 
 	lss_song_list_space = al_get_font_line_height(app->resources.font[lss_song_list_font]);
 	lss_song_list_visible = 540 / lss_song_list_space + 1;
@@ -311,6 +312,33 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 		}
 		lss_state_song_list_center(app);
 		t3f_key[ALLEGRO_KEY_PGDN] = 0;
+	}
+	
+	/* detect keyboard shortcuts for navigating list */
+	k = t3f_read_key(0);
+	if(k >= 'a' && k <= 'z')
+	{
+		for(i = 0; i < app->song_list->entries; i++)
+		{
+			if(app->song_list->entry[i]->artist[0] == k || app->song_list->entry[i]->artist[0] == toupper(k))
+			{
+				app->selected_song = i;
+				lss_state_song_list_center(app);
+				break;
+			}
+		}
+	}
+	else if(k >= 'A' && k <= 'Z')
+	{
+		for(i = 0; i < app->song_list->entries; i++)
+		{
+			if(app->song_list->entry[i]->title[0] == k || app->song_list->entry[i]->title[0] == toupper(k))
+			{
+				app->selected_song = i;
+				lss_state_song_list_center(app);
+				break;
+			}
+		}
 	}
 	max = app->song_list->entries * lss_song_list_space - lss_song_list_visible * lss_song_list_space + lss_song_list_space;
 	if(lss_song_list_scroll_pos < 0)
