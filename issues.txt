@@ -60,6 +60,10 @@ Live Studio Sessions Issues
 [X]Figure out why some HOPO notes aren't marked correctly. So far it looks like
    it might be something to do with being the second note.
 
+[ ]Ensure strum actions are used up. Currently, it is possible to strum and then
+   press the appropriate notes and have it count as a hit. Need to check the
+   pressed member to determine if it is being properly reset.
+
 [ ]Add some sample songs to the game for people without song libraries to play
    with.
 
