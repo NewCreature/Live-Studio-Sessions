@@ -63,15 +63,15 @@ Live Studio Sessions Issues
 [X]Add some sample songs to the game for people without song libraries to play
    with.
 
+[X]Don't kill streak when strumming a HOPO note. Player should have the option
+   to strum if they want.
+
 [ ]Ensure strum actions are used up. Currently, it is possible to strum and then
    press the appropriate notes and have it count as a hit. Need to check the
    pressed member to determine if it is being properly reset.
 
 [ ]Figure out why there aren't enough beat markers being generated on some
    songs.
-
-[ ]Don't kill streak when strumming a HOPO note. Player should have the option
-   to strum if they want.
 
 [ ]Investigate crash issues.
 
