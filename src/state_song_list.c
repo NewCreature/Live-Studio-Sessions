@@ -24,10 +24,10 @@ static double lss_song_list_scroll_pos = 0.0;
 static double lss_song_list_scroll_velocity = 0.0;
 static double lss_song_list_touch_pos = 0.0;
 static int lss_song_list_touch_id = -1;
-static bool lss_song_list_selected;
-static bool lss_song_list_tapped;
-static bool lss_song_list_scrolled;
-static int lss_song_list_touch_frames;
+static bool lss_song_list_selected = false;
+static bool lss_song_list_tapped = false;
+static bool lss_song_list_scrolled = false;
+static int lss_song_list_touch_frames = 0;
 static int lss_song_list_tap_frames = 0;
 static int lss_song_list_sort_type = 0;
 static char lss_song_list_sort_filter[32] = {0};
@@ -350,11 +350,15 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 	}
 	
 	max = app->song_list->entries * lss_song_list_space - lss_song_list_visible * lss_song_list_space + lss_song_list_space;
-	if(lss_song_list_scroll_pos < 0)
+	if(app->song_list->entries < lss_song_list_visible)
 	{
 		lss_song_list_scroll_pos = 0;
 	}
-	else if(lss_song_list_scroll_pos >= max)
+	else if(lss_song_list_scroll_pos < 0)
+	{
+		lss_song_list_scroll_pos = 0;
+	}
+	else if(lss_song_list_scroll_pos > max)
 	{
 		lss_song_list_scroll_pos = max;
 	}
