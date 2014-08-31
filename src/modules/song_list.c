@@ -327,16 +327,134 @@ void lss_song_list_add_files(LSS_SONG_LIST * dp, const ALLEGRO_PATH * path, int 
 	al_destroy_fs_entry(dir);
 }
 
+static const char * lss_song_list_filter = NULL;
+static int lss_song_list_filter_field = 0;
+
+static int lss_song_list_stricmp(const char * s1, const char * s2)
+{
+	int pos = 0;
+	
+	while(1)
+	{
+		if(tolower(s1[pos]) != tolower(s2[pos]))
+		{
+			if(s1[pos] == '\0')
+			{
+				return -1;
+			}
+			else if(s2[pos] == '\0')
+			{
+				return 1;
+			}
+			else
+			{
+				return tolower(s1[pos]) - tolower(s2[pos]);
+			}
+		}
+		else
+		{
+			break;
+		}
+		pos++;
+	}
+	return 0;
+}
+
+static int lss_song_list_strmatch(const char * s1, const char * s2)
+{
+	int pos = 0;
+	
+	while(1)
+	{
+		if(tolower(s1[pos]) != tolower(s2[pos]))
+		{
+			if(s1[pos] == '\0')
+			{
+				return -1;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		else
+		{
+			if(s1[pos] == '\0')
+			{
+				return -1;
+			}
+		}
+		pos++;
+	}
+	return 0;
+}
+
 static int lss_song_list_sorter(const void * item_1, const void * item_2)
 {
 	LSS_SONG_LIST_ENTRY * sp1 = *(LSS_SONG_LIST_ENTRY **)(item_1);
 	LSS_SONG_LIST_ENTRY * sp2 = *(LSS_SONG_LIST_ENTRY **)(item_2);
-	int acmp;
+	int acmp, acmp2;
 	
-	acmp = strcmp(sp1->artist, sp2->artist);
-	if(!acmp)
+	if(lss_song_list_filter)
 	{
-		return strcmp(sp1->title, sp2->title);
+		if(lss_song_list_filter_field == 0)
+		{
+			acmp = lss_song_list_strmatch(lss_song_list_filter, sp1->artist);
+			acmp2 = lss_song_list_strmatch(lss_song_list_filter, sp2->artist);
+			if(acmp && acmp2)
+			{
+				acmp = lss_song_list_stricmp(sp1->artist, sp2->artist);
+				if(!acmp)
+				{
+					return lss_song_list_stricmp(sp1->title, sp2->title);
+				}
+			}
+			else if(acmp)
+			{
+				return -1;
+			}
+			else if(acmp2)
+			{
+				return 1;
+			}
+		}
+		else if(lss_song_list_filter_field == 1)
+		{
+			acmp = lss_song_list_strmatch(lss_song_list_filter, sp1->title);
+			acmp2 = lss_song_list_strmatch(lss_song_list_filter, sp2->title);
+			if(acmp && acmp2)
+			{
+				acmp = lss_song_list_stricmp(sp1->artist, sp2->title);
+				if(!acmp)
+				{
+					return lss_song_list_stricmp(sp1->artist, sp2->artist);
+				}
+			}
+			else if(acmp)
+			{
+				return -1;
+			}
+			else if(acmp2)
+			{
+				return 1;
+			}
+		}
+	}
+	if(lss_song_list_filter_field == 0)
+	{
+		acmp = lss_song_list_stricmp(sp1->artist, sp2->artist);
+		if(!acmp)
+		{
+			return lss_song_list_stricmp(sp1->title, sp2->title);
+		}
+	}
+	else
+	{
+		acmp = lss_song_list_stricmp(sp1->title, sp2->title);
+		if(!acmp)
+		{
+			return lss_song_list_stricmp(sp1->artist, sp2->artist);
+		}
 	}
 	return acmp;
 }
@@ -344,5 +462,7 @@ static int lss_song_list_sorter(const void * item_1, const void * item_2)
 /* sort the sprite list using the above helper function */
 void lss_song_list_sort(LSS_SONG_LIST * dp, int field, const char * filter)
 {
-   qsort(dp->entry, dp->entries, sizeof(LSS_SONG_LIST_ENTRY *), lss_song_list_sorter);
+	lss_song_list_filter_field = field;
+	lss_song_list_filter = filter;
+	qsort(dp->entry, dp->entries, sizeof(LSS_SONG_LIST_ENTRY *), lss_song_list_sorter);
 }
