@@ -56,7 +56,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	int f;
 	ALLEGRO_PATH * included_songs_path;
 	ALLEGRO_PATH * free_songs_path;
-	ALLEGRO_PATH * songs_path;
+	ALLEGRO_PATH * songs_path = NULL;
 	const char * val;
 	
 	/* initialize T3F */
@@ -115,14 +115,13 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		{
 			songs_path = al_create_path(val);
 		}
-		else
-		{
-			songs_path = al_create_path("data/songs");
-		}
 	}
 	f = lss_song_list_count_files(al_path_cstr(free_songs_path, '/'), 0);
 	f += lss_song_list_count_files(al_path_cstr(included_songs_path, '/'), 0);
-	f += lss_song_list_count_files(al_path_cstr(songs_path, '/'), 0);
+	if(songs_path)
+	{
+		f += lss_song_list_count_files(al_path_cstr(songs_path, '/'), 0);
+	}
 	if(f <= 0)
 	{
 		printf("No songs found!\n");
@@ -136,7 +135,10 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 	lss_song_list_add_files(app->song_list, free_songs_path, 0);
 	lss_song_list_add_files(app->song_list, included_songs_path, 0);
-	lss_song_list_add_files(app->song_list, songs_path, 0);
+	if(songs_path)
+	{
+		lss_song_list_add_files(app->song_list, songs_path, 0);
+	}
 	lss_song_list_sort(app->song_list, 0, NULL);
 	
 	app->profiles = lss_load_profiles();
