@@ -72,9 +72,12 @@ bool lss_process_text_entry(void)
 				break;
 			}
 		}
-		if(lss_entering_text_proc)
+		if(key)
 		{
-			lss_entering_text_proc(lss_entering_text_data, key);
+			if(lss_entering_text_proc)
+			{
+				lss_entering_text_proc(lss_entering_text_data, key);
+			}
 		}
 		return true;
 	}
