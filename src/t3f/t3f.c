@@ -946,6 +946,11 @@ int t3f_read_key(int flags)
 	return rkey;
 }
 
+bool t3f_key_pressed(void)
+{
+	return t3f_key_buffer_keys > 0;
+}
+
 void t3f_get_mouse_mickeys(int * x, int * y, int * z)
 {
 	if(x)

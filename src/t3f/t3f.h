@@ -124,6 +124,7 @@ float t3f_distance(float x1, float y1, float x2, float y2);
 void t3f_clear_keys(void);
 bool t3f_add_key(int key);
 int t3f_read_key(int flags);
+bool t3f_key_pressed(void);
 
 /* mouse */
 void t3f_get_mouse_mickeys(int * x, int * y, int * z);
