@@ -66,6 +66,9 @@ Live Studio Sessions Issues
 [X]Don't kill streak when strumming a HOPO note. Player should have the option
    to strum if they want.
 
+[ ]Stummed HOPO notes should count the accuracy of the stum and not the HOPO.
+   This will ensure scoring matches player intent.
+
 [ ]Ensure strum actions are used up. Currently, it is possible to strum and then
    press the appropriate notes and have it count as a hit. Need to check the
    pressed member to determine if it is being properly reset.
