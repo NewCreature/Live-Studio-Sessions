@@ -8,18 +8,29 @@
 #define LSS_SONG_MAX_TRACKS       16
 #define LSS_SONG_MAX_DIFFICULTIES  8
 
+#define LSS_SONG_NOTE_HIT_LEVEL_NONE    0
+#define LSS_SONG_NOTE_HIT_LEVEL_MISS    1
+#define LSS_SONG_NOTE_HIT_LEVEL_BAD     2
+#define LSS_SONG_NOTE_HIT_LEVEL_OKAY    3
+#define LSS_SONG_NOTE_HIT_LEVEL_GOOD    4
+#define LSS_SONG_NOTE_HIT_LEVEL_PERFECT 5
+
 typedef struct
 {
 	
+	/* static data (don't change after loading) */
 	int val;
 	int tick;
-	int play_tick;
 	int length;
 	bool active;
 	bool in_chord;
+	bool hopo;
+	
+	/* dynamic data (keep track of stuff during gameplay) */
+	int play_tick;
 	bool playing;
 	bool visible;
-	bool hopo;
+	int hit_level;
 	
 } LSS_SONG_NOTE;
 

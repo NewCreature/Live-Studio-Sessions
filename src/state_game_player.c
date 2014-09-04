@@ -218,11 +218,6 @@ void lss_initialize_player(LSS_GAME * gp, int player)
 	gp->player[0].playing_notes.notes = 0;
 	gp->player[0].next_notes.note[0] = -1;
 	gp->player[0].next_notes.notes = 1;
-	gp->player[0].hit_notes = 0;
-	gp->player[0].missed_notes = 0;
-	gp->player[0].perfect_notes = 0;
-	gp->player[0].good_notes = 0;
-	gp->player[0].bad_notes = 0;
 	gp->player[0].streak = 0;
 	gp->player[0].multiplier = 1;
 	gp->player[0].life = 100;
@@ -281,6 +276,10 @@ void lss_player_logic(LSS_GAME * gp, int player)
 				{
 					al_set_audio_stream_gain(gp->song_audio->stream[stream], 0.0);
 				}
+			}
+			for(i = 0; i < gp->player[0].next_notes.notes; i++)
+			{
+				gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[i]]->hit_level = LSS_SONG_NOTE_HIT_LEVEL_MISS;
 			}
 			missed_notes = gp->player[0].next_notes.notes;
 			missed_groups = 1;
@@ -358,8 +357,38 @@ void lss_player_logic(LSS_GAME * gp, int player)
 		{
 			gp->player[0].playing_notes.hopo = false; // prevent extra strums from going unnoticed
 			hopo_strum = true;
+			gp->player[0].score -= gp->player[0].playing_notes.hopo_points;
+			
+			/* adjust note accuracy to match strum position */
+			for(i = 0; i < gp->player[0].playing_notes.notes; i++)
+			{
+				if(d >= -1.0 && d <= 1.0)
+				{
+					gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_notes.note[i]]->hit_level = LSS_SONG_NOTE_HIT_LEVEL_PERFECT;
+					accuracy = 4;
+				}
+				else if(d >= -2.0 && d <= 2.0)
+				{
+					gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_notes.note[i]]->hit_level = LSS_SONG_NOTE_HIT_LEVEL_GOOD;
+					accuracy = 3;
+				}
+				else if(d >= -5.0 && d <= 5.0)
+				{
+					gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_notes.note[i]]->hit_level = LSS_SONG_NOTE_HIT_LEVEL_OKAY;
+					accuracy = 2;
+				}
+				else
+				{
+					gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_notes.note[i]]->hit_level = LSS_SONG_NOTE_HIT_LEVEL_BAD;
+					accuracy = 1;
+				}
+			}
 		}
 		
+		/* add adjusted points to score */
+		points = gp->player[0].playing_notes.notes * (LSS_GAME_NOTE_BASE_POINTS * accuracy) * gp->player[0].multiplier;
+		gp->player[0].score += points;
+
 		/* if we have strummed a HOPO note, ignore the rest of the logic so we
 		 * don't kill the streak or mess with the next_notes */
 		if(!hopo_strum)
@@ -383,25 +412,29 @@ void lss_player_logic(LSS_GAME * gp, int player)
 						gp->player[0].playing_notes.note[j] = gp->player[0].hittable_notes[i].note[j];
 						gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].hittable_notes[i].note[j]]->visible = false;
 						gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].hittable_notes[i].note[j]]->play_tick = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].hittable_notes[i].note[j]]->tick;
+						if(d >= -1.0 && d <= 1.0)
+						{
+							gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].hittable_notes[i].note[j]]->hit_level = LSS_SONG_NOTE_HIT_LEVEL_PERFECT;
+							accuracy = 4;
+						}
+						else if(d >= -2.0 && d <= 2.0)
+						{
+							gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].hittable_notes[i].note[j]]->hit_level = LSS_SONG_NOTE_HIT_LEVEL_GOOD;
+							accuracy = 3;
+						}
+						else if(d >= -5.0 && d <= 5.0)
+						{
+							gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].hittable_notes[i].note[j]]->hit_level = LSS_SONG_NOTE_HIT_LEVEL_OKAY;
+							accuracy = 2;
+						}
+						else
+						{
+							gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].hittable_notes[i].note[j]]->hit_level = LSS_SONG_NOTE_HIT_LEVEL_BAD;
+							accuracy = 1;
+						}
 					}
 					gp->player[0].playing_notes.notes = gp->player[0].hittable_notes[i].notes;
 					gp->player[0].playing_notes.hopo = false;
-					gp->player[0].hit_notes += gp->player[0].playing_notes.notes;
-					if(d >= -1.0 && d <= 1.0)
-					{
-						gp->player[0].perfect_notes += gp->player[0].playing_notes.notes;
-						accuracy = 4;
-					}
-					else if(d >= -2.0 && d <= 2.0)
-					{
-						gp->player[0].good_notes += gp->player[0].playing_notes.notes;
-						accuracy = 3;
-					}
-					else if(d < -5.0 || d > 5.0)
-					{
-						gp->player[0].bad_notes += gp->player[0].playing_notes.notes;
-						accuracy = 1;
-					}
 					gp->player[0].multiplier = gp->player[0].streak / 8 + 1;
 					if(gp->player[0].multiplier > 4)
 					{
@@ -529,31 +562,36 @@ void lss_player_logic(LSS_GAME * gp, int player)
 						gp->player[0].playing_notes.note[i] = gp->player[0].next_notes.note[i];
 						gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[i]]->visible = false;
 						gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[i]]->play_tick = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[i]]->tick;
+						if(d >= -1.0 && d <= 1.0)
+						{
+							gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[i]]->hit_level = LSS_SONG_NOTE_HIT_LEVEL_PERFECT;
+							accuracy = 4;
+						}
+						else if(d >= -2.0 && d <= 2.0)
+						{
+							gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[i]]->hit_level = LSS_SONG_NOTE_HIT_LEVEL_GOOD;
+							accuracy = 3;
+						}
+						else if(d >= -5.0 && d <= 5.0)
+						{
+							gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[i]]->hit_level = LSS_SONG_NOTE_HIT_LEVEL_OKAY;
+							accuracy = 2;
+						}
+						else
+						{
+							gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[i]]->hit_level = LSS_SONG_NOTE_HIT_LEVEL_BAD;
+							accuracy = 1;
+						}
 					}
 					gp->player[0].playing_notes.notes = gp->player[0].next_notes.notes;
 					gp->player[0].playing_notes.hopo = true;
-					gp->player[0].hit_notes += gp->player[0].playing_notes.notes;
-					if(d >= -1.0 && d <= 1.0)
-					{
-						gp->player[0].perfect_notes += gp->player[0].playing_notes.notes;
-						accuracy = 4;
-					}
-					else if(d >= -2.0 && d <= 2.0)
-					{
-						gp->player[0].good_notes += gp->player[0].playing_notes.notes;
-						accuracy = 3;
-					}
-					else if(d < -5.0 && d > 5.0)
-					{
-						gp->player[0].bad_notes += gp->player[0].playing_notes.notes;
-						accuracy = 1;
-					}
 					gp->player[0].multiplier = gp->player[0].streak / 8 + 1;
 					if(gp->player[0].multiplier > 4)
 					{
 						gp->player[0].multiplier = 4;
 					}
 					points = gp->player[0].playing_notes.notes * (LSS_GAME_NOTE_BASE_POINTS * accuracy) * gp->player[0].multiplier;
+					gp->player[0].playing_notes.hopo_points = points;
 					gp->player[0].score += points;
 					gp->player[0].streak++;
 					gp->player[0].miss_streak = 0;
@@ -571,7 +609,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 	{
 		gp->player[0].streak = 0;
 		gp->player[0].multiplier = 1;
-		gp->player[0].missed_notes += missed_notes;
+//		gp->player[0].missed_notes += missed_notes;
 		gp->player[0].full_combo = false;
 		for(i = 0; i < missed_groups; i++)
 		{

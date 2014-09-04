@@ -152,41 +152,96 @@ void lss_game_exit(LSS_GAME * gp)
 
 static void lss_game_get_player_results(LSS_GAME * gp, int player)
 {
-	int total_notes = gp->player[0].hit_notes + gp->player[0].missed_notes;
+	int i;
+	
+	gp->player[0].total_notes = 0;
+	gp->player[0].hit_notes = 0;
+	gp->player[0].missed_notes = 0;
+	gp->player[0].bad_notes = 0;
+	gp->player[0].good_notes = 0;
+	gp->player[0].perfect_notes = 0;
+	for(i = 0; i < gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes; i++)
+	{
+		if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->hit_level != LSS_SONG_NOTE_HIT_LEVEL_NONE)
+		{
+			gp->player[0].total_notes++;
+			switch(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->hit_level)
+			{
+				case LSS_SONG_NOTE_HIT_LEVEL_MISS:
+				{
+					gp->player[0].missed_notes++;
+					break;
+				}
+				case LSS_SONG_NOTE_HIT_LEVEL_BAD:
+				{
+					gp->player[0].hit_notes++;
+					gp->player[0].bad_notes++;
+					break;
+				}
+				case LSS_SONG_NOTE_HIT_LEVEL_OKAY:
+				{
+					gp->player[0].hit_notes++;
+					break;
+				}
+				case LSS_SONG_NOTE_HIT_LEVEL_GOOD:
+				{
+					gp->player[0].hit_notes++;
+					gp->player[0].good_notes++;
+					break;
+				}
+				case LSS_SONG_NOTE_HIT_LEVEL_PERFECT:
+				{
+					gp->player[0].hit_notes++;
+					gp->player[0].perfect_notes++;
+					break;
+				}
+			}
+		}
+	}
 	
 	gp->player[0].stars = 0;
 	/* give one star for completing the song */
-	if(total_notes >= gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes)
+	if(gp->player[0].total_notes >= gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes)
 	{
 		gp->player[0].stars++;
 	}
 	
 	/* give one star for hitting half of the notes */
-	if(gp->player[0].stars && (gp->player[0].hit_notes * 100) / total_notes >= 50)
+	if(gp->player[0].stars && (gp->player[0].hit_notes * 100) / gp->player[0].total_notes >= 50)
 	{
 		gp->player[0].stars++;
 	}
 	
 	/* give one star for hitting three quarters of the notes */
-	if(gp->player[0].stars && (gp->player[0].hit_notes * 100) / total_notes >= 75)
+	if(gp->player[0].stars && (gp->player[0].hit_notes * 100) / gp->player[0].total_notes >= 75)
 	{
 		gp->player[0].stars++;
 	}
 	
 	/* give one star for hitting all of the notes */
-	if(gp->player[0].stars && (gp->player[0].hit_notes * 100) / total_notes >= 100)
+	if(gp->player[0].stars && (gp->player[0].hit_notes * 100) / gp->player[0].total_notes >= 100)
 	{
 		gp->player[0].stars++;
 	}
 	
 	/* give one star for no bad notes */
-	if(gp->player[0].stars >= 4 && gp->player[0].perfect_notes + gp->player[0].good_notes >= total_notes)
+	if(gp->player[0].stars >= 4 && gp->player[0].perfect_notes + gp->player[0].good_notes >= gp->player[0].total_notes)
 	{
 		gp->player[0].stars++;
 	}
 	
 	/* calculate accuracy */
-	gp->player[0].accuracy = ((double)(gp->player[0].hit_notes) * 100.0) / (double)total_notes;
+	if(gp->player[0].total_notes > 0)
+	{
+		gp->player[0].accuracy = ((double)(gp->player[0].hit_notes) * 100.0) / (double)gp->player[0].total_notes;
+	}
+	else
+	{
+		gp->player[0].accuracy = -1.0;
+	}
+
+	/* calculate completion percentage */
+	gp->player[0].completion = ((float)gp->player[0].total_notes / (float)gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes) * 100.0;
 
 	/* full combo only awarded if song is completed */
 	if(!gp->player[0].stars)

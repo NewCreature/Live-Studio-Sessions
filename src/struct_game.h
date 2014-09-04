@@ -16,6 +16,7 @@ typedef struct
 	int note[32];
 	int notes;
 	bool hopo;
+	int hopo_points; // points awarded for played HOPO note, subtract these if note is strummed later
 
 } LSS_PLAYER_NOTE_GROUP;
 
@@ -34,7 +35,6 @@ typedef struct
 	int miss_streak;
 	int multiplier;
 	
-	int hit_notes, missed_notes, perfect_notes, good_notes, bad_notes;
 	bool full_combo;
 
 	LSS_PLAYER_NOTE_GROUP next_notes;
@@ -51,6 +51,8 @@ typedef struct
 	/* cache game results so we only need to calculate them once */
 	int stars;
 	double accuracy;
+	double completion;
+	int total_notes, hit_notes, missed_notes, perfect_notes, good_notes, bad_notes;
 
 } LSS_PLAYER;
 
