@@ -1,10 +1,11 @@
-Application Name
-----------------
+Live Studio Sessions
+--------------------
 
 Description
 -----------
 
-Description of your application.
+A rhythm game based on Frets On Fire where your goal is to make records. Get
+high scores by playing songs as accurately as possible.
 
 
 Installation
@@ -16,17 +17,25 @@ How to install.
 Getting Started
 ---------------
 
-Basic instructions.
+Use the mouse or keyboard to navigate the menus. You can also control the menus
+using a configured guitar controller (select Options on the main menu, then
+Controls).
 
 
 Playing the Game
 ----------------
 
-How to play the game.
+You play the game by holding the fret buttons that match the incoming note
+markers, and strumming when the notes cross the strum line.
+
+To play with a keyboard, it is recommended that you hold the keyboard in your
+left hand with your fingers positioned over the F1-F5 keys. This makes the game
+play feel similar to playing with a guitar controller.
 
 
 Contacting Us
 -------------
 
-Contact information.
+Feel free to send comments to us at:
 
+	todd@t3-i.com
