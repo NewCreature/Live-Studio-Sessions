@@ -98,6 +98,10 @@ Live Studio Sessions Issues
 
 [ ]Get Android port up and running.
 
+   [ ]Fix RTK IO module to allow using non-standard backends. We need it to be
+      able to open and read files through Allegro's IO routines in order to get
+      this port running.
+
    [ ]Figure out why AV Setup isn't working.
    
    [ ]Figure out why game crashes when trying to start a song.
