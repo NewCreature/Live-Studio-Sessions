@@ -1,5 +1,11 @@
-appname (0.1) maverick; urgency=low
+live-studio-sessions (0.2) maverick; urgency=low
 
-  * Changes...
+  * Fix build script source code packaging to include all the necessary files.
 
- -- Author Name <e@mail.com>  BUILD_DATE +0000
+ -- Todd Cope <todd@t3-i.com>  BUILD_DATE +0000
+
+live-studio-sessions (0.1) maverick; urgency=low
+
+  * Initial public release.
+
+ -- Todd Cope <todd@t3-i.com.com>  Mon, 08 Sep 2014 14:52:53 +0000
