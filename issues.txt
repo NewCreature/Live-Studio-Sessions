@@ -73,6 +73,8 @@ Live Studio Sessions Issues
    press the appropriate notes and have it count as a hit. Need to check the
    pressed member to determine if it is being properly reset.
 
+[ ]Make sure root changelog gets packaged in the source package.
+
 [ ]Figure out why there aren't enough beat markers being generated on some
    songs.
 
