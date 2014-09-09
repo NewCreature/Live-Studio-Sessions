@@ -75,6 +75,8 @@ Live Studio Sessions Issues
 
 [X]Make sure root changelog gets packaged in the source package.
 
+[ ]Fix HOPO being hittable even when previous note was not hit.
+
 [ ]Figure out why there aren't enough beat markers being generated on some
    songs.
 
