@@ -542,7 +542,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 		}
 		
 		/* see if we are hitting a HOPO note */
-		if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[0]]->hopo && gp->player[0].streak > 0)
+		if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[0]]->hopo && gp->player[0].streak > 0 && missed_groups == 0)
 		{
 			d = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[0]]->tick - (gp->current_tick - gp->av_delay)));
 			if(d >= -8 && d <= 8)
