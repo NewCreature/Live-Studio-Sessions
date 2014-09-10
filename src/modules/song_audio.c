@@ -169,6 +169,7 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 		}
 		
 		ap->playing = true;
+		al_set_mixer_postprocess_callback(al_get_default_mixer(), NULL, NULL);
 	}
 	else if(!playing && ap->playing)
 	{
