@@ -402,11 +402,11 @@ bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp, LSS_SONG_LIST
 	t3f_add_gui_text_element(dp->menu[LSS_MENU_OPTIONS], lss_menu_proc_options_back, "Back", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 	
 	/* start song audio */
-//	dp->song_audio = lss_load_song_audio(lp->entry[t3f_rand(&dp->rng) & lp->entries]->path);
-//	if(dp->song_audio)
-//	{
-//		lss_set_song_audio_playing(dp->song_audio, true);
-//	}
+	dp->song_audio = lss_load_song_audio(lp->entry[t3f_rand(&dp->rng) & lp->entries]->path);
+	if(dp->song_audio)
+	{
+		lss_set_song_audio_playing(dp->song_audio, true);
+	}
 	
 	return true;
 }
@@ -415,11 +415,11 @@ void lss_title_exit(LSS_TITLE_DATA * dp)
 {
 	int i;
 	
-//	if(dp->song_audio)
-//	{
-//		lss_destroy_song_audio(dp->song_audio);
-//		dp->song_audio = NULL;
-//	}
+	if(dp->song_audio)
+	{
+		lss_destroy_song_audio(dp->song_audio);
+		dp->song_audio = NULL;
+	}
 	al_destroy_bitmap(dp->logo_bitmap);
 	for(i = 0; i < LSS_MAX_MENUS; i++)
 	{
