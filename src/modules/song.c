@@ -282,7 +282,7 @@ bool lss_song_mark_beats(LSS_SONG * sp, double total_length)
 			if(current_beat_event < sp->source_midi->tempo_events)
 			{
 				/* get new BPM if we are sitting on a tempo change */
-				if(current_time >= sp->source_midi->tempo_event[current_beat_event]->pos_sec - 0.5)
+				if(current_time >= sp->source_midi->tempo_event[current_beat_event]->pos_sec - 0.05)
 				{
 					current_time = sp->source_midi->tempo_event[current_beat_event]->pos_sec;
 					current_beat_event++;
@@ -297,7 +297,7 @@ bool lss_song_mark_beats(LSS_SONG * sp, double total_length)
 			current_time += beat_time;
 		}
 	}
-	sp->beats += 256;
+	sp->beats += 8;
 
 	/* allocate beats */
 	sp->beat = malloc(sizeof(LSS_SONG_BEAT *) * sp->beats);
@@ -336,10 +336,8 @@ bool lss_song_mark_beats(LSS_SONG * sp, double total_length)
 						BPM = rtk_ppqn_to_bpm(sp->source_midi->tempo_event[current_beat_event - 1]->data_i[0]);
 						beat_time = 60.0 / BPM;
 					}
-					printf("new BPM: %f, %f\n", BPM, beat_time);
 				}
 			}
-			printf("current_beat = %d/%d\n", current_beat, sp->beats);
 			if(current_beat < sp->beats)
 			{
 				sp->beat[current_beat]->tick = (current_time + sp->offset) * 60.0;
@@ -353,14 +351,6 @@ bool lss_song_mark_beats(LSS_SONG * sp, double total_length)
 				}
 			}
 			current_beat++;
-			current_time += beat_time;
-		}
-		
-		/* keep going until we run out of beats */
-		printf("adding final beats: %d, %f\n", sp->beats - current_beat, beat_time);
-		for(i = current_beat; i < sp->beats; i++)
-		{
-			sp->beat[current_beat]->tick = (current_time + sp->offset) * 60.0;
 			current_time += beat_time;
 		}
 	}
