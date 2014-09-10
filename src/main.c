@@ -2,6 +2,7 @@
 #include "t3f/draw.h"
 #include "t3f/resource.h"
 #include "t3f/view.h"
+#include "t3f/debug.h"
 #include <allegro5/allegro_native_dialog.h>
 
 #include "rtk/midi.h"
@@ -167,6 +168,15 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	app->game.player[0].selected_track = 0;
 	app->game.player[0].selected_difficulty = 0;
 	lss_select_menu(&app->title, LSS_MENU_MAIN);
+	
+	#ifdef T3F_DEBUG
+		if(!t3f_open_debug_log("lss_debug.log"))
+		{
+			printf("Failed to open debug log!\n");
+			return false;
+		}
+	#endif
+	
 	return true;
 }
 
@@ -177,6 +187,9 @@ void app_exit(APP_INSTANCE * app)
 	lss_destroy_profiles(app->profiles);
 	lss_free_global_resources(&app->resources);
 	lss_destroy_song_list(app->song_list);
+	#ifdef T3F_DEBUG
+		t3f_close_debug_log();
+	#endif
 }
 
 int main(int argc, char * argv[])

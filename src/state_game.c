@@ -3,6 +3,7 @@
 #include "t3f/view.h"
 #include "t3f/draw.h"
 #include "t3f/primitives.h"
+#include "t3f/debug.h"
 
 #include "resources.h"
 #include "state_game.h"
@@ -22,7 +23,9 @@ void lss_add_bitmap_to_atlas(T3F_ATLAS * ap, ALLEGRO_BITMAP ** bp, int type)
 
 bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 {
+	t3f_debug_message("lss_game_initialize() enter\n");
 	al_stop_timer(t3f_timer);
+	t3f_debug_message("\tLoading textures...\n");
 	gp->note_texture[0] = t3f_load_resource((void *)(&gp->note_texture[0]), T3F_RESOURCE_TYPE_BITMAP, "data/note_green_strum.png", 0, 0, 0);
 	if(!gp->note_texture[0])
 	{
@@ -98,6 +101,7 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 	{
 		return false;
 	}
+	t3f_debug_message("\tGenerating atlas...\n");
 	gp->atlas = t3f_create_atlas(1024, 1024);
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[0], T3F_ATLAS_SPRITE);
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[1], T3F_ATLAS_SPRITE);
@@ -111,11 +115,13 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[9], T3F_ATLAS_SPRITE);
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->fret_button_image, T3F_ATLAS_SPRITE);
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->strum_bar_image, T3F_ATLAS_SPRITE);
+	t3f_debug_message("\tLoading song audio...\n");
 	gp->song_audio = lss_load_song_audio(song_path);
 	if(!gp->song_audio)
 	{
 		return false;
 	}
+	t3f_debug_message("\tCreating primitives cache...\n");
 	gp->primitives = t3f_create_primitives_cache(1024);
 	if(!gp->primitives)
 	{
@@ -123,11 +129,14 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 	}
 	gp->board_y = 420.0;
 	gp->board_speed = 12.0;
+	t3f_debug_message("\tInitializing player...\n");
 	lss_initialize_player(gp, 0);
+	t3f_debug_message("\tGenerating beat markers...\n");
 	lss_song_mark_beats(gp->song, gp->song_audio->length);
 	gp->current_tick = gp->song->beat[0]->tick;
 	al_start_timer(t3f_timer);
 	gp->done = false;
+	t3f_debug_message("lss_game_initialize() exit\n");
 	return true;
 }
 
@@ -135,9 +144,14 @@ void lss_game_exit(LSS_GAME * gp)
 {
 	int i;
 	
+	t3f_debug_message("lss_game_exit() enter\n");
+	t3f_debug_message("\tDestroying primitives cache...\n");
 	t3f_destroy_primitives_cache(gp->primitives);
+	t3f_debug_message("\tDestroying song audio...\n");
 	lss_destroy_song_audio(gp->song_audio);
+	t3f_debug_message("\tDestroying song...\n");
 	lss_destroy_song(gp->song);
+	t3f_debug_message("\tDestroying textures...\n");
 	for(i = 0; i < 10; i++)
 	{
 		t3f_destroy_resource(gp->note_texture[i]);
@@ -147,13 +161,16 @@ void lss_game_exit(LSS_GAME * gp)
 	t3f_destroy_resource(gp->beat_line_image);
 	t3f_destroy_resource(gp->fret_button_image);
 	t3f_destroy_resource(gp->strum_bar_image);
+	t3f_debug_message("\tDestroying atlas...\n");
 	t3f_destroy_atlas(gp->atlas);
+	t3f_debug_message("lss_game_exit() exit\n");
 }
 
 static void lss_game_get_player_results(LSS_GAME * gp, int player)
 {
 	int i;
 	
+	t3f_debug_message("lss_game_get_player_results() enter\n");
 	gp->player[0].total_notes = 0;
 	gp->player[0].hit_notes = 0;
 	gp->player[0].missed_notes = 0;
@@ -248,6 +265,7 @@ static void lss_game_get_player_results(LSS_GAME * gp, int player)
 	{
 		gp->player[0].full_combo = false;
 	}
+	t3f_debug_message("lss_game_get_player_results() exit\n");
 }
 
 void lss_game_logic(LSS_GAME * gp)

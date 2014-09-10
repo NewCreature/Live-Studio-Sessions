@@ -1,4 +1,5 @@
 #include "t3f/t3f.h"
+#include "t3f/debug.h"
 
 #include "song_audio.h"
 
@@ -93,6 +94,7 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 {
 	int i;
 	
+	t3f_debug_message("lss_set_song_audio_playing() enter\n");
 	if(playing && !ap->playing)
 	{
 		/* create voice for audio to be played back through */
@@ -116,10 +118,11 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 		
 		/* set a callback for the mixer so we can start the audio at the exact
 		 * time we want */
-		 if(!al_set_mixer_postprocess_callback(al_get_default_mixer(), lss_song_audio_callback, NULL))
-		 {
-			 printf("Failed to set mixer callback!\n");
-		 }
+		t3f_debug_message("\tSetting mixer callback...\n");
+		if(!al_set_mixer_postprocess_callback(al_get_default_mixer(), lss_song_audio_callback, NULL))
+		{
+			t3f_debug_message("\tFailed to set mixer callback!\n");
+		}
 
 		/* attach mixer to voice, must be done before starting stream playback
 		 * or it causes crashes on Mac (look into this later) */
@@ -139,45 +142,53 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 			}
 		} */
 		/* attach the streams to the mixer and set them to playing */
+		t3f_debug_message("\tWaiting for callback counter...\n");
 		lss_song_audio_callback_counter = 0;
 		while(lss_song_audio_callback_counter == 0)
 		{
 		}
+		t3f_debug_message("\tStarting audio streams...\n");
 		for(i = 0; i < LSS_SONG_AUDIO_MAX_STREAMS; i++)
 		{
 			if(ap->stream[i])
 			{
+				t3f_debug_message("\t\tStart audio stream %d...\n", i);
 				if(!al_attach_audio_stream_to_mixer(ap->stream[i], al_get_default_mixer()))
 				{
-					printf("failed to attach stream to audio mixer\n");
+					t3f_debug_message("\t\tFailed to attach stream %d to audio mixer\n", i);
 					return false;
 				}
 				if(!al_set_audio_stream_playing(ap->stream[i], true))
 				{
-					printf("failed to start playing audio stream\n");
+					t3f_debug_message("\t\tFailed to start playing audio stream %d\n", i);
 					return false;
 				}
 			}
 		}
 		if(lss_song_audio_callback_counter > 1)
 		{
+			t3f_debug_message("\tAudio stream start took too long, waiting for callback counter...\n");
 			lss_song_audio_callback_counter = 0;
 			while(lss_song_audio_callback_counter == 0)
 			{
 			}
+			t3f_debug_message("\tRewinding audio streams...\n");
 			lss_set_song_audio_position(ap, 0.0);
 		}
 		
 		ap->playing = true;
+		t3f_debug_message("\tRemoving mixer callback...\n");
 		al_set_mixer_postprocess_callback(al_get_default_mixer(), NULL, NULL);
 	}
 	else if(!playing && ap->playing)
 	{
 //		al_set_voice_playing(ap->voice, false);
+		t3f_debug_message("\tStopping audio streams...\n");
 		for(i = 0; i < LSS_SONG_AUDIO_MAX_STREAMS; i++)
 		{
 			if(ap->stream[i])
 			{
+				t3f_debug_message("\tStopping audio stream %d...\n", i);
 				al_set_audio_stream_playing(ap->stream[i], false);
 				al_detach_audio_stream(ap->stream[i]);
 			}
@@ -187,6 +198,7 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 //		al_destroy_voice(ap->voice);
 		ap->playing = false;
 	}
+	t3f_debug_message("lss_set_song_audio_playing() exit\n");
 	return true;
 }
 

@@ -1,6 +1,7 @@
 #include <ctype.h>
 
 #include "t3f/t3f.h"
+#include "t3f/debug.h"
 #include "song_list.h"
 
 LSS_SONG_LIST * lss_create_song_list(const char * fn, int entries)
@@ -462,7 +463,9 @@ static int lss_song_list_sorter(const void * item_1, const void * item_2)
 /* sort the sprite list using the above helper function */
 void lss_song_list_sort(LSS_SONG_LIST * dp, int field, const char * filter)
 {
+	t3f_debug_message("lss_song_list_sort() enter\n");
 	lss_song_list_filter_field = field;
 	lss_song_list_filter = filter;
 	qsort(dp->entry, dp->entries, sizeof(LSS_SONG_LIST_ENTRY *), lss_song_list_sorter);
+	t3f_debug_message("lss_song_list_sort() exit\n");
 }

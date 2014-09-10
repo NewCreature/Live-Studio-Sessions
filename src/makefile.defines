@@ -21,7 +21,7 @@ APP_OBJECTS = rtk/io.o rtk/midi.o t3net/t3net.o modules/song_list.o \
               resources.o state_game_player.o state_title.o state_av_setup.o \
               state_song_list.o
 APP_LIBS = -lmxml -lallegro_dialog$(LIB_SUFFIX)
-#APP_CFLAGS = 
+APP_CFLAGS = -DT3F_DEBUG
 
 ################
 # global stuff #
