@@ -66,11 +66,21 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Error initializing T3F\n");
 		return false;
 	}
+	#ifdef T3F_DEBUG
+		if(!t3f_open_debug_log("lss_debug.log"))
+		{
+			printf("Failed to open debug log!\n");
+			return false;
+		}
+	#endif
+	
+	t3f_debug_message("Initializing dialog add-on...\n");
 	if(!al_init_native_dialog_addon())
 	{
 		printf("Error initializing native dialog add-on!\n");
 		return false;
 	}
+	t3f_debug_message("Initializing controllers...\n");
 	app->controller[0].controller = t3f_create_controller(8);
 	if(!app->controller[0].controller)
 	{
@@ -87,6 +97,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	#else
 		app->controller[0].source = LSS_CONTROLLER_SOURCE_TOUCH;
 	#endif
+	t3f_debug_message("Loading resources...\n");
 	if(!lss_load_global_resources(&app->resources))
 	{
 		printf("Could not load global resources!\n");
@@ -94,6 +105,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 	
 	/* create song database */
+	t3f_debug_message("Creating songs database...\n");
 	free_songs_path = al_create_path("data/songs");
 	if(!free_songs_path)
 	{
@@ -142,6 +154,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 	lss_song_list_sort(app->song_list, 0, NULL);
 	
+	t3f_debug_message("Loading profiles...\n");
 	app->profiles = lss_load_profiles();
 	if(!app->profiles)
 	{
@@ -151,12 +164,14 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 //	app_load_song(app);
 //	app->current_event = 0;
 //	app->current_event_tick = (app->midi->track[1]->event[app->current_event]->pos_sec + app->offset) * 60.0;
+	t3f_debug_message("Initializing title screen...\n");
 	if(!lss_title_initialize(&app->title, &app->resources, app->song_list))
 	{
 		return false;
 	}
 	app->title.block_count = 0;
 	app->state = LSS_STATE_TITLE;
+	t3f_debug_message("Loading configuration...\n");
 	app->game.av_delay = 15;
 	val = al_get_config_value(t3f_config, "Live Studio Sessions", "av_delay");
 	if(val)
@@ -171,14 +186,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	app->game.player[0].selected_difficulty = 0;
 	lss_select_menu(&app->title, LSS_MENU_MAIN);
 	
-	#ifdef T3F_DEBUG
-		if(!t3f_open_debug_log("lss_debug.log"))
-		{
-			printf("Failed to open debug log!\n");
-			return false;
-		}
-	#endif
-	
+	t3f_debug_message("Done...\n");
 	return true;
 }
 
