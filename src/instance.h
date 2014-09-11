@@ -27,6 +27,8 @@ typedef struct
 	
 	/* menu data */
 	int selected_song;
+	int selected_track;
+	int selected_difficulty;
 	
 	int state;
 	

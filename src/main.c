@@ -164,6 +164,8 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		app->game.av_delay = atoi(val);
 	}
 	app->selected_song = 0;
+	app->selected_track = 1;
+	app->selected_difficulty = 3;
 	app->leaderboard = NULL;
 	app->game.player[0].selected_track = 0;
 	app->game.player[0].selected_difficulty = 0;
