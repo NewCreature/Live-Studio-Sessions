@@ -456,10 +456,10 @@ RTK_MIDI * rtk_load_midi(const char * fn)
 	int c;
 	char buf[4];
 	long data;
-	FILE * fp;
+	void * fp;
 	RTK_MIDI *midi;
 
-	fp = fopen(fn, "rb");
+	fp = rtk_io_fopen(fn, "rb");
 	if(!fp)
 	{
 		return NULL;
@@ -468,7 +468,7 @@ RTK_MIDI * rtk_load_midi(const char * fn)
 	midi = malloc(sizeof(RTK_MIDI));
 	if(!midi)
 	{
-		fclose(fp);
+		rtk_io_fclose(fp);
 		return NULL;
 	}
 	memset(midi, 0, sizeof(RTK_MIDI));
@@ -477,11 +477,11 @@ RTK_MIDI * rtk_load_midi(const char * fn)
 	if(!midi->raw_data)
 	{
 		free(midi);
-		fclose(fp);
+		rtk_io_fclose(fp);
 		return NULL;
 	}
 
-	fread(buf, 1, 4, fp); /* read midi header */
+	rtk_io_fread(fp, buf, 4); /* read midi header */
 
 	if(memcmp(buf, "MThd", 4))
 	{
@@ -507,7 +507,7 @@ RTK_MIDI * rtk_load_midi(const char * fn)
 
 	for(c=0; c < midi->raw_data->tracks; c++)
 	{            /* read each track */
-		fread(buf, 1, 4, fp);                /* read track header */
+		rtk_io_fread(fp, buf, 4);                /* read track header */
 		if(memcmp(buf, "MTrk", 4))
 		{
 			goto err;
@@ -523,13 +523,13 @@ RTK_MIDI * rtk_load_midi(const char * fn)
 		}
 
 		/* finally, read track data */
-		if(fread(midi->raw_data->track[c].data, 1, data, fp) != data)
+		if(rtk_io_fread(fp, midi->raw_data->track[c].data, data) != data)
 		{
 			goto err;
 		}
 	}
 
-	fclose(fp);
+	rtk_io_fclose(fp);
 	
 	/* convert raw MIDI data to something useful */
 	rtk_parse_midi(midi, 0);
@@ -541,7 +541,7 @@ RTK_MIDI * rtk_load_midi(const char * fn)
 	/* oh dear... */
 	err:
 	{
-		fclose(fp);
+		rtk_io_fclose(fp);
 		rtk_destroy_midi(midi);
 	}
 	return NULL;

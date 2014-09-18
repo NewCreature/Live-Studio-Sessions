@@ -6,6 +6,7 @@
 #include <allegro5/allegro_native_dialog.h>
 
 #include "rtk/midi.h"
+#include "rtk/io_allegro.h"
 #include "modules/song_list.h"
 #include "modules/song_audio.h"
 #include "modules/song.h"
@@ -185,6 +186,8 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	app->game.player[0].selected_track = 0;
 	app->game.player[0].selected_difficulty = 0;
 	lss_select_menu(&app->title, LSS_MENU_MAIN);
+	
+	rtk_io_set_allegro_driver();
 	
 	t3f_debug_message("Done...\n");
 	return true;
