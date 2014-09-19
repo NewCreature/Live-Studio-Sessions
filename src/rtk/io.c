@@ -47,7 +47,7 @@ int rtk_io_fgetc(void * fp)
 	return EOF;
 }
 
-int rtk_io_mgetw(void * fp)
+short rtk_io_mgetw(void * fp)
 {
 	int b1, b2;
 
@@ -108,14 +108,14 @@ int rtk_io_mputw(int w, void * fp)
 	{
 		if (rtk_io_fputc(b2, fp) == b2)
 		{
-			return w;
+			return 1;
 		}
 	}
 
 	return EOF;
 }
 
-long rtk_io_mputl(long l, void * fp)
+int rtk_io_mputl(long l, void * fp)
 {
 	int b1, b2, b3, b4;
 
@@ -132,7 +132,7 @@ long rtk_io_mputl(long l, void * fp)
 			{
 				if(rtk_io_fputc(b4, fp) == b4)
 				{
-					return l;
+					return 1;
 				}
 			}
 		}
