@@ -77,7 +77,17 @@ Live Studio Sessions Issues
 
 [X]Fix HOPO being hittable even when previous note was not hit.
 
-[ ]Fix buggy touch input on menus. Menu items should only activate when
+[X]Get Android port up and running.
+
+   [X]Fix RTK IO module to allow using non-standard backends. We need it to be
+      able to open and read files through Allegro's IO routines in order to get
+      this port running.
+
+   [X]Figure out why AV Setup isn't working.
+   
+   [X]Figure out why game crashes when trying to start a song.
+   
+[X]Fix buggy touch input on menus. Menu items should only activate when
    releasing a touch.
 
 [ ]Fix issue where controller input is disabled on menus. I think it is caused
@@ -108,16 +118,6 @@ Live Studio Sessions Issues
    delay, while songs that use the original CD audio can work well with the game
    as well.
 
-[ ]Get Android port up and running.
-
-   [ ]Fix RTK IO module to allow using non-standard backends. We need it to be
-      able to open and read files through Allegro's IO routines in order to get
-      this port running.
-
-   [ ]Figure out why AV Setup isn't working.
-   
-   [ ]Figure out why game crashes when trying to start a song.
-   
 [ ]Adjust board scroll speed and note positioning according to BPM.
 
    All the game's logic will operate in ticks. Only the rendering will be
