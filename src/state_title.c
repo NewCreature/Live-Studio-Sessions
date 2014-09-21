@@ -1,6 +1,7 @@
 #include "t3f/gui.h"
 #include "t3f/resource.h"
 #include "t3f/debug.h"
+#include "t3f/android.h"
 #ifndef T3F_ANDROID
 	#include <allegro5/allegro_native_dialog.h>
 #endif
@@ -67,6 +68,7 @@ int lss_menu_proc_profiles_new(void * data, int i, void * p)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	
 	lss_begin_text_entry(data, "", lss_new_profile_buffer, 32, lss_new_profile_entry_callback);
+	t3f_show_soft_keyboard(true);
 	lss_select_menu(&app->title, LSS_MENU_NEW_PROFILE);
 	return 1;
 }
@@ -101,6 +103,7 @@ int lss_menu_proc_profiles_new_ok(void * data, int i, void * p)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
+	t3f_show_soft_keyboard(false);
 	lss_end_text_entry();
 	if(!lss_is_string_empty(lss_new_profile_buffer))
 	{
@@ -121,6 +124,7 @@ int lss_menu_proc_profiles_new_cancel(void * data, int i, void * p)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
+	t3f_show_soft_keyboard(false);
 	lss_end_text_entry();
 	lss_select_menu(&app->title, LSS_MENU_PROFILES);
 	return 1;
