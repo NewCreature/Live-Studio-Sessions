@@ -422,7 +422,10 @@ void lss_state_song_list_song_select_render(APP_INSTANCE * app)
 static void lss_song_list_process_menu(APP_INSTANCE * app, T3F_GUI * menu)
 {
 	t3f_process_gui(menu, app);
-	lss_read_controller(&app->controller[0]);
+	if(app->controller[0].source != LSS_CONTROLLER_SOURCE_TOUCH)
+	{
+		lss_read_controller(&app->controller[0]);
+	}
 	if(t3f_key[ALLEGRO_KEY_ENTER] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_GREEN].pressed)
 	{
 		t3f_activate_selected_gui_element(menu, app);

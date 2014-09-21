@@ -449,7 +449,10 @@ void lss_title_logic(LSS_TITLE_DATA * dp, APP_INSTANCE * app)
 	if(dp->current_menu >= 0)
 	{
 		t3f_process_gui(dp->menu[dp->current_menu], app);
-		lss_read_controller(&app->controller[0]);
+		if(app->controller[0].source != LSS_CONTROLLER_SOURCE_TOUCH)
+		{
+			lss_read_controller(&app->controller[0]);
+		}
 		if(!dp->block_count)
 		{
 			if(!lss_process_text_entry())
