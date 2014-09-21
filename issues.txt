@@ -77,6 +77,9 @@ Live Studio Sessions Issues
 
 [X]Fix HOPO being hittable even when previous note was not hit.
 
+[ ]Fix buggy touch input on menus. Menu items should only activate when
+   releasing a touch.
+
 [ ]Fix issue where controller input is disabled on menus. I think it is caused
    by the text entry module being left activated.
 
