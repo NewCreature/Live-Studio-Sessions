@@ -4,10 +4,13 @@
 
 LSS_PROFILES * lss_load_profiles(void)
 {
+	const ALLEGRO_FILE_INTERFACE * old_interface;
 	LSS_PROFILES * pp;
 	char fn[1024];
 	int i;
 	
+	old_interface = al_get_new_file_interface();
+	al_set_standard_file_interface();
 	pp = malloc(sizeof(LSS_PROFILES));
 	if(pp)
 	{
@@ -33,20 +36,25 @@ LSS_PROFILES * lss_load_profiles(void)
 			}
 		}
 	}
+	al_set_new_file_interface(old_interface);
 	return pp;
 }
 
 bool lss_save_profiles(LSS_PROFILES * pp)
 {
+	const ALLEGRO_FILE_INTERFACE * old_interface;
 	char fn[1024];
 	int i;
 
+	old_interface = al_get_new_file_interface();
+	al_set_standard_file_interface();
 	for(i = 0; i < pp->entries; i++)
 	{
 		/* save config file */
 		sprintf(fn, "%s%d.dat", t3f_get_filename(t3f_data_path, "profile"), i);
 		al_save_config_file(fn, pp->entry[i].config);
 	}
+	al_set_new_file_interface(old_interface);
 	return true;
 }
 
