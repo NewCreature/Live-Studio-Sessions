@@ -48,9 +48,9 @@ void lss_read_controller(LSS_CONTROLLER * cp)
 					{
 						x = t3f_touch[i].x;
 						y = t3f_touch[i].y;
-						if(x < 64 * 5 && y < 64)
+						if(x < 128 * 5 && y < 128)
 						{
-							cp->controller->state[x / 64].down = true;
+							cp->controller->state[x / 128].down = true;
 						}
 						else if(x > 480)
 						{
