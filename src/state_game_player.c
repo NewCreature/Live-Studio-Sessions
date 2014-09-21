@@ -875,7 +875,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	}
 	
 	/* render on-screen control helpers when using touch */
-	if(gp->player[0].controller->type == LSS_CONTROLLER_SOURCE_TOUCH)
+	if(gp->player[0].controller->source == LSS_CONTROLLER_SOURCE_TOUCH)
 	{
 		for(i = 0; i < 5; i++)
 		{
@@ -887,7 +887,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 			{
 				a = 0.25;
 			}
-			t3f_draw_bitmap(gp->fret_button_image, lss_alpha_color(color_chart[i], a), i * 64, 0, 0, 0);
+			t3f_draw_bitmap(gp->fret_button_image, lss_alpha_color(color_chart[i], a), i * 128, 0, 0, 0);
 		}
 		t3f_draw_bitmap(gp->strum_bar_image, al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 960 - 64 - 64, 270 - 4, 0, 0);
 	}
