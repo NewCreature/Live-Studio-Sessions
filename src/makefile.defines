@@ -20,8 +20,8 @@ APP_OBJECTS = rtk/io.o rtk/midi.o rtk/io_allegro.o t3net/t3net.o modules/song_li
               modules/gui.o main.o state.o state_game.o state_game_results.o \
               resources.o state_game_player.o state_title.o state_av_setup.o \
               state_song_list.o
-APP_LIBS = -lmxml -lallegro_dialog$(LIB_SUFFIX)
-APP_CFLAGS = -DT3F_DEBUG
+APP_LIBS = -lmxml
+APP_CFLAGS = 
 
 ################
 # global stuff #
@@ -34,7 +34,7 @@ GLOBAL_CFLAGS = -O2 -fomit-frame-pointer -funroll-loops -Wall -I. -DT3F_DEVELOPE
 #MACOSX_CFLAGS = 
 #MACOSX_PLATFORM_OBJECTS = 
 #MACOSX_PLATFORM_LIBS = 
-MACOSX_DEPEND_LIBS = -lcurl-static
+MACOSX_DEPEND_LIBS = -lcurl-static -lallegro_dialog$(LIB_SUFFIX)
 #MACOSX_PLATFORM_TARGET = 
 
 ###############
@@ -43,7 +43,7 @@ MACOSX_DEPEND_LIBS = -lcurl-static
 #LINUX_CFLAGS = 
 #LINUX_PLATFORM_OBJECTS = 
 #LINUX_PLATFORM_LIBS = 
-LINUX_DEPEND_LIBS = -lcurl
+LINUX_DEPEND_LIBS = -lcurl -lallegro_dialog$(LIB_SUFFIX)
 #LINUX_PLATFORM_TARGET =
 
 ################################################
@@ -52,7 +52,7 @@ LINUX_DEPEND_LIBS = -lcurl
 #LINUX_STATIC_CFLAGS =
 #LINUX_STATIC_PLATFORM_OBJECTS =
 #LINUX_STATIC_PLATFORM_LIBS = 
-LINUX_STATIC_DEPEND_LIBS = -lcurl `pkg-config --libs gtk+-2.0`
+LINUX_STATIC_DEPEND_LIBS = -lcurl `pkg-config --libs gtk+-2.0` -lallegro_dialog$(LIB_SUFFIX)
 #LINUX_STATIC_PLATFORM_TARGET =
 
 ##############################
@@ -61,7 +61,7 @@ LINUX_STATIC_DEPEND_LIBS = -lcurl `pkg-config --libs gtk+-2.0`
 #MINGW_CROSS_CFLAGS = 
 #MINGW_CROSS_PLATFORM_OBJECTS = 
 #MINGW_CROSS_PLATFORM_LIBS = 
-MINGW_CROSS_DEPEND_LIBS = -lcurldll -lws2_32 -lwinmm
+MINGW_CROSS_DEPEND_LIBS = -lcurldll -lws2_32 -lwinmm -lallegro_dialog$(LIB_SUFFIX)
 #MINGW_CROSS_PLATFORM_TARGET =
 
 ###############
@@ -70,7 +70,7 @@ MINGW_CROSS_DEPEND_LIBS = -lcurldll -lws2_32 -lwinmm
 #MINGW_CFLAGS = 
 #MINGW_PLATFORM_OBJECTS = 
 #MINGW_PLATFORM_LIBS = 
-MINGW_DEPEND_LIBS = -lcurldll
+MINGW_DEPEND_LIBS = -lcurldll -lallegro_dialog$(LIB_SUFFIX)
 #MINGW_PLATFORM_TARGET =
 
 #################

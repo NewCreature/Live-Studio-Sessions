@@ -227,8 +227,12 @@ static void lss_state_song_list_touch_scroll_logic(APP_INSTANCE * app)
 	/* detect which song was tapped */
 	if(lss_song_list_selected)
 	{
-		app->selected_song = (int)(lss_song_list_scroll_pos + lss_song_list_touch_pos) / lss_song_list_space;
-		if(app->selected_song >= app->song_list->entries)
+		app->selected_song = (int)(lss_song_list_scroll_pos + lss_song_list_touch_pos - lss_song_list_space) / lss_song_list_space;
+		if(app->selected_song < 0)
+		{
+			app->selected_song = 0;
+		}
+		else if(app->selected_song >= app->song_list->entries)
 		{
 			app->selected_song = app->song_list->entries - 1;
 		}
@@ -298,11 +302,12 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 		}
 		t3f_key[ALLEGRO_KEY_ENTER] = 0;
 	}
-	else if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
+	else if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
 	{
 		lss_create_profiles_menu(app);
 		app->state = LSS_STATE_TITLE;
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+		t3f_key[ALLEGRO_KEY_BACK] = 0;
 	}
 	else if(t3f_key[ALLEGRO_KEY_UP] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].pressed)
 	{
@@ -438,7 +443,7 @@ static void lss_song_list_process_menu(APP_INSTANCE * app, T3F_GUI * menu)
 void lss_state_song_list_track_select_logic(APP_INSTANCE * app)
 {
 	lss_song_list_process_menu(app, lss_song_list_menu);
-	if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
+	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
 	{
 		t3f_destroy_gui(lss_song_list_menu);
 		lss_song_list_menu = NULL;
@@ -446,6 +451,7 @@ void lss_state_song_list_track_select_logic(APP_INSTANCE * app)
 		lss_song_list_tap_frames = 0;
 		app->state = LSS_STATE_SONG_SELECT;
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+		t3f_key[ALLEGRO_KEY_BACK] = 0;
 	}
 	if(lss_song_list_menu)
 	{
@@ -465,13 +471,14 @@ void lss_state_song_list_track_select_render(APP_INSTANCE * app)
 void lss_state_song_list_difficulty_select_logic(APP_INSTANCE * app)
 {
 	lss_song_list_process_menu(app, lss_song_list_menu);
-	if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
+	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
 	{
 		t3f_destroy_gui(lss_song_list_menu);
 		lss_song_list_menu = NULL;
 		lss_create_track_list_menu(app);
 		app->state = LSS_STATE_SONG_SELECT_TRACK;
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+		t3f_key[ALLEGRO_KEY_BACK] = 0;
 	}
 	if(lss_song_list_menu)
 	{

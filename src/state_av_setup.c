@@ -35,13 +35,14 @@ void lss_state_av_setup_logic(APP_INSTANCE * app)
 		app->game.av_delay--;
 		t3f_key[ALLEGRO_KEY_DOWN] = 0;
 	}
-	if(t3f_key[ALLEGRO_KEY_ESCAPE])
+	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 	{
 		app->game.done = true;
 		lss_game_exit(&app->game);
 		sprintf(buf, "%d", app->game.av_delay);
 		al_set_config_value(t3f_config, "Live Studio Sessions", "av_delay", buf);
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+		t3f_key[ALLEGRO_KEY_BACK] = 0;
 	}
 	if(app->game.current_tick == 0)
 	{

@@ -1,7 +1,9 @@
 #include "t3f/gui.h"
 #include "t3f/resource.h"
 #include "t3f/debug.h"
-#include <allegro5/allegro_native_dialog.h>
+#ifndef T3F_ANDROID
+	#include <allegro5/allegro_native_dialog.h>
+#endif
 
 #include "modules/song_list.h"
 #include "modules/text_entry.h"
@@ -180,6 +182,7 @@ int lss_menu_proc_options_av_setup(void * data, int ip, void * p)
 	return 1;
 }
 
+#ifndef T3F_ANDROID
 int lss_menu_proc_options_library(void * data, int ip, void * p)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -231,6 +234,7 @@ int lss_menu_proc_options_library(void * data, int ip, void * p)
 	al_start_timer(t3f_timer);
 	return 1;
 }
+#endif
 
 int lss_menu_proc_options_back(void * data, int i, void * p)
 {
@@ -462,7 +466,7 @@ void lss_title_logic(LSS_TITLE_DATA * dp, APP_INSTANCE * app)
 					t3f_key[ALLEGRO_KEY_DOWN] = 0;
 				}
 			}
-			if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
+			if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
 			{
 				if(app->state == LSS_STATE_TITLE)
 				{
@@ -471,6 +475,7 @@ void lss_title_logic(LSS_TITLE_DATA * dp, APP_INSTANCE * app)
 					t3f_activate_selected_gui_element(dp->menu[dp->current_menu], app);
 				}
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+				t3f_key[ALLEGRO_KEY_BACK] = 0;
 			}
 		}
 		
