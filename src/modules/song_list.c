@@ -4,7 +4,7 @@
 #include "t3f/debug.h"
 #include "song_list.h"
 
-LSS_SONG_LIST * lss_create_song_list(const char * fn, int entries)
+LSS_SONG_LIST * lss_create_song_list(const char * fn, int entries, int collections)
 {
 	LSS_SONG_LIST * dp;
 	
@@ -37,6 +37,12 @@ LSS_SONG_LIST * lss_create_song_list(const char * fn, int entries)
 	{
 		dp->cache = NULL;
 	}
+	dp->collection = malloc(entries * sizeof(LSS_SONG_COLLECTION *));
+	if(!dp->collection)
+	{
+		free(dp);
+		return NULL;
+	}
 	return dp;
 }
 
@@ -54,6 +60,11 @@ void lss_destroy_song_list(LSS_SONG_LIST * dp)
 		free(dp->entry[i]);
 	}
 	free(dp->entry);
+	for(i = 0; i < dp->collections; i++)
+	{
+		free(dp->collection[i]);
+	}
+	free(dp->collection);
 	free(dp);
 }
 
@@ -126,6 +137,72 @@ unsigned long lss_song_list_count_files(const char * location, int flags)
 		else
 		{
 			if(compare_filename(pp, "song.ini"))
+			{
+				lss_song_list_file_count++;
+			}
+		}
+		al_destroy_path(pp);
+		al_destroy_fs_entry(fp);
+	}
+	al_destroy_fs_entry(dir);
+	al_destroy_path(path);
+	return lss_song_list_file_count;
+}
+
+unsigned long lss_song_list_count_collections(const char * location, int flags)
+{
+	ALLEGRO_FS_ENTRY * dir;
+	ALLEGRO_FS_ENTRY * fp;
+	ALLEGRO_PATH * pp;
+	ALLEGRO_PATH * path;
+	const char * name;
+	char cname[1024] = {0};
+	
+	/* reset counter if this is the first time entering this function */
+	if(!(flags & LSS_SONG_LIST_FLAG_RECURSE))
+	{
+		lss_song_list_file_count = 0;
+	}
+	
+	path = al_create_path(location);
+	name = al_path_cstr(path, '/');
+	strcpy(cname, name);
+	if(cname[strlen(cname) - 1] == '/')
+	{
+		if(flags & LSS_SONG_LIST_FLAG_RECURSE)
+		{
+			if(cname[strlen(cname) - 2] == '.')
+			{
+				return 0;
+			}
+		}
+		cname[strlen(cname) - 1] = 0;
+	}
+	
+	dir = al_create_fs_entry(cname);
+	if(!dir)
+	{
+		return 0;
+	}
+	if(!al_open_directory(dir))
+	{
+		return 0;
+	}
+	while(1)
+	{
+		fp = al_read_directory(dir);
+		if(!fp)
+		{
+			break;
+		}
+		pp = al_create_path(al_get_fs_entry_name(fp));
+		if(al_get_fs_entry_mode(fp) & ALLEGRO_FILEMODE_ISDIR)
+		{
+			lss_song_list_count_collections(al_path_cstr(pp, '/'), flags | LSS_SONG_LIST_FLAG_RECURSE);
+		}
+		else
+		{
+			if(compare_filename(pp, "collection.ini"))
 			{
 				lss_song_list_file_count++;
 			}

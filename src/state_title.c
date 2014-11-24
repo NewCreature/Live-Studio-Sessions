@@ -194,6 +194,7 @@ int lss_menu_proc_options_library(void * data, int ip, void * p)
 	ALLEGRO_PATH * pp = NULL, * ipp, * fpp;
 	const char * pc;
 	int f = 0;
+	int c = 0;
 
 	al_stop_timer(t3f_timer);
 	fc = al_create_native_file_dialog(al_get_config_value(t3f_config, "Live Studio Sessions", "Library Path"), "Choose Song Library Location", "*.*", ALLEGRO_FILECHOOSER_FOLDER);
@@ -218,7 +219,10 @@ int lss_menu_proc_options_library(void * data, int ip, void * p)
 						f = lss_song_list_count_files(al_path_cstr(fpp, '/'), 0);
 						f += lss_song_list_count_files(al_path_cstr(ipp, '/'), 0);
 						f += lss_song_list_count_files(al_path_cstr(pp, '/'), 0);
-						app->song_list = lss_create_song_list(t3f_get_filename(t3f_data_path, "song_list.cache"), f);
+						c = lss_song_list_count_collections(al_path_cstr(fpp, '/'), 0);
+						c += lss_song_list_count_collections(al_path_cstr(ipp, '/'), 0);
+						c += lss_song_list_count_collections(al_path_cstr(pp, '/'), 0);
+						app->song_list = lss_create_song_list(t3f_get_filename(t3f_data_path, "song_list.cache"), f, c);
 						if(app->song_list)
 						{
 							lss_song_list_add_files(app->song_list, fpp, 0);

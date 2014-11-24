@@ -57,7 +57,7 @@ static bool lss_setup_default_controllers(APP_INSTANCE * app)
 /* initialize our app, load graphics, etc. */
 bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
-	int f;
+	int f, c;
 	ALLEGRO_PATH * included_songs_path;
 	ALLEGRO_PATH * free_songs_path;
 	ALLEGRO_PATH * songs_path = NULL;
@@ -145,7 +145,17 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("No songs found!\n");
 		return false;
 	}
-	app->song_list = lss_create_song_list(t3f_get_filename(t3f_data_path, "song_list.cache"), f);
+	c = lss_song_list_count_collections(al_path_cstr(free_songs_path, '/'), 0);
+	c += lss_song_list_count_collections(al_path_cstr(included_songs_path, '/'), 0);
+	if(songs_path)
+	{
+		c += lss_song_list_count_collections(al_path_cstr(songs_path, '/'), 0);
+	}
+	if(c <= 0)
+	{
+		printf("No collections found!\n");
+	}
+	app->song_list = lss_create_song_list(t3f_get_filename(t3f_data_path, "song_list.cache"), f, c);
 	if(!app->song_list)
 	{
 		printf("Could create song list!\n");

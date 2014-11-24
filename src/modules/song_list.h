@@ -22,16 +22,29 @@ typedef struct
 typedef struct
 {
 
+	ALLEGRO_PATH * path;
+	char name[256];
+
+} LSS_SONG_COLLECTION;
+
+typedef struct
+{
+
 	ALLEGRO_CONFIG * cache;
 	char cache_filename[1024];
 	LSS_SONG_LIST_ENTRY ** entry;
 	int entries;
+	
+	/* collection info */
+	LSS_SONG_COLLECTION ** collection;
+	int collections;
 
 } LSS_SONG_LIST;
 
-LSS_SONG_LIST * lss_create_song_list(const char * fn, int entries);
+LSS_SONG_LIST * lss_create_song_list(const char * fn, int entries, int collections);
 void lss_destroy_song_list(LSS_SONG_LIST * dp);
 unsigned long lss_song_list_count_files(const char * location, int flags);
+unsigned long lss_song_list_count_collections(const char * location, int flags);
 void lss_song_list_add_files(LSS_SONG_LIST * dp, const ALLEGRO_PATH * path, int flags);
 
 void lss_song_list_sort(LSS_SONG_LIST * dp, int field, const char * filter);
