@@ -32,6 +32,7 @@ static int lss_song_list_tap_frames = 0;
 static int lss_song_list_sort_type = 0;
 static char lss_song_list_sort_filter[32] = {0};
 static bool lss_song_list_sort_query = false;
+static int lss_song_list_collection = -1;
 
 static void lss_enumerate_tracks(LSS_SONG * sp)
 {
@@ -259,9 +260,20 @@ static bool lss_song_select_entry_callback(void * data, int c)
 
 	if(c == '\t')
 	{
-		lss_song_list_sort_type = 1 - lss_song_list_sort_type;
+		lss_song_list_sort_type++;
+		if(lss_song_list_sort_type > 2)
+		{
+			lss_song_list_sort_type = 0;
+		}
 	}
-	lss_song_list_sort(app->song_list, lss_song_list_sort_type, lss_song_list_sort_filter);
+	if(lss_song_list_sort_type < 2)
+	{
+		lss_song_list_sort(app->song_list, lss_song_list_sort_type, lss_song_list_sort_filter);
+	}
+	else
+	{
+		lss_song_list_sort_collection(app->song_list, lss_song_list_collection);
+	}
 	app->selected_song = 0;
 	lss_state_song_list_center(app);
 	return true;
@@ -308,6 +320,30 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 		app->state = LSS_STATE_TITLE;
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 		t3f_key[ALLEGRO_KEY_BACK] = 0;
+	}
+	else if(t3f_key[ALLEGRO_KEY_LEFT] && lss_song_list_sort_type == 2)
+	{
+		lss_song_list_collection--;
+		if(lss_song_list_collection < -1)
+		{
+			lss_song_list_collection = app->song_list->collections - 1;
+		}
+		lss_song_list_sort_collection(app->song_list, lss_song_list_collection);
+		app->selected_song = 0;
+		lss_state_song_list_center(app);
+		t3f_key[ALLEGRO_KEY_LEFT] = 0;
+	}
+	else if(t3f_key[ALLEGRO_KEY_RIGHT] && lss_song_list_sort_type == 2)
+	{
+		lss_song_list_collection++;
+		if(lss_song_list_collection >= app->song_list->collections)
+		{
+			lss_song_list_collection = -1;
+		}
+		lss_song_list_sort_collection(app->song_list, lss_song_list_collection);
+		app->selected_song = 0;
+		lss_state_song_list_center(app);
+		t3f_key[ALLEGRO_KEY_RIGHT] = 0;
 	}
 	else if(t3f_key[ALLEGRO_KEY_UP] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].pressed)
 	{
@@ -376,16 +412,25 @@ void lss_state_song_list_song_select_render(APP_INSTANCE * app)
 	int start_song = (int)lss_song_list_scroll_pos / lss_song_list_space;
 	const char * val;
 	char buf[256];
+	char * type[3] = {"Title", "Artist", "Collection"};
 
 	al_clear_to_color(LSS_TITLE_COLOR_BG);
 	al_draw_tinted_bitmap(app->title.logo_bitmap, al_map_rgba_f(0.0, 0.0, 0.0, 0.125), 480 - al_get_bitmap_width(app->title.logo_bitmap) / 2, 270 - al_get_bitmap_height(app->title.logo_bitmap) / 2, 0);
 	
 	/* render filter info */
 	al_hold_bitmap_drawing(true);
-	al_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 4, 0 + 4, 0, "Sort By %s", lss_song_list_sort_type ? "Title" : "Artist");
-	al_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, 0, 0, 0, "Sort By %s", lss_song_list_sort_type ? "Title" : "Artist");
-	al_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_display_width + 4, 0 + 4, ALLEGRO_ALIGN_RIGHT, "%s", lss_song_list_sort_filter);
-	al_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, t3f_display_width, 0, ALLEGRO_ALIGN_RIGHT, "%s", lss_song_list_sort_filter);
+	al_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 4, 0 + 4, 0, "Sort By %s", type[lss_song_list_sort_type]);
+	al_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, 0, 0, 0, "Sort By %s", type[lss_song_list_sort_type]);
+	if(lss_song_list_sort_type < 2)
+	{
+		al_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_display_width + 4, 0 + 4, ALLEGRO_ALIGN_RIGHT, "%s", lss_song_list_sort_filter);
+		al_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, t3f_display_width, 0, ALLEGRO_ALIGN_RIGHT, "%s", lss_song_list_sort_filter);
+	}
+	else if(lss_song_list_collection >= 0)
+	{
+		al_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_display_width + 4, 0 + 4, ALLEGRO_ALIGN_RIGHT, "%s", app->song_list->collection[lss_song_list_collection]->name);
+		al_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, t3f_display_width, 0, ALLEGRO_ALIGN_RIGHT, "%s", app->song_list->collection[lss_song_list_collection]->name);
+	}
 	al_hold_bitmap_drawing(false);
 	
 	/* render song list entries */

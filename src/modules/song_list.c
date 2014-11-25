@@ -37,7 +37,7 @@ LSS_SONG_LIST * lss_create_song_list(const char * fn, int entries, int collectio
 	{
 		dp->cache = NULL;
 	}
-	dp->collection = malloc(entries * sizeof(LSS_SONG_COLLECTION *));
+	dp->collection = malloc(collections * sizeof(LSS_SONG_COLLECTION *));
 	if(!dp->collection)
 	{
 		free(dp);
@@ -241,6 +241,30 @@ static char * lss_song_list_encode_artist_title(char * out, char * artist, char 
 	return out;
 }
 
+/* determine if song at path sp is in collection cp */
+static bool lss_song_list_file_in_collection(const ALLEGRO_PATH * cp, const ALLEGRO_PATH * sp)
+{
+	int i;
+	const char * cpp;
+	const char * spp;
+	
+	cpp = al_path_cstr(cp, '/');
+	spp = al_path_cstr(sp, '/');
+
+	for(i = 0; i < strlen(cpp); i++)
+	{
+		if(i >= strlen(spp))
+		{
+			return false;
+		}
+		if(spp[i] != cpp[i])
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
 void lss_song_list_add_file(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int flags)
 {
 	const char * val;
@@ -284,6 +308,24 @@ void lss_song_list_add_file(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int fla
 				if(val)
 				{
 					strcpy(dp->entry[dp->entries]->frets, val);
+				}
+				val = al_get_config_value(cp, "song", "tier");
+				if(val)
+				{
+					dp->entry[dp->entries]->tier = atoi(val);
+				}
+				else
+				{
+					dp->entry[dp->entries]->tier = 0;
+				}
+				val = al_get_config_value(cp, "song", "sort");
+				if(val)
+				{
+					dp->entry[dp->entries]->sort = atoi(val);
+				}
+				else
+				{
+					dp->entry[dp->entries]->sort = 0;
 				}
 				
 				val = al_get_config_value(dp->cache, al_path_cstr(pp, '/'), "checksum");
@@ -336,6 +378,34 @@ void lss_song_list_add_file(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int fla
 			}
 		}
 		dp->entries++;
+	}
+	al_destroy_config(cp);
+}
+
+void lss_song_list_add_collection(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int flags)
+{
+	const char * val;
+	ALLEGRO_CONFIG * cp;
+
+	cp = al_load_config_file(al_path_cstr(pp, '/'));
+	if(!cp)
+	{
+		return;
+	}
+//	printf("Adding song: %s\n", al_path_cstr(pp, '/'));
+	dp->collection[dp->collections] = malloc(sizeof(LSS_SONG_COLLECTION));
+	if(dp->collection[dp->collections])
+	{
+//		memset(&dp->entry[dp->entries], 0, sizeof(LSS_SONG_LIST_ENTRY));
+		dp->collection[dp->collections]->path = al_clone_path(pp);
+		al_set_path_filename(dp->collection[dp->collections]->path, NULL);
+//		dp->entry[dp->entries]->extra = NULL;
+		val = al_get_config_value(cp, "collection", "name");
+		if(val)
+		{
+			strcpy(dp->collection[dp->collections]->name, val);
+		}
+		dp->collections++;
 	}
 	al_destroy_config(cp);
 }
@@ -398,11 +468,42 @@ void lss_song_list_add_files(LSS_SONG_LIST * dp, const ALLEGRO_PATH * path, int 
 				} */
 //				printf("%s\n", al_path_to_string(pp, '/'));
 			}
+			if(compare_filename(pp, "collection.ini"))
+			{
+				lss_song_list_add_collection(dp, pp, flags);
+/*				if(pp2_database_callback)
+				{
+					pp2_database_callback(pp);
+				} */
+//				printf("Found collection: %s\n", al_path_cstr(pp, '/'));
+			}
 		}
 		al_destroy_path(pp);
 		al_destroy_fs_entry(fp);
 	}
 	al_destroy_fs_entry(dir);
+}
+
+void lss_song_list_collect_files(LSS_SONG_LIST * dp)
+{
+	int i, j;
+
+	/* attach songs to collections */
+	if(dp->collections > 0)
+	{
+		for(i = 0; i < dp->entries; i++)
+		{
+			/* see if this song is part of a collection */
+			dp->entry[i]->collection = -1;
+			for(j = 0; j < dp->collections; j++)
+			{
+				if(lss_song_list_file_in_collection(dp->collection[j]->path, dp->entry[i]->path))
+				{
+					dp->entry[i]->collection = j;
+				}
+			}
+		}
+	}
 }
 
 static const char * lss_song_list_filter = NULL;
@@ -545,4 +646,41 @@ void lss_song_list_sort(LSS_SONG_LIST * dp, int field, const char * filter)
 	lss_song_list_filter = filter;
 	qsort(dp->entry, dp->entries, sizeof(LSS_SONG_LIST_ENTRY *), lss_song_list_sorter);
 	t3f_debug_message("lss_song_list_sort() exit\n");
+}
+
+static int lss_song_list_collection_sort_collection;
+
+static int lss_song_list_collection_sorter(const void * item_1, const void * item_2)
+{
+	LSS_SONG_LIST_ENTRY * sp1 = *(LSS_SONG_LIST_ENTRY **)(item_1);
+	LSS_SONG_LIST_ENTRY * sp2 = *(LSS_SONG_LIST_ENTRY **)(item_2);
+	
+	if(sp1->collection == lss_song_list_collection_sort_collection)
+	{
+		return -1;
+	}
+	else if(sp2->collection == lss_song_list_collection_sort_collection)
+	{
+		return 1;
+	}
+	return 1;
+/*	if(sp1->collection == lss_song_list_collection_sort_collection && sp2->collection == lss_song_list_collection_sort_collection)
+	{
+		return 0;
+	}
+	else if(sp1->collection == lss_song_list_collection_sort_collection && sp2->collection != lss_song_list_collection_sort_collection)
+	{
+		return -1;
+	}
+	else if(sp1->collection != lss_song_list_collection_sort_collection && sp2->collection == lss_song_list_collection_sort_collection)
+	{
+		return 1;
+	} */
+	return -1;
+}
+
+void lss_song_list_sort_collection(LSS_SONG_LIST * dp, int collection)
+{
+	lss_song_list_collection_sort_collection = collection;
+	qsort(dp->entry, dp->entries, sizeof(LSS_SONG_LIST_ENTRY *), lss_song_list_collection_sorter);
 }

@@ -167,6 +167,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		lss_song_list_add_files(app->song_list, songs_path, 0);
 	}
+	lss_song_list_collect_files(app->song_list);
 	lss_song_list_sort(app->song_list, 0, NULL);
 	
 	t3f_debug_message("Loading profiles...\n");

@@ -228,6 +228,7 @@ int lss_menu_proc_options_library(void * data, int ip, void * p)
 							lss_song_list_add_files(app->song_list, fpp, 0);
 							lss_song_list_add_files(app->song_list, ipp, 0);
 							lss_song_list_add_files(app->song_list, pp, 0);
+							lss_song_list_collect_files(app->song_list);
 							lss_song_list_sort(app->song_list, 0, NULL);
 						}
 						al_set_config_value(t3f_config, "Live Studio Sessions", "Library Path", al_path_cstr(pp, '/'));
