@@ -15,6 +15,8 @@
 #define LSS_SONG_NOTE_HIT_LEVEL_GOOD    4
 #define LSS_SONG_NOTE_HIT_LEVEL_PERFECT 5
 
+#define LSS_SONG_PLACEMENT_SCALE       12 // 1 tick is equal to 12 z-units
+
 typedef struct
 {
 	
@@ -25,6 +27,7 @@ typedef struct
 	bool active;
 	bool in_chord;
 	bool hopo;
+	float start_z, end_z;
 	
 	/* dynamic data (keep track of stuff during gameplay) */
 	int play_tick;
@@ -50,6 +53,7 @@ typedef struct
 
 	double BPM;
 	int tick;
+	float z;
 
 } LSS_SONG_BEAT;
 

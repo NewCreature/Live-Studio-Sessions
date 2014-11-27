@@ -113,6 +113,8 @@ static int lss_player_note_visible(LSS_GAME * gp, int player, int note)
 {
 	double z, end_z;
 	
+//	z = ((gp->song->track[gp->player[player].selected_track][gp->player[player].selected_difficulty].note[note]->start_z - (gp->camera_z - gp->delay_z))) * gp->board_speed;
+//	end_z = ((gp->song->track[gp->player[player].selected_track][gp->player[player].selected_difficulty].note[note]->end_z - (gp->camera_z - gp->delay_z))) * gp->board_speed;
 	z = ((gp->song->track[gp->player[player].selected_track][gp->player[player].selected_difficulty].note[note]->tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
 	end_z = ((gp->song->track[gp->player[player].selected_track][gp->player[player].selected_difficulty].note[note]->tick + gp->song->track[gp->player[player].selected_track][gp->player[player].selected_difficulty].note[note]->length - (gp->current_tick - gp->av_delay))) * gp->board_speed;
 	return lss_player_check_visibility(z, end_z);
@@ -122,6 +124,7 @@ static int lss_player_beat_visible(LSS_GAME * gp, int beat)
 {
 	double z;
 	
+//	z = ((gp->song->beat[beat]->z - (gp->camera_z - gp->delay_z))) * gp->board_speed;
 	z = ((gp->song->beat[beat]->tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
 	return lss_player_check_visibility(z, z);
 }
@@ -737,6 +740,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	{
 		for(i = gp->player[0].first_visible_beat; i <= gp->player[0].last_visible_beat; i++)
 		{
+//			z = ((gp->song->beat[i]->z - gp->camera_z)) * gp->board_speed;
 			z = ((gp->song->beat[i]->tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
 			a = 1.0;
 			if(z > 1984)
@@ -779,8 +783,10 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 				}
 				else
 				{
+//					z = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->start_z - gp->camera_z)) * gp->board_speed;
 					z = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->play_tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
 				}
+//				end_z = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->end_z - gp->camera_z)) * gp->board_speed;
 				end_z = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->length - (gp->current_tick - gp->av_delay))) * gp->board_speed;
 				a = 1.0;
 				if(z < 2048.0 + 128.0 && end_z > -640.0 && end_z > z)
@@ -834,6 +840,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 			playing = false;
 			if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->active)
 			{
+//				z = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->start_z - gp->camera_z)) * gp->board_speed;
 				z = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
 				a = 1.0;
 				note_type = 0;

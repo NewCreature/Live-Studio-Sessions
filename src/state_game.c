@@ -128,12 +128,17 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 		return false;
 	}
 	gp->board_y = 420.0;
+//	gp->board_speed = 1.0;
 	gp->board_speed = 12.0;
+	gp->delay_z = gp->av_delay * LSS_SONG_PLACEMENT_SCALE;
 	t3f_debug_message("\tInitializing player...\n");
 	lss_initialize_player(gp, 0);
 	t3f_debug_message("\tGenerating beat markers...\n");
 	lss_song_mark_beats(gp->song, gp->song_audio->length);
 	gp->current_tick = gp->song->beat[0]->tick;
+	gp->current_beat = 0;
+	gp->camera_z = gp->song->beat[0]->z - gp->delay_z;
+	gp->camera_vz = (float)LSS_SONG_PLACEMENT_SCALE * (gp->board_speed * (gp->song->beat[0]->BPM / 120.0));
 	al_start_timer(t3f_timer);
 	gp->done = false;
 	t3f_debug_message("lss_game_initialize() exit\n");
@@ -299,6 +304,17 @@ void lss_game_logic(LSS_GAME * gp)
 		al_start_timer(t3f_timer);
 	}
 	gp->current_tick++;
+	gp->camera_z += gp->camera_vz;
+	
+	/* update camera speed if we crossed over beat line */
+	if(gp->current_beat < gp->song->beats - 1)
+	{
+		if(gp->current_tick >= gp->song->beat[gp->current_beat + 1]->tick)
+		{
+			gp->current_beat++;
+			gp->camera_vz = (float)LSS_SONG_PLACEMENT_SCALE * (gp->board_speed * (gp->song->beat[gp->current_beat]->BPM / 120.0));
+		}
+	}
 }
 
 void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)

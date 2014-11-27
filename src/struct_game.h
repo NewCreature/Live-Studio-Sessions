@@ -73,7 +73,9 @@ typedef struct
 	T3F_PRIMITIVES_CACHE * primitives;
 
 	LSS_PLAYER player[LSS_MAX_PLAYERS];
-	int current_tick;
+	int current_tick, current_beat;
+	float camera_z, camera_vz;
+	float delay_z;
 	bool done;
 
 	int av_delay;

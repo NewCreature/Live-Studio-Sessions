@@ -149,6 +149,43 @@ static int lss_song_get_note_end_event(LSS_SONG * sp, int track, int note_on_eve
 	return -1;
 }
 
+static double rtk_tick_to_real_time(int division, double bpm, unsigned long ticks)
+{
+	return ticks / (double)division * ((double)60.0 / (bpm));
+}
+
+/* convert MIDI tick to real time (seconds), must be called after rtk_build_tempo_map() */
+static double lss_song_get_z(RTK_MIDI * mp, unsigned long tick, double offset)
+{
+	double current_bpm = 120.0; // default to 120 BPM (MIDI standard)
+	double time_span = 0.0;
+	int current_tick = 0;
+	int i;
+	double z = 0.0;
+
+	if(mp->tempo_events)
+	{
+		i = 0;
+		while(i < mp->tempo_events && mp->tempo_event[i]->tick < tick)
+		{
+			current_bpm = rtk_ppqn_to_bpm(mp->tempo_event[i]->data_i[0]);
+			i++;
+			if(i < mp->tempo_events && mp->tempo_event[i]->tick < tick)
+			{
+				current_tick = mp->tempo_event[i]->tick;
+				time_span = (mp->tempo_event[i]->pos_sec - mp->tempo_event[i - 1]->pos_sec);
+				z += ((time_span * 60.0) * (double)LSS_SONG_PLACEMENT_SCALE) * (current_bpm / 120.0);
+			}
+		}
+	}
+	
+	/* add the remaining time from the tempo change to the desired tick */
+	time_span = rtk_tick_to_real_time(mp->raw_data->divisions, current_bpm, tick - current_tick);
+	z += (((time_span + offset) * 60.0) * (double)LSS_SONG_PLACEMENT_SCALE) * (current_bpm / 120.0);
+
+	return z;
+}
+
 static bool lss_song_populate_tracks(LSS_SONG * sp)
 {
 	int i, j, d;
@@ -209,6 +246,8 @@ static bool lss_song_populate_tracks(LSS_SONG * sp)
 						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->length = (sp->source_midi->track[i]->event[note_off_event]->pos_sec + sp->offset) * 60.0 - sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->tick;
 						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->active = true;
 						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->visible = true;
+						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->start_z = lss_song_get_z(sp->source_midi, sp->source_midi->track[i]->event[j]->tick, sp->offset);
+						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->end_z = lss_song_get_z(sp->source_midi, sp->source_midi->track[i]->event[note_off_event]->tick, sp->offset);
 						
 						hopo_forced = lss_song_get_note_forced_hopo_status(sp, i, j);
 
@@ -268,9 +307,10 @@ bool lss_song_mark_beats(LSS_SONG * sp, double total_length)
 	int i;
 	int current_beat_event = 0;
 	double BPM = 120.0;
-	double current_time = 0.0;
+	double current_time = 0.0, previous_time = 0.0;
 	double beat_time;
 	int current_beat = 0;
+	double current_z = (((sp->offset) * 60.0) * (double)LSS_SONG_PLACEMENT_SCALE) * (BPM / 120.0);;
 	
 	/* count beats */
 	sp->beats = 0;
@@ -319,6 +359,7 @@ bool lss_song_mark_beats(LSS_SONG * sp, double total_length)
 	beat_time = 60.0 / BPM;
 	current_beat_event = 0;
 	current_time = 0.0;
+	previous_time = 0.0;
 	current_beat = 8;
 	if(sp->source_midi->tempo_events)
 	{
@@ -329,18 +370,22 @@ bool lss_song_mark_beats(LSS_SONG * sp, double total_length)
 			{
 				if(current_time >= sp->source_midi->tempo_event[current_beat_event]->pos_sec - 0.05)
 				{
+					previous_time = current_time;
 					current_time = sp->source_midi->tempo_event[current_beat_event]->pos_sec;
 					current_beat_event++;
 					if(current_beat_event <= sp->source_midi->tempo_events)
 					{
 						BPM = rtk_ppqn_to_bpm(sp->source_midi->tempo_event[current_beat_event - 1]->data_i[0]);
 						beat_time = 60.0 / BPM;
+						current_z += (((current_time - previous_time) * 60.0) * (double)LSS_SONG_PLACEMENT_SCALE) * (BPM / 120.0);
 					}
 				}
 			}
 			if(current_beat < sp->beats)
 			{
 				sp->beat[current_beat]->tick = (current_time + sp->offset) * 60.0;
+				sp->beat[current_beat]->z = current_z;
+				sp->beat[current_beat]->BPM = BPM;
 			}
 			/* fill in pre-audio beats */
 			if(current_beat == 8)
@@ -348,10 +393,14 @@ bool lss_song_mark_beats(LSS_SONG * sp, double total_length)
 				for(i = 0; i < 8; i++)
 				{
 					sp->beat[7 - i]->tick = (current_time + sp->offset - (beat_time * (double)(i + 1))) * 60.0;
+					sp->beat[7 - i]->z = sp->beat[7 - i]->tick * LSS_SONG_PLACEMENT_SCALE;
+					sp->beat[7 - i]->BPM = sp->beat[8]->BPM;
 				}
 			}
 			current_beat++;
+			previous_time = current_time;
 			current_time += beat_time;
+			current_z += (((current_time - previous_time) * 60.0) * (double)LSS_SONG_PLACEMENT_SCALE) * (BPM / 120.0);
 		}
 	}
 	return true;
