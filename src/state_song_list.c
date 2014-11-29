@@ -316,6 +316,11 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 	}
 	else if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
 	{
+		if(lss_song_list_sort_query)
+		{
+			lss_end_text_entry();
+			lss_song_list_sort_query = false;
+		}
 		lss_create_profiles_menu(app);
 		app->state = LSS_STATE_TITLE;
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
@@ -323,6 +328,11 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 	}
 	else if(t3f_key[ALLEGRO_KEY_LEFT] && lss_song_list_sort_type == 2)
 	{
+		if(lss_song_list_sort_query)
+		{
+			lss_end_text_entry();
+			lss_song_list_sort_query = false;
+		}
 		lss_song_list_collection--;
 		if(lss_song_list_collection < -1)
 		{
@@ -335,6 +345,11 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 	}
 	else if(t3f_key[ALLEGRO_KEY_RIGHT] && lss_song_list_sort_type == 2)
 	{
+		if(lss_song_list_sort_query)
+		{
+			lss_end_text_entry();
+			lss_song_list_sort_query = false;
+		}
 		lss_song_list_collection++;
 		if(lss_song_list_collection >= app->song_list->collections)
 		{
