@@ -90,13 +90,13 @@ Live Studio Sessions Issues
 [X]Fix buggy touch input on menus. Menu items should only activate when
    releasing a touch.
 
-[ ]Fix issue where controller input is disabled on menus. I think it is caused
+[X]Figure out why there aren't enough beat markers being generated on some
+   songs.
+
+[X]Fix issue where controller input is disabled on menus. I think it is caused
    by the text entry module being left activated.
 
 [ ]Got full combo, but song completion was marked 99%.
-
-[ ]Figure out why there aren't enough beat markers being generated on some
-   songs.
 
 [ ]Investigate crash issues.
 
