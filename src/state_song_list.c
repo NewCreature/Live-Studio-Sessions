@@ -427,7 +427,7 @@ void lss_state_song_list_song_select_render(APP_INSTANCE * app)
 	int start_song = (int)lss_song_list_scroll_pos / lss_song_list_space;
 	const char * val;
 	char buf[256];
-	char * type[3] = {"Title", "Artist", "Collection"};
+	char * type[3] = {"Artist", "Title", "Collection"};
 
 	al_clear_to_color(LSS_TITLE_COLOR_BG);
 	al_draw_tinted_bitmap(app->title.logo_bitmap, al_map_rgba_f(0.0, 0.0, 0.0, 0.125), 480 - al_get_bitmap_width(app->title.logo_bitmap) / 2, 270 - al_get_bitmap_height(app->title.logo_bitmap) / 2, 0);
