@@ -6,8 +6,11 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_memfile.h>
+#ifndef ALLEGRO_ANDROID
+	#include <allegro5/allegro_native_dialog.h>
+#endif
 
-#ifdef T3F_ANDROID
+#ifdef ALLEGRO_ANDROID
 	#include <allegro5/allegro_android.h>
 	#include <allegro5/allegro_physfs.h>
 	#include <physfs.h>
@@ -16,10 +19,14 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "t3f/t3f.h"
-#include "t3f/memory.h"
+#include "t3f.h"
+#include "memory.h"
 #include "resource.h"
 #include "view.h"
+#include "android.h"
+#ifndef ALLEGRO_ANDROID
+	#include "menu.h"
+#endif
 
 /* display data */
 int t3f_virtual_display_width = 0;
@@ -63,6 +70,9 @@ ALLEGRO_TRANSFORM t3f_current_transform;
 /* blender data */
 ALLEGRO_STATE t3f_state_stack[T3F_MAX_STACK];
 int t3f_state_stack_size = 0;
+
+/* menu data */
+bool t3f_menu_resize = false; // set at menu->display attach on Windows
 
 bool t3f_quit = false;
 int t3f_requested_flags = 0;
@@ -109,7 +119,7 @@ void t3f_setup_directories(ALLEGRO_PATH * final)
 	int working_paths = 0;
 	const char * cpath = NULL;
 	int i;
-	
+
 	/* find first directory that exists */
 	working_path[0] = al_clone_path(final);
 	working_paths = 1;
@@ -119,7 +129,7 @@ void t3f_setup_directories(ALLEGRO_PATH * final)
 		al_drop_path_tail(working_path[working_paths]);
 		working_paths++;
 	}
-	
+
 	/* iterate through working_path[] and make each directory */
 	for(i = working_paths - 1; i >= 0; i--)
 	{
@@ -139,7 +149,7 @@ bool t3f_save_bitmap_f(ALLEGRO_FILE * fp, ALLEGRO_BITMAP * bp)
 	ALLEGRO_PATH * path = NULL;
 	int i, size;
 	bool ret = false;
-	
+
 	path = al_get_standard_path(ALLEGRO_TEMP_PATH);
 	if(path)
 	{
@@ -198,7 +208,7 @@ static void t3f_get_options(void)
 	const char * val;
 	char buf[64];
 	int i;
-	
+
 	for(i = 0; i < T3F_MAX_OPTIONS; i++)
 	{
 		snprintf(buf, 64, "Key %d", i);
@@ -218,12 +228,12 @@ static bool t3f_locate_resource(const char * filename)
 	ALLEGRO_PATH * path;
 	ALLEGRO_PATH * file_path;
 	bool found = false;
-	
+
 	/* handle Android first so we don't do unnecessary checks */
-	#ifdef T3F_ANDROID
-	
+	#ifdef ALLEGRO_ANDROID
+
 		int ret;
-		
+
 		path = al_get_standard_path(ALLEGRO_EXENAME_PATH);
 		if(path)
 		{
@@ -243,19 +253,19 @@ static bool t3f_locate_resource(const char * filename)
 				}
 			}
 		}
-		
+
 		/* if PHYSFS setup failed, use APK file interface instead */
 		al_android_set_apk_file_interface();
 		return true;
 
 	#endif
-	
+
 	/* if we are already in the correct directory */
 	if(al_filename_exists(filename))
 	{
 		return true;
 	}
-	
+
 	/* look in resources path */
 	file_path = al_create_path(filename);
 	if(!file_path)
@@ -305,7 +315,7 @@ static bool t3f_locate_resource(const char * filename)
 		}
 		al_destroy_path(file_path);
 	}
-	
+
 	if(found)
 	{
 		path = al_create_path("/usr/share/");
@@ -326,7 +336,7 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 	int i;
 	ALLEGRO_PATH * temp_path = NULL;
 	const ALLEGRO_FILE_INTERFACE * old_interface;
-	
+
 	// compile time configuration
 	#ifdef T3F_DEVELOPER_NAME
 		t3f_developer_name = malloc(strlen(T3F_DEVELOPER_NAME) + 1);
@@ -349,25 +359,24 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 		printf("Could not initialize Allegro!\n");
 		return 0;
 	}
-	
+
 	al_set_app_name(name);
 	if(t3f_developer_name)
 	{
 		al_set_org_name(t3f_developer_name);
 	}
-	
+
 	/* set up application path */
 	t3f_config_path = al_get_standard_path(ALLEGRO_USER_SETTINGS_PATH);
 	t3f_data_path = al_get_standard_path(ALLEGRO_USER_DATA_PATH);
 	t3f_temp_path = al_get_standard_path(ALLEGRO_TEMP_PATH);
 	t3f_setup_directories(t3f_config_path);
 	t3f_setup_directories(t3f_data_path);
-	
+
 	/* set default options */
-	#ifdef T3F_ANDROID
+	#ifdef ALLEGRO_ANDROID
 		t3f_option[T3F_OPTION_RENDER_MODE] = T3F_RENDER_MODE_ALWAYS_CLEAR;
 	#endif
-	
 
 	/* set up configuration file */
 	temp_path = al_clone_path(t3f_config_path);
@@ -383,7 +392,7 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 		t3f_config = al_create_config();
 	}
 	t3f_get_options();
-	
+
 	if(!al_init_image_addon())
 	{
 		printf("Failed to initialize image add-on!\n");
@@ -423,7 +432,7 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 			t3f_flags |= T3F_USE_JOYSTICK;
 		}
 	}
-	
+
 	memset(t3f_touch, 0, sizeof(T3F_TOUCH) * T3F_MAX_TOUCHES);
 	if(flags & T3F_USE_TOUCH)
 	{
@@ -433,23 +442,27 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 		}
 	}
 	al_init_primitives_addon();
-	
+	#ifndef ALLEGRO_ANDROID
+		al_init_native_dialog_addon();
+	#endif
+
 	strcpy(t3f_window_title, name);
-	
+	al_set_new_window_title(t3f_window_title);
+
 	t3f_timer = al_create_timer(1.000 / fps);
 	if(!t3f_timer)
 	{
 		printf("Failed to create timer!\n");
 		return 0;
 	}
-	
+
 	t3f_queue = al_create_event_queue();
 	if(!t3f_queue)
 	{
 		printf("Failed to create event queue!\n");
 		return 0;
 	}
-	
+
 	/* create display unless we have opted for no display */
 	if(!(flags & T3F_NO_DISPLAY))
 	{
@@ -459,7 +472,11 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 			return 0;
 		}
 	}
-	
+	else
+	{
+		t3f_flags |= T3F_NO_DISPLAY;
+	}
+
 	if(t3f_flags & T3F_USE_KEYBOARD)
 	{
 		al_register_event_source(t3f_queue, al_get_keyboard_event_source());
@@ -481,28 +498,31 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 		al_register_event_source(t3f_queue, al_get_touch_input_event_source());
 	}
 	al_register_event_source(t3f_queue, al_get_timer_event_source(t3f_timer));
-	
-	/* create a default view */
-	t3f_default_view = t3f_create_view(0, 0, w, h, w / 2, h / 2);
-	if(!t3f_default_view)
+
+	if(!(t3f_flags & T3F_NO_DISPLAY))
 	{
-		printf("Failed to create default view!\n");
-		return 0;
+		/* create a default view */
+		t3f_default_view = t3f_create_view(0, 0, w, h, w / 2, h / 2);
+		if(!t3f_default_view)
+		{
+			printf("Failed to create default view!\n");
+			return 0;
+		}
+		t3f_select_view(t3f_default_view);
 	}
-	t3f_select_view(t3f_default_view);
-	
+
 	t3f_color_white = al_map_rgba_f(1.0, 1.0, 1.0, 1.0);
 	t3f_color_black = al_map_rgba_f(0.0, 0.0, 0.0, 1.0);
 	al_set_new_bitmap_flags(ALLEGRO_MIN_LINEAR | ALLEGRO_MAG_LINEAR);
 	al_inhibit_screensaver(true); // stop screensaver from showing
-	
+
 	t3f_logic_proc = logic_proc;
 	t3f_render_proc = render_proc;
 	t3f_user_data = data;
-	
+
 	/* locate user resources */
 	t3f_locate_resource("data/t3f.dat");
-	
+
 	return 1;
 }
 
@@ -510,7 +530,7 @@ void t3f_set_option(int option, int value)
 {
 	char buf[64] = {0};
 	char vbuf[64] = {0};
-	
+
 	t3f_option[option] = value;
 	snprintf(buf, 64, "Key %d", option);
 	snprintf(vbuf, 64, "%d", value);
@@ -522,7 +542,7 @@ static void t3f_get_base_transform(void)
 	float r, vr, scalex = 1.0, scaley = 1.0;
 	const char * value;
 	bool override_setup = false;
-	
+
 	/* reset internal display dimensions */
 	t3f_display_offset_x = 0;
 	t3f_display_offset_y = 0;
@@ -550,7 +570,7 @@ static void t3f_get_base_transform(void)
 	{
 		t3f_display_height = atoi(value);
 	}
-	
+
 	/* if we encounter any overrides in the config file, switch to manual mode */
 	if(override_setup)
 	{
@@ -613,11 +633,11 @@ static void t3f_get_base_transform(void)
 		scaley = (float)t3f_display_height / (float)t3f_virtual_display_height;
 		al_build_transform(&t3f_base_transform, 0.0, 0.0, scalex, scaley, 0.0);
 	}
-	
+
 	/* scale mouse coordinates */
 	t3f_mouse_scale_x = (float)t3f_virtual_display_width / (float)t3f_display_width;
 	t3f_mouse_scale_y = (float)t3f_virtual_display_height / (float)t3f_display_height;
-	
+
 	/* set up edge coordinates for use with T3F_FILL_SCREEN */
 	if(t3f_display_offset_x == 0)
 	{
@@ -644,7 +664,7 @@ int t3f_set_gfx_mode(int w, int h, int flags)
 	int dflags = 0;
 	int dw, dh;
 	int ret = 1;
-	
+
 	/* Disable full screen window attempt on Mac OS X because it will not give
 	 * the correct results on 10.5 (my deployment target. This should really be
 	 * fixed in Allegro but it is not on their to-do list */
@@ -653,7 +673,7 @@ int t3f_set_gfx_mode(int w, int h, int flags)
 	#else
 		bool fsw_supported = false; // is full screen window supported?
 	#endif
-	
+
 	/* disable fsw support if the config file says to */
 	cvalue = al_get_config_value(t3f_config, "T3F", "real_fullscreen");
 	if(cvalue && strcmp(cvalue, "true"))
@@ -665,7 +685,7 @@ int t3f_set_gfx_mode(int w, int h, int flags)
 	{
 		flags |= T3F_RESIZABLE;
 	}
-	
+
 	if(t3f_display)
 	{
 		if(flags & T3F_RESIZABLE)
@@ -729,12 +749,21 @@ int t3f_set_gfx_mode(int w, int h, int flags)
 		al_set_config_value(t3f_config, "T3F", "display_height", val);
 		t3f_get_base_transform();
 		t3f_select_view(t3f_current_view);
-		al_set_window_title(t3f_display, t3f_window_title);
 	}
-	
+
 	/* first time creating display */
 	else
 	{
+		/* see if we want a menu */
+		if(flags & T3F_USE_MENU)
+		{
+			/* use GTK on Linux so menus will work */
+			#ifdef ALLEGRO_GTK_TOPLEVEL
+				dflags |= ALLEGRO_GTK_TOPLEVEL;
+			#endif
+			t3f_flags |= T3F_USE_MENU;
+		}
+
 		/* if we are using console (for a server, for instance) don't create display */
 		al_set_new_display_option(ALLEGRO_SUPPORTED_ORIENTATIONS, ALLEGRO_DISPLAY_ORIENTATION_LANDSCAPE, ALLEGRO_REQUIRE);
 		cvalue = al_get_config_value(t3f_config, "T3F", "force_fullscreen");
@@ -853,14 +882,14 @@ int t3f_set_gfx_mode(int w, int h, int flags)
 }
 
 /* set the clipping rectangle, taking the current transformation into account,
- * used in conjunction with the view system you will pass virtual screen 
+ * used in conjunction with the view system you will pass virtual screen
  * coordinates */
 void t3f_set_clipping_rectangle(int x, int y, int w, int h)
 {
 	float tx, ty;
 	float twx, twy;
 	float ox = 0.0, oy = 0.0;
-	
+
 	/* convert virtual screen coordinates to real display coordinates */
 	al_transform_coordinates(&t3f_current_transform, &ox, &oy);
 	if(w != 0 && h != 0)
@@ -890,7 +919,7 @@ void t3f_set_event_handler(void (*proc)(ALLEGRO_EVENT * event, void * data))
 void t3f_exit(void)
 {
 	const ALLEGRO_FILE_INTERFACE * old_interface;
-	
+
 	old_interface = al_get_new_file_interface();
 	al_set_standard_file_interface();
 	al_save_config_file(t3f_config_filename, t3f_config);
@@ -978,7 +1007,7 @@ void t3f_set_mouse_xy(float x, float y)
 void t3f_clear_touch_data(void)
 {
 	int i;
-	
+
 	for(i = 0; i < T3F_MAX_TOUCHES; i++)
 	{
 		t3f_touch[i].active = false;
@@ -1011,7 +1040,7 @@ bool t3f_pop_state(void)
 int t3f_get_joystick_number(ALLEGRO_JOYSTICK * jp)
 {
 	int i;
-	
+
 	for(i = 0; i < al_get_num_joysticks(); i++)
 	{
 		if(jp == t3f_joystick[i] && t3f_joystick[i] != NULL)
@@ -1026,7 +1055,7 @@ float t3f_fread_float(ALLEGRO_FILE * fp)
 {
 	char buffer[256] = {0};
 	int l;
-	
+
 	l = al_fgetc(fp);
 	al_fread(fp, buffer, l);
 	buffer[l] = '\0';
@@ -1040,7 +1069,7 @@ int t3f_fwrite_float(ALLEGRO_FILE * fp, float f)
 {
 	char buffer[256] = {0};
 	int l;
-	
+
 	sprintf(buffer, "%f", f);
 	l = strlen(buffer);
 	al_fputc(fp, l);
@@ -1061,7 +1090,7 @@ unsigned long t3f_checksum_file(const char * fn)
 	ALLEGRO_FILE * fp;
 	unsigned long sum = 0;
 	int c;
-	
+
 	fp = al_fopen(fn, "rb");
 	if(fp)
 	{
@@ -1083,7 +1112,7 @@ bool t3f_copy_file(const char * src, const char * dest)
 	ALLEGRO_FILE * fsrc;
 	ALLEGRO_FILE * fdest;
 	char c;
-	
+
 	fsrc = al_fopen(src, "rb");
 	if(!fsrc)
 	{
@@ -1109,19 +1138,32 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 {
 	switch(event->type)
 	{
-		
+
 		/* user pressed close button */
 		case ALLEGRO_EVENT_DISPLAY_CLOSE:
 		{
 			t3f_exit();
 			break;
 		}
-		
+
 		/* window was resized */
 		case ALLEGRO_EVENT_DISPLAY_RESIZE:
 		{
 			char val[8] = {0};
 			al_acknowledge_resize(t3f_display);
+			/* handle resize event caused by attaching menu */
+			#ifdef ALLEGRO_WINDOWS
+				int menu_height;
+				if(t3f_flags & T3F_USE_MENU)
+				{
+					if(t3f_menu_resize)
+					{
+						menu_height = al_get_display_height(t3f_display) - t3f_display_height;
+						al_resize_display(t3f_display, al_get_display_width(t3f_display), al_get_display_height(t3f_display) + menu_height);
+						t3f_menu_resize = false;
+					}
+				}
+			#endif
 			t3f_get_base_transform();
 			al_set_clipping_rectangle(0, 0, al_get_display_width(t3f_display), al_get_display_height(t3f_display));
 			al_clear_to_color(al_map_rgb_f(0.0, 0.0, 0.0));
@@ -1136,7 +1178,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 			al_set_config_value(t3f_config, "T3F", "display_height", val);
 			break;
 		}
-		
+
 		case ALLEGRO_EVENT_DISPLAY_FOUND:
 		{
 			t3f_unload_atlases();
@@ -1145,21 +1187,21 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 			t3f_rebuild_atlases();
 			break;
 		}
-		
+
 		/* key was pressed or repeated */
 		case ALLEGRO_EVENT_KEY_DOWN:
 		{
 			t3f_key[event->keyboard.keycode] = 1;
 			break;
 		}
-		
+
 		/* key was released */
 		case ALLEGRO_EVENT_KEY_UP:
 		{
 			t3f_key[event->keyboard.keycode] = 0;
 			break;
 		}
-		
+
 		/* a character was entered */
 		case ALLEGRO_EVENT_KEY_CHAR:
 		{
@@ -1173,14 +1215,14 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 			}
 			break;
 		}
-		
+
 		case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
 		{
 			t3f_mouse_button[event->mouse.button - 1] = 1;
 			t3f_mouse_x = (float)(event->mouse.x - t3f_display_offset_x) * t3f_mouse_scale_x;
 			t3f_mouse_y = (float)(event->mouse.y - t3f_display_offset_y) * t3f_mouse_scale_y;
 			t3f_mouse_z = event->mouse.z;
-			
+
 			t3f_touch[0].active = true;
 			t3f_touch[0].x = t3f_mouse_x;
 			t3f_touch[0].y = t3f_mouse_y;
@@ -1235,7 +1277,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 			t3f_mouse_hidden = false;
 			break;
 		}
-		
+
 		case ALLEGRO_EVENT_JOYSTICK_AXIS:
 		case ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN:
 		case ALLEGRO_EVENT_JOYSTICK_BUTTON_UP:
@@ -1247,7 +1289,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 			}
 			break;
 		}
-		
+
 		case ALLEGRO_EVENT_TOUCH_BEGIN:
 		{
 			t3f_touch[event->touch.id + 1].active = true;
@@ -1256,7 +1298,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 			t3f_touch[event->touch.id + 1].primary = event->touch.primary;
 			break;
 		}
-		
+
 		case ALLEGRO_EVENT_TOUCH_MOVE:
 		{
 			t3f_touch[event->touch.id + 1].x = (float)(event->touch.x - t3f_display_offset_x) * t3f_mouse_scale_x;
@@ -1273,7 +1315,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 			t3f_touch[event->touch.id + 1].released = true;
 			break;
 		}
-		
+
 		/* handle drawing halt */
 		case ALLEGRO_EVENT_DISPLAY_HALT_DRAWING:
 		{
@@ -1289,11 +1331,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 		}
 		case ALLEGRO_EVENT_DISPLAY_RESUME_DRAWING:
 		{
-			#if ALLEGRO_VERSION_INT >= ((5 << 24) | (1 << 16) | (7 << 8))
-				al_acknowledge_drawing_resume(t3f_display);
-			#else
-				al_acknowledge_drawing_resume(t3f_display, NULL);
-			#endif
+			al_acknowledge_drawing_resume(t3f_display);
 			t3f_halted = 0;
 			t3f_reload_resources();
 			t3f_rebuild_atlases();
@@ -1305,19 +1343,30 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 			al_start_timer(t3f_timer);
 			break;
 		}
-		
+		#ifndef ALLEGRO_ANDROID
+			case ALLEGRO_EVENT_MENU_CLICK:
+			{
+				t3f_process_menu_click(event->user.data1, t3f_user_data);
+				break;
+			}
+		#endif
+
 		/* this keeps your program running */
 		case ALLEGRO_EVENT_TIMER:
 		{
+			t3f_android_support_helper();
+			#ifndef ALLEGRO_ANDROID
+				t3f_update_menus(t3f_user_data);
+			#endif
 			t3f_logic_proc(t3f_user_data);
 			t3f_need_redraw = true;
 			break;
 		}
-	}	
+	}
 }
 
 /* called when it's time to render */
-void t3f_render(void)
+void t3f_render(bool flip)
 {
 	/* some video drivers and compositors may leave junk in the buffers, this
 	 * config file setting will work around the issue by clearing the entire
@@ -1330,9 +1379,30 @@ void t3f_render(void)
 	}
 	al_copy_transform(&t3f_current_transform, &t3f_base_transform);
 	al_use_transform(&t3f_current_transform); // <-- apply additional transformations to t3f_current_transform
+	if(t3f_display && t3f_render_proc && !t3f_halted)
 	t3f_render_proc(t3f_user_data);
-	al_flip_display();
-	t3f_need_redraw = false;
+	if(flip)
+	{
+		al_flip_display();
+		t3f_need_redraw = false;
+	}
+}
+
+void t3f_process_events(void)
+{
+	ALLEGRO_EVENT event;
+
+	while(al_get_next_event(t3f_queue, &event))
+	{
+		if(t3f_event_handler_proc)
+		{
+			t3f_event_handler_proc(&event, t3f_user_data);
+		}
+		else
+		{
+			t3f_event_handler(&event);
+		}
+	}
 }
 
 /* this function is where it's at
@@ -1340,7 +1410,7 @@ void t3f_render(void)
 void t3f_run(void)
 {
 	ALLEGRO_EVENT event;
-	
+
 	al_start_timer(t3f_timer);
 	while(!t3f_quit)
 	{
@@ -1353,10 +1423,11 @@ void t3f_run(void)
 		{
 			t3f_event_handler(&event);
 		}
+
        	/* draw after we have run all the logic */
-		if(t3f_display && t3f_render_proc && !t3f_halted && t3f_need_redraw && al_event_queue_is_empty(t3f_queue))
+		if(t3f_need_redraw && al_event_queue_is_empty(t3f_queue))
 		{
-			t3f_render();
+			t3f_render(true);
 		}
 		if(t3f_halted == 1)
 		{

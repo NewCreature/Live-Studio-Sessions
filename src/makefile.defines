@@ -7,9 +7,9 @@
 #########################
 APP_COMPANY = t3-i
 APP_NAME = live-studio-sessions
-APP_BUNDLE_NAME = Live\ Studio\ Sessions
-APP_VERSION = 0.1
-APP_RELEASE = 1
+APP_TITLE = Live\ Studio\ Sessions
+APP_VERSION = 0.2
+APP_RELEASE = 2
 APP_PUBLISHER = T\^3\ Software
 APP_COPYRIGHT = Copyright\ (C)\ 2014\ T\^3\ Software
 APP_ANDROID_PACKAGE = com.t3i.livestudiosessions
@@ -19,9 +19,11 @@ APP_OBJECTS = rtk/io.o rtk/midi.o rtk/io_allegro.o t3net/t3net.o modules/song_li
               modules/obfuscate.o modules/text_entry.o modules/profile.o \
               modules/gui.o main.o state.o state_game.o state_game_results.o \
               resources.o state_game_player.o state_title.o state_av_setup.o \
-              state_song_list.o
+              state_song_list.o t3net/leaderboard.o
 APP_LIBS = -lmxml
-APP_CFLAGS = 
+APP_CFLAGS =
+app_clean:
+#	@
 
 ################
 # global stuff #
@@ -31,18 +33,18 @@ GLOBAL_CFLAGS = -O2 -fomit-frame-pointer -funroll-loops -Wall -I. -DT3F_DEVELOPE
 ##################
 # Mac OS X stuff #
 ##################
-#MACOSX_CFLAGS = 
-#MACOSX_PLATFORM_OBJECTS = 
-#MACOSX_PLATFORM_LIBS = 
+#MACOSX_CFLAGS =
+#MACOSX_PLATFORM_OBJECTS =
+#MACOSX_PLATFORM_LIBS =
 MACOSX_DEPEND_LIBS = -lcurl-static -lallegro_dialog$(LIB_SUFFIX)
-#MACOSX_PLATFORM_TARGET = 
+#MACOSX_PLATFORM_TARGET =
 
 ###############
 # Linux stuff #
 ###############
-#LINUX_CFLAGS = 
-#LINUX_PLATFORM_OBJECTS = 
-#LINUX_PLATFORM_LIBS = 
+#LINUX_CFLAGS =
+#LINUX_PLATFORM_OBJECTS =
+#LINUX_PLATFORM_LIBS =
 LINUX_DEPEND_LIBS = -lcurl -lallegro_dialog$(LIB_SUFFIX)
 #LINUX_PLATFORM_TARGET =
 
@@ -51,33 +53,33 @@ LINUX_DEPEND_LIBS = -lcurl -lallegro_dialog$(LIB_SUFFIX)
 ################################################
 #LINUX_STATIC_CFLAGS =
 #LINUX_STATIC_PLATFORM_OBJECTS =
-#LINUX_STATIC_PLATFORM_LIBS = 
+#LINUX_STATIC_PLATFORM_LIBS =
 LINUX_STATIC_DEPEND_LIBS = -lcurl `pkg-config --libs gtk+-2.0` -lallegro_dialog$(LIB_SUFFIX)
 #LINUX_STATIC_PLATFORM_TARGET =
 
 ##############################
 # MinGW cross-compiler stuff #
 ##############################
-#MINGW_CROSS_CFLAGS = 
-#MINGW_CROSS_PLATFORM_OBJECTS = 
-#MINGW_CROSS_PLATFORM_LIBS = 
+#MINGW_CROSS_CFLAGS =
+#MINGW_CROSS_PLATFORM_OBJECTS =
+#MINGW_CROSS_PLATFORM_LIBS =
 MINGW_CROSS_DEPEND_LIBS = -lcurldll -lws2_32 -lwinmm -lallegro_dialog$(LIB_SUFFIX)
 #MINGW_CROSS_PLATFORM_TARGET =
 
 ###############
 # MinGW stuff #
 ###############
-#MINGW_CFLAGS = 
-#MINGW_PLATFORM_OBJECTS = 
-#MINGW_PLATFORM_LIBS = 
+#MINGW_CFLAGS =
+#MINGW_PLATFORM_OBJECTS =
+#MINGW_PLATFORM_LIBS =
 MINGW_DEPEND_LIBS = -lcurldll -lallegro_dialog$(LIB_SUFFIX)
 #MINGW_PLATFORM_TARGET =
 
 #################
 # Android stuff #
 #################
-#ANDROID_CFLAGS = 
-#ANDROID_PLATFORM_OBJECTS = 
+#ANDROID_CFLAGS =
+#ANDROID_PLATFORM_OBJECTS =
 ANDROID_PLATFORM_LIBS = -lcurl
 #ANDROID_DEPEND_LIBS =
 #ANDROID_PLATFORM_TARGET =
