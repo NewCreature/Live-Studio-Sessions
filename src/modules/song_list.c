@@ -674,7 +674,12 @@ static int lss_song_list_collection_sorter(const void * item_1, const void * ite
 	LSS_SONG_LIST_ENTRY * sp1 = *(LSS_SONG_LIST_ENTRY **)(item_1);
 	LSS_SONG_LIST_ENTRY * sp2 = *(LSS_SONG_LIST_ENTRY **)(item_2);
 
-	if(sp1->collection == lss_song_list_collection_sort_collection)
+	if(sp1->collection == lss_song_list_collection_sort_collection && sp2->collection == lss_song_list_collection_sort_collection)
+	{
+//		printf("%d, %d - %d, %d\n", sp1->tier, sp1->sort, sp2->tier, sp2->sort);
+		return ((sp1->tier * 100) + sp1->sort) - ((sp2->tier * 100) + sp2->sort);
+	}
+	else if(sp1->collection == lss_song_list_collection_sort_collection)
 	{
 		return -1;
 	}
