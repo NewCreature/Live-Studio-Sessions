@@ -82,7 +82,6 @@ static bool compare_filename(const ALLEGRO_PATH * path, const char * fn)
 }
 
 static unsigned long lss_song_list_file_count = 0;
-static unsigned long lss_song_list_file_count_matches = 0;
 
 unsigned long lss_song_list_count_files(const char * location, int flags)
 {
@@ -646,8 +645,26 @@ void lss_song_list_sort(LSS_SONG_LIST * dp, int field, const char * filter)
 	lss_song_list_filter_field = field;
 	lss_song_list_filter = filter;
 	qsort(dp->entry, dp->entries, sizeof(LSS_SONG_LIST_ENTRY *), lss_song_list_sorter);
-	t3f_debug_message("lss_song_list_sort() exit\n");
 	dp->visible_entries = dp->entries;
+	if(filter)
+	{
+		dp->visible_entries = 0;
+		if(field == 0)
+		{
+			while(lss_song_list_strmatch(lss_song_list_filter, dp->entry[dp->visible_entries]->artist) && dp->visible_entries < dp->entries - 1)
+			{
+				dp->visible_entries++;
+			}
+		}
+		else if(field == 1)
+		{
+			while(lss_song_list_strmatch(lss_song_list_filter, dp->entry[dp->visible_entries]->title) && dp->visible_entries < dp->entries - 1)
+			{
+				dp->visible_entries++;
+			}
+		}
+	}
+	t3f_debug_message("lss_song_list_sort() exit\n");
 }
 
 static int lss_song_list_collection_sort_collection;
