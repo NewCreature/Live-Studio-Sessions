@@ -32,7 +32,7 @@ static int rtk_parse_midi(RTK_MIDI * mp, int pass)
 	int i, j, track_pos, delta, track_event;
 	unsigned long bytes_used;
 	int d1, d2, d3, d4;
-	
+
 	/* allocate empty tracks on first pass */
 	if(pass == 0)
 	{
@@ -51,7 +51,7 @@ static int rtk_parse_midi(RTK_MIDI * mp, int pass)
 			}
 		}
 	}
-	
+
 	/* allocate space for events on second pass */
 	else if(pass == 1)
 	{
@@ -79,7 +79,7 @@ static int rtk_parse_midi(RTK_MIDI * mp, int pass)
 			}
 		}
 	}
-	
+
 	for(i = 0; i < mp->raw_data->tracks; i++)
 	{	//For each imported track
 		last_midi_event = 0;	//Running status resets at beginning of each track
@@ -87,7 +87,7 @@ static int rtk_parse_midi(RTK_MIDI * mp, int pass)
 		midi_event = 0;
 		midi_event_type = 0;
 		midi_meta_event = 0;
-		
+
 		track_pos = 0;
 		track_event = 0;
 		while(track_pos < mp->raw_data->track[i].len)
@@ -115,7 +115,7 @@ static int rtk_parse_midi(RTK_MIDI * mp, int pass)
 				track_pos++;	//Increment buffer pointer past the status byte
 			}
 			midi_event_type = midi_event & 0xF0;
-			
+
 			/* don't used filtered data for meta events */
 			if(midi_event_type == 0xF0)
 			{
@@ -237,7 +237,7 @@ static int rtk_parse_midi(RTK_MIDI * mp, int pass)
 							{
 								mp->track[i]->event[track_event]->data_i[0] = d4;
 							}
-							
+
 							/* count tempo events so we know how much space to allocate later */
 							else if(pass == 0)
 							{
@@ -253,7 +253,7 @@ static int rtk_parse_midi(RTK_MIDI * mp, int pass)
 							d2 = (mp->raw_data->track[i].data[track_pos++]);	//Denominator
 							d3 = (mp->raw_data->track[i].data[track_pos++]);	//Metronome
 							d4 = (mp->raw_data->track[i].data[track_pos++]);	//32nds
-							
+
 							if(pass == 1)
 							{
 								mp->track[i]->event[track_event]->data_i[0] = d1;
@@ -337,7 +337,7 @@ static void rtk_build_tempo_map(RTK_MIDI * mp)
 	double current_bpm = 120.0;
 	unsigned long current_tick = 0;
 	double current_time = 0.0;
-	
+
 	/* allocate storage for tempo events */
 	mp->tempo_event = malloc(sizeof(RTK_MIDI_EVENT *) * mp->tempo_events);
 	if(mp->tempo_event)
@@ -354,7 +354,7 @@ static void rtk_build_tempo_map(RTK_MIDI * mp)
 				return;
 			}
 		}
-		
+
 		/* iterate through all events, copying any tempo change found */
 		for(i = 0; i < mp->tracks; i++)
 		{
@@ -368,7 +368,7 @@ static void rtk_build_tempo_map(RTK_MIDI * mp)
 			}
 		}
 		qsort(mp->tempo_event, mp->tempo_events, sizeof(RTK_MIDI_EVENT *), rtk_tempo_map_qsort_callback);
-		
+
 		/* generate real time data for tempo map */
 		for(i = 0; i < mp->tempo_events; i++)
 		{
@@ -410,7 +410,7 @@ static double rtk_get_real_time(RTK_MIDI * mp, unsigned long tick)
 			current_tick = mp->tempo_event[current_tempo_event]->tick;
 		}
 	}
-	
+
 	/* add the remaining time from the tempo change to the desired tick */
 	current_time += rtk_tick_to_real_time(mp->raw_data->divisions, current_bpm, tick - current_tick);
 
@@ -421,10 +421,10 @@ static double rtk_get_real_time(RTK_MIDI * mp, unsigned long tick)
 static void rtk_get_event_real_times(RTK_MIDI * mp)
 {
 	int i, j;
-	
+
 	/* build the tempo map so we can calculate the real times */
 	rtk_build_tempo_map(mp);
-	
+
 	for(i = 0; i < mp->tracks; i++)
 	{
 		for(j = 0; j < mp->track[i]->events; j++)
@@ -438,7 +438,7 @@ static void rtk_get_event_real_times(RTK_MIDI * mp)
 static void rtk_get_track_names(RTK_MIDI * mp)
 {
 	int i, j;
-	
+
 	for(i = 0; i < mp->tracks; i++)
 	{
 		for(j = 0; j < mp->track[i]->events; j++)
@@ -472,7 +472,7 @@ RTK_MIDI * rtk_load_midi(const char * fn)
 		return NULL;
 	}
 	memset(midi, 0, sizeof(RTK_MIDI));
-	
+
 	midi->raw_data = malloc(sizeof(RTK_MIDI_DATA));
 	if(!midi->raw_data)
 	{
@@ -503,7 +503,7 @@ RTK_MIDI * rtk_load_midi(const char * fn)
 	}
 
 	data = rtk_io_mgetw(fp);                    /* beat divisions */
-	midi->raw_data->divisions = abs(data);
+	midi->raw_data->divisions = labs(data);
 
 	for(c=0; c < midi->raw_data->tracks; c++)
 	{            /* read each track */
@@ -530,7 +530,7 @@ RTK_MIDI * rtk_load_midi(const char * fn)
 	}
 
 	rtk_io_fclose(fp);
-	
+
 	/* convert raw MIDI data to something useful */
 	rtk_parse_midi(midi, 0);
 	rtk_parse_midi(midi, 1);
@@ -550,7 +550,7 @@ RTK_MIDI * rtk_load_midi(const char * fn)
 void rtk_destroy_midi(RTK_MIDI * mp)
 {
 	int i;
-	
+
 	for(i = 0; i < mp->tracks; i++)
 	{
 		free(mp->track[i]);
