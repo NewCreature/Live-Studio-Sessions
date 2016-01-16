@@ -11,12 +11,12 @@ typedef struct
 	ALLEGRO_PATH * path;
 	unsigned long checksum;
 	char id[256]; // unique identifier used for leaderboards and such
-	
+
 	/* cached song info */
 	char artist[128];
 	char title[256];
 	char frets[128];
-	
+
 	int collection;
 	int tier;
 	int sort;
@@ -38,7 +38,8 @@ typedef struct
 	char cache_filename[1024];
 	LSS_SONG_LIST_ENTRY ** entry;
 	int entries;
-	
+	int visible_entries;
+
 	/* collection info */
 	LSS_SONG_COLLECTION ** collection;
 	int collections;

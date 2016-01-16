@@ -37,7 +37,7 @@ static int lss_song_list_collection = -1;
 static void lss_enumerate_tracks(LSS_SONG * sp)
 {
 	int i, j;
-	
+
 	lss_tracks = 0;
 	for(i = 0; i < sp->source_midi->tracks; i++)
 	{
@@ -176,7 +176,7 @@ static void lss_state_song_list_touch_scroll_logic(APP_INSTANCE * app)
 			}
 		}
 	}
-	
+
 	if(lss_song_list_touch_id >= 0)
 	{
 		if(t3f_touch[lss_song_list_touch_id].active)
@@ -233,12 +233,12 @@ static void lss_state_song_list_touch_scroll_logic(APP_INSTANCE * app)
 		{
 			app->selected_song = 0;
 		}
-		else if(app->selected_song >= app->song_list->entries)
+		else if(app->selected_song >= app->song_list->visible_entries)
 		{
-			app->selected_song = app->song_list->entries - 1;
+			app->selected_song = app->song_list->visible_entries - 1;
 		}
 	}
-	
+
 	if(lss_song_list_tapped)
 	{
 		lss_song_list_tap_frames++;
@@ -365,7 +365,7 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 		app->selected_song--;
 		if(app->selected_song < 0)
 		{
-			app->selected_song = app->song_list->entries - 1;
+			app->selected_song = app->song_list->visible_entries - 1;
 		}
 		lss_state_song_list_center(app);
 		t3f_key[ALLEGRO_KEY_UP] = 0;
@@ -373,7 +373,7 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 	else if(t3f_key[ALLEGRO_KEY_DOWN] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed)
 	{
 		app->selected_song++;
-		if(app->selected_song >= app->song_list->entries)
+		if(app->selected_song >= app->song_list->visible_entries)
 		{
 			app->selected_song = 0;
 		}
@@ -385,7 +385,7 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 		app->selected_song -= lss_song_list_visible;
 		if(app->selected_song < 0)
 		{
-			app->selected_song = app->song_list->entries - 1;
+			app->selected_song = app->song_list->visible_entries - 1;
 		}
 		lss_state_song_list_center(app);
 		t3f_key[ALLEGRO_KEY_PGUP] = 0;
@@ -393,7 +393,7 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 	else if(t3f_key[ALLEGRO_KEY_PGDN])
 	{
 		app->selected_song += lss_song_list_visible;
-		if(app->selected_song >= app->song_list->entries)
+		if(app->selected_song >= app->song_list->visible_entries)
 		{
 			app->selected_song = 0;
 		}
@@ -404,9 +404,9 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 	{
 		lss_process_text_entry();
 	}
-	
-	max = app->song_list->entries * lss_song_list_space - lss_song_list_visible * lss_song_list_space;
-	if(app->song_list->entries < lss_song_list_visible)
+
+	max = app->song_list->visible_entries * lss_song_list_space - lss_song_list_visible * lss_song_list_space;
+	if(app->song_list->visible_entries < lss_song_list_visible)
 	{
 		lss_song_list_scroll_pos = 0;
 	}
@@ -431,7 +431,7 @@ void lss_state_song_list_song_select_render(APP_INSTANCE * app)
 
 	al_clear_to_color(LSS_TITLE_COLOR_BG);
 	al_draw_tinted_bitmap(app->title.logo_bitmap, al_map_rgba_f(0.0, 0.0, 0.0, 0.125), 480 - al_get_bitmap_width(app->title.logo_bitmap) / 2, 270 - al_get_bitmap_height(app->title.logo_bitmap) / 2, 0);
-	
+
 	/* render filter info */
 	al_hold_bitmap_drawing(true);
 	al_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 4, 0 + 4, 0, "Sort By %s", type[lss_song_list_sort_type]);
@@ -447,11 +447,11 @@ void lss_state_song_list_song_select_render(APP_INSTANCE * app)
 		al_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, t3f_display_width, 0, ALLEGRO_ALIGN_RIGHT, "%s", app->song_list->collection[lss_song_list_collection]->name);
 	}
 	al_hold_bitmap_drawing(false);
-	
+
 	/* render song list entries */
 	al_hold_bitmap_drawing(true);
 	t3f_set_clipping_rectangle(0, lss_song_list_space * 1, t3f_display_width, t3f_display_height - lss_song_list_space * 2);
-	for(i = start_song; i < start_song + lss_song_list_visible && i < app->song_list->entries; i++)
+	for(i = start_song; i < start_song + lss_song_list_visible && i < app->song_list->visible_entries; i++)
 	{
 		if(i == app->selected_song)
 		{
@@ -468,7 +468,7 @@ void lss_state_song_list_song_select_render(APP_INSTANCE * app)
 	}
 	al_hold_bitmap_drawing(false);
 	t3f_set_clipping_rectangle(0, 0, 0, 0);
-	
+
 	/* render info for selected song */
 	sprintf(buf, "high_score_%d_%d", app->selected_track, app->selected_difficulty);
 	val = al_get_config_value(app->game.player[0].profile->config, app->song_list->entry[app->selected_song]->id, buf);

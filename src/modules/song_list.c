@@ -7,7 +7,7 @@
 LSS_SONG_LIST * lss_create_song_list(const char * fn, int entries, int collections)
 {
 	LSS_SONG_LIST * dp;
-	
+
 	dp = malloc(sizeof(LSS_SONG_LIST));
 	if(!dp)
 	{
@@ -72,7 +72,7 @@ static bool compare_filename(const ALLEGRO_PATH * path, const char * fn)
 {
 //	int i;
 	const char * cfn = NULL;
-	
+
 	cfn = al_get_path_filename(path);
 	if(!strcmp(cfn, fn))
 	{
@@ -82,6 +82,7 @@ static bool compare_filename(const ALLEGRO_PATH * path, const char * fn)
 }
 
 static unsigned long lss_song_list_file_count = 0;
+static unsigned long lss_song_list_file_count_matches = 0;
 
 unsigned long lss_song_list_count_files(const char * location, int flags)
 {
@@ -91,13 +92,13 @@ unsigned long lss_song_list_count_files(const char * location, int flags)
 	ALLEGRO_PATH * path;
 	const char * name;
 	char cname[1024] = {0};
-	
+
 	/* reset counter if this is the first time entering this function */
 	if(!(flags & LSS_SONG_LIST_FLAG_RECURSE))
 	{
 		lss_song_list_file_count = 0;
 	}
-	
+
 	path = al_create_path(location);
 	name = al_path_cstr(path, '/');
 	strcpy(cname, name);
@@ -112,7 +113,7 @@ unsigned long lss_song_list_count_files(const char * location, int flags)
 		}
 		cname[strlen(cname) - 1] = 0;
 	}
-	
+
 	dir = al_create_fs_entry(cname);
 	if(!dir)
 	{
@@ -157,13 +158,13 @@ unsigned long lss_song_list_count_collections(const char * location, int flags)
 	ALLEGRO_PATH * path;
 	const char * name;
 	char cname[1024] = {0};
-	
+
 	/* reset counter if this is the first time entering this function */
 	if(!(flags & LSS_SONG_LIST_FLAG_RECURSE))
 	{
 		lss_song_list_file_count = 0;
 	}
-	
+
 	path = al_create_path(location);
 	name = al_path_cstr(path, '/');
 	strcpy(cname, name);
@@ -178,7 +179,7 @@ unsigned long lss_song_list_count_collections(const char * location, int flags)
 		}
 		cname[strlen(cname) - 1] = 0;
 	}
-	
+
 	dir = al_create_fs_entry(cname);
 	if(!dir)
 	{
@@ -228,7 +229,7 @@ static int lss_song_list_encode_character(int c)
 static char * lss_song_list_encode_artist_title(char * out, char * artist, char * title)
 {
 	int i;
-	
+
 	strcpy(out, "______");
 	for(i = 0; i < 3 && i < strlen(artist); i++)
 	{
@@ -247,7 +248,7 @@ static bool lss_song_list_file_in_collection(const ALLEGRO_PATH * cp, const ALLE
 	int i;
 	const char * cpp;
 	const char * spp;
-	
+
 	cpp = al_path_cstr(cp, '/');
 	spp = al_path_cstr(sp, '/');
 
@@ -327,7 +328,7 @@ void lss_song_list_add_file(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int fla
 				{
 					dp->entry[dp->entries]->sort = 0;
 				}
-				
+
 				val = al_get_config_value(dp->cache, al_path_cstr(pp, '/'), "checksum");
 				if(!val)
 				{
@@ -339,12 +340,12 @@ void lss_song_list_add_file(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int fla
 						dp->entry[dp->entries]->checksum = t3f_checksum_file(al_path_cstr(midi_path, '/'));
 						al_destroy_path(midi_path);
 					}
-					
+
 					/* create ID from checksum and song info */
 					sprintf(dp->entry[dp->entries]->id, "%s%lu", lss_song_list_encode_artist_title(buf, dp->entry[dp->entries]->artist, dp->entry[dp->entries]->title), dp->entry[dp->entries]->checksum);
 					sprintf(val2, "%lu", dp->entry[dp->entries]->checksum);
 					al_set_config_value(dp->cache, al_path_cstr(pp, '/'), "checksum", val2);
-					
+
 					/* store path of song under ID so we can reference songs by ID later */
 					al_set_config_value(dp->cache, dp->entry[dp->entries]->id, "Path", al_path_cstr(pp, '/'));
 //					printf("checksum: %s\n", val2);
@@ -362,7 +363,7 @@ void lss_song_list_add_file(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int fla
 						sprintf(dp->entry[dp->entries]->id, "%s%lu", lss_song_list_encode_artist_title(buf, dp->entry[dp->entries]->artist, dp->entry[dp->entries]->title), dp->entry[dp->entries]->checksum);
 					}
 				}
-				
+
 				/* store info from song.ini in the song list cache for easy
 				 * access */
 				al_set_config_value(dp->cache, al_path_cstr(pp, '/'), "Artist", dp->entry[dp->entries]->artist);
@@ -417,7 +418,7 @@ void lss_song_list_add_files(LSS_SONG_LIST * dp, const ALLEGRO_PATH * path, int 
 	ALLEGRO_PATH * pp;
 	const char * name;
 	char cname[1024] = {0};
-	
+
 	/* ignore ./ and ../ path entries */
 	name = al_path_cstr(path, '/');
 	strcpy(cname, name);
@@ -432,7 +433,7 @@ void lss_song_list_add_files(LSS_SONG_LIST * dp, const ALLEGRO_PATH * path, int 
 		}
 		cname[strlen(cname) - 1] = 0;
 	}
-	
+
 //	printf("!Looking in %s\n", cname);
 	dir = al_create_fs_entry(cname);
 	if(!dir)
@@ -512,7 +513,7 @@ static int lss_song_list_filter_field = 0;
 static int lss_song_list_stricmp(const char * s1, const char * s2)
 {
 	int pos = 0;
-	
+
 	while(1)
 	{
 		if(tolower(s1[pos]) != tolower(s2[pos]))
@@ -542,7 +543,7 @@ static int lss_song_list_stricmp(const char * s1, const char * s2)
 static int lss_song_list_strmatch(const char * s1, const char * s2)
 {
 	int pos = 0;
-	
+
 	while(1)
 	{
 		if(tolower(s1[pos]) != tolower(s2[pos]))
@@ -573,7 +574,7 @@ static int lss_song_list_sorter(const void * item_1, const void * item_2)
 	LSS_SONG_LIST_ENTRY * sp1 = *(LSS_SONG_LIST_ENTRY **)(item_1);
 	LSS_SONG_LIST_ENTRY * sp2 = *(LSS_SONG_LIST_ENTRY **)(item_2);
 	int acmp, acmp2;
-	
+
 	if(lss_song_list_filter)
 	{
 		if(lss_song_list_filter_field == 0)
@@ -646,6 +647,7 @@ void lss_song_list_sort(LSS_SONG_LIST * dp, int field, const char * filter)
 	lss_song_list_filter = filter;
 	qsort(dp->entry, dp->entries, sizeof(LSS_SONG_LIST_ENTRY *), lss_song_list_sorter);
 	t3f_debug_message("lss_song_list_sort() exit\n");
+	dp->visible_entries = dp->entries;
 }
 
 static int lss_song_list_collection_sort_collection;
@@ -654,7 +656,7 @@ static int lss_song_list_collection_sorter(const void * item_1, const void * ite
 {
 	LSS_SONG_LIST_ENTRY * sp1 = *(LSS_SONG_LIST_ENTRY **)(item_1);
 	LSS_SONG_LIST_ENTRY * sp2 = *(LSS_SONG_LIST_ENTRY **)(item_2);
-	
+
 	if(sp1->collection == lss_song_list_collection_sort_collection)
 	{
 		return -1;
@@ -683,4 +685,9 @@ void lss_song_list_sort_collection(LSS_SONG_LIST * dp, int collection)
 {
 	lss_song_list_collection_sort_collection = collection;
 	qsort(dp->entry, dp->entries, sizeof(LSS_SONG_LIST_ENTRY *), lss_song_list_collection_sorter);
+	dp->visible_entries = 0;
+	while(dp->entry[dp->visible_entries]->collection == collection && dp->visible_entries < dp->entries - 1)
+	{
+		dp->visible_entries++;
+	}
 }
