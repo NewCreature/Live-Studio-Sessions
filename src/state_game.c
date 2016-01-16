@@ -11,14 +11,7 @@
 
 void lss_add_bitmap_to_atlas(T3F_ATLAS * ap, ALLEGRO_BITMAP ** bp, int type)
 {
-	ALLEGRO_BITMAP * abp;
-
-	abp = t3f_add_bitmap_to_atlas(ap, bp, type);
-	if(abp)
-	{
-		al_destroy_bitmap(*bp);
-		*bp = abp;
-	}
+	t3f_add_bitmap_to_atlas(ap, bp, type);
 }
 
 bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
@@ -148,7 +141,7 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 void lss_game_exit(LSS_GAME * gp)
 {
 	int i;
-	
+
 	t3f_debug_message("lss_game_exit() enter\n");
 	t3f_debug_message("\tDestroying primitives cache...\n");
 	t3f_destroy_primitives_cache(gp->primitives);
@@ -174,7 +167,7 @@ void lss_game_exit(LSS_GAME * gp)
 static void lss_game_get_player_results(LSS_GAME * gp, int player)
 {
 	int i;
-	
+
 	t3f_debug_message("lss_game_get_player_results() enter\n");
 	gp->player[0].total_notes = 0;
 	gp->player[0].hit_notes = 0;
@@ -220,38 +213,38 @@ static void lss_game_get_player_results(LSS_GAME * gp, int player)
 			}
 		}
 	}
-	
+
 	gp->player[0].stars = 0;
 	/* give one star for completing the song */
 	if(gp->player[0].total_notes >= gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes)
 	{
 		gp->player[0].stars++;
 	}
-	
+
 	/* give one star for hitting half of the notes */
 	if(gp->player[0].stars && (gp->player[0].hit_notes * 100) / gp->player[0].total_notes >= 50)
 	{
 		gp->player[0].stars++;
 	}
-	
+
 	/* give one star for hitting three quarters of the notes */
 	if(gp->player[0].stars && (gp->player[0].hit_notes * 100) / gp->player[0].total_notes >= 75)
 	{
 		gp->player[0].stars++;
 	}
-	
+
 	/* give one star for hitting all of the notes */
 	if(gp->player[0].stars && (gp->player[0].hit_notes * 100) / gp->player[0].total_notes >= 100)
 	{
 		gp->player[0].stars++;
 	}
-	
+
 	/* give one star for no bad notes */
 	if(gp->player[0].stars >= 4 && gp->player[0].perfect_notes + gp->player[0].good_notes >= gp->player[0].total_notes)
 	{
 		gp->player[0].stars++;
 	}
-	
+
 	/* calculate accuracy */
 	if(gp->player[0].total_notes > 0)
 	{
@@ -305,7 +298,7 @@ void lss_game_logic(LSS_GAME * gp)
 	}
 	gp->current_tick++;
 	gp->camera_z += gp->camera_vz;
-	
+
 	/* update camera speed if we crossed over beat line */
 	if(gp->current_beat < gp->song->beats - 1)
 	{

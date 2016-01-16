@@ -73,7 +73,7 @@ void lss_state_logic(APP_INSTANCE * app)
 					sprintf(buf[1], "%d", lss_obfuscate_value(app->game.player[0].high_score));
 					al_set_config_value(app->game.player[0].profile->config, app->game.song_id, buf[0], buf[1]);
 				}
-				
+
 				/* store results */
 				sprintf(buf[0], "platinum_%d_%d", app->game.player[0].selected_track, app->game.player[0].selected_difficulty);
 				sprintf(buf[1], "%d", app->game.player[0].stars);
@@ -86,17 +86,17 @@ void lss_state_logic(APP_INSTANCE * app)
 					sprintf(buf[0], "fc_%d_%d", app->game.player[0].selected_track, app->game.player[0].selected_difficulty);
 					al_set_config_value(app->game.player[0].profile->config, app->game.song_id, buf[0], "1");
 				}
-				
+
 				sprintf(buf[0], "%d%d", app->game.player[0].selected_track, app->game.player[0].selected_difficulty);
 				sprintf(buf[1], "%s", app->game.player[0].profile->name);
 				if(app->game.player[0].score > 0)
 				{
-					if(!t3net_upload_score("http://www.t3-i.com/leaderboards/poll.php", "live_studio_sessions", "0.1", buf[0], app->song_list->entry[app->selected_song]->id, buf[1], lss_obfuscate_value(app->game.player[0].score)))
+					if(!t3net_upload_score("http://www.t3-i.com/t3net2/leaderboards/insert.php", "live_studio_sessions", "0.1", buf[0], app->song_list->entry[app->selected_song]->id, buf[1], lss_obfuscate_value(app->game.player[0].score), NULL))
 					{
 						printf("failed to upload score\n");
 					}
 				}
-				app->leaderboard = t3net_get_leaderboard("http://www.t3-i.com/leaderboards/query_2.php", "live_studio_sessions", "0.1", buf[0], app->song_list->entry[app->selected_song]->id, 10, 0);
+				app->leaderboard = t3net_get_leaderboard("http://www.t3-i.com/t3net2/leaderboards/query.php", "live_studio_sessions", "0.1", buf[0], app->song_list->entry[app->selected_song]->id, 10, 0);
 				if(!app->leaderboard)
 				{
 					printf("Failed to download leaderboard\n");

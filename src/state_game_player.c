@@ -24,7 +24,7 @@ static bool lss_player_get_next_notes(LSS_SONG * sp, LSS_PLAYER * pp)
 {
 	int cur_note = pp->next_notes.note[pp->next_notes.notes - 1];
 	int cur_tick;
-	
+
 	if(cur_note < 0)
 	{
 		cur_note = 0;
@@ -34,7 +34,7 @@ static bool lss_player_get_next_notes(LSS_SONG * sp, LSS_PLAYER * pp)
 	{
 		cur_tick = sp->track[pp->selected_track][pp->selected_difficulty].note[cur_note]->tick;
 	}
-	
+
 	pp->next_notes.notes = 0;
 	while(cur_note < sp->track[pp->selected_track][pp->selected_difficulty].notes)
 	{
@@ -112,7 +112,7 @@ static int lss_player_check_visibility(double z, double end_z)
 static int lss_player_note_visible(LSS_GAME * gp, int player, int note)
 {
 	double z, end_z;
-	
+
 //	z = ((gp->song->track[gp->player[player].selected_track][gp->player[player].selected_difficulty].note[note]->start_z - (gp->camera_z - gp->delay_z))) * gp->board_speed;
 //	end_z = ((gp->song->track[gp->player[player].selected_track][gp->player[player].selected_difficulty].note[note]->end_z - (gp->camera_z - gp->delay_z))) * gp->board_speed;
 	z = ((gp->song->track[gp->player[player].selected_track][gp->player[player].selected_difficulty].note[note]->tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
@@ -123,7 +123,7 @@ static int lss_player_note_visible(LSS_GAME * gp, int player, int note)
 static int lss_player_beat_visible(LSS_GAME * gp, int beat)
 {
 	double z;
-	
+
 //	z = ((gp->song->beat[beat]->z - (gp->camera_z - gp->delay_z))) * gp->board_speed;
 	z = ((gp->song->beat[beat]->tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
 	return lss_player_check_visibility(z, z);
@@ -260,11 +260,11 @@ void lss_player_logic(LSS_GAME * gp, int player)
 	bool hopo_strum = false;
 	bool hopo_strum_check = false; // true if we needed to check next_notes for valid strummable note
 	bool hopo_strum_pass = false;
-	
+
 	lss_read_controller(gp->player[0].controller);
 	lss_player_detect_visible_notes(gp, 0);
 	lss_player_detect_visible_beats(gp, 0);
-	
+
 	/* move on to next note if we missed this one, do this first because logic
 	 * below assumes next_notes is current */
 	if(gp->player[0].next_notes.notes)
@@ -306,7 +306,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 					group = 0;
 					gp->player[0].hittable_notes[group].notes = 0;
 				}
-				
+
 				/* move on to next group */
 				else if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick != cur_tick)
 				{
@@ -314,7 +314,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 					gp->player[0].hittable_notes[group].notes = 0;
 					cur_tick = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick;
 				}
-				
+
 				/* add note to current group */
 				gp->player[0].hittable_notes[group].note[gp->player[0].hittable_notes[group].notes] = i;
 				gp->player[0].hittable_notes[group].notes++;
@@ -337,18 +337,18 @@ void lss_player_logic(LSS_GAME * gp, int player)
 					hopo_strum_check = true;
 					d = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[0]]->tick - (gp->current_tick - gp->av_delay)));
 				}
-				
+
 				/* have strummed the next note as well as the previous note,
 				 * only eat strum of the HOPO note is closer than the next note */
 				if(hopo_strum_check)
 				{
 					d2 = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].playing_notes.note[0]]->tick - (gp->current_tick - gp->av_delay)));
-					if(fabs(d2) < fabs(d))
+					if(abs(d2) < abs(d))
 					{
 						hopo_strum_pass = true;
 					}
 				}
-				
+
 				/* if the strummed note only matches the HOPO note, eat the strum */
 				else
 				{
@@ -361,7 +361,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 			gp->player[0].playing_notes.hopo = false; // prevent extra strums from going unnoticed
 			hopo_strum = true;
 			gp->player[0].score -= gp->player[0].playing_notes.hopo_points;
-			
+
 			/* adjust note accuracy to match strum position */
 			for(i = 0; i < gp->player[0].playing_notes.notes; i++)
 			{
@@ -387,7 +387,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 				}
 			}
 		}
-		
+
 		/* add adjusted points to score */
 		points = gp->player[0].playing_notes.notes * (LSS_GAME_NOTE_BASE_POINTS * accuracy) * gp->player[0].multiplier;
 		gp->player[0].score += points;
@@ -464,7 +464,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 					break;
 				}
 			}
-			
+
 			/* no note matches means we should kill the combo */
 			if(i == gp->player[0].hittable_notes_groups)
 			{
@@ -543,7 +543,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 				}
 			}
 		}
-		
+
 		/* see if we are hitting a HOPO note */
 		if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[gp->player[0].next_notes.note[0]]->hopo && gp->player[0].streak > 0 && missed_groups == 0)
 		{
@@ -631,7 +631,7 @@ static void lss_player_render_primitive_fretboard(LSS_GAME * gp, int player)
 	float oy[5] = {3.0 - 4.0, 1.0 - 4.0, 0.0 - 4.0, 1.0 - 4.0, 3.0 - 4.0};
 	float c, cy, z, end_z;
 	ALLEGRO_VERTEX v[32];
-	
+
 	c = al_get_bitmap_width(gp->note_texture[0]) / 2;
 	cy = c + c / 4 - 2;
 	z = -480;
@@ -654,13 +654,13 @@ static void lss_player_render_primitive_fretboard(LSS_GAME * gp, int player)
 	v[4].y = t3f_project_y(420 + cy + oy[4], end_z);
 	v[4].z = 0;
 	v[4].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
-	
+
 	memcpy(&v[5], &v[4], sizeof(ALLEGRO_VERTEX));
 	v[6].x = t3f_project_x(320 + 3 * 80, end_z);
 	v[6].y = t3f_project_y(420 + cy + oy[3], end_z);
 	v[6].z = 0;
 	v[6].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
-	
+
 	memcpy(&v[7], &v[6], sizeof(ALLEGRO_VERTEX));
 	v[8].x = t3f_project_x(320 + 2 * 80, end_z);
 	v[8].y = t3f_project_y(420 + cy + oy[2], end_z);
@@ -692,7 +692,7 @@ static void lss_player_render_primitive_beat_line(LSS_GAME * gp, int player, dou
 {
 	float oy[5] = {3.0 - 4.0, 1.0 - 4.0, 0.0 - 4.0, 1.0 - 4.0, 3.0 - 4.0};
 	float c, cy;
-	
+
 	c = al_get_bitmap_width(gp->note_texture[0]) / 2;
 	cy = c + c / 4 - 2;
 	al_draw_line(t3f_project_x(320 + 0 * 80 - 36, z), t3f_project_y(420 + cy + oy[0] + 2.0, z), t3f_project_x(320 + 0 * 80, z), t3f_project_y(420 + cy + oy[0], z), t3f_color_white, 2.0);
@@ -706,7 +706,7 @@ static void lss_player_render_primitive_beat_line(LSS_GAME * gp, int player, dou
 static ALLEGRO_COLOR lss_alpha_color(ALLEGRO_COLOR c1, float alpha)
 {
 	float r1, g1, b1, a1;
-	
+
 	al_unmap_rgba_f(c1, &r1, &g1, &b1, &a1);
 	return al_map_rgba_f(r1 * alpha, g1 * alpha, b1 * alpha, a1 * alpha);
 }
@@ -832,7 +832,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 			}
 		}
 		t3f_flush_cached_primitives(gp->primitives, NULL, ALLEGRO_PRIM_TRIANGLE_LIST);
-		
+
 		/* render notes */
 		al_hold_bitmap_drawing(true);
 		for(i = gp->player[0].last_visible_note; i >= gp->player[0].first_visible_note; i--)
@@ -880,7 +880,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 		}
 		t3f_draw_rotated_bitmap(gp->note_texture[i], al_map_rgba_f(a, a, a, a), c, cy, 320 + i * 80, 420 + cy + oy[i], 0, rotate[i], 0);
 	}
-	
+
 	/* render on-screen control helpers when using touch */
 	if(gp->player[0].controller->source == LSS_CONTROLLER_SOURCE_TOUCH)
 	{
