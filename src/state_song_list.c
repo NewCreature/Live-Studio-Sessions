@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include "modules/gui.h"
 #include "modules/text_entry.h"
+#include "modules/obfuscate.h"
 
 #include "instance.h"
 #include "state.h"
@@ -426,6 +427,7 @@ void lss_state_song_list_song_select_render(APP_INSTANCE * app)
 	int i, offset;
 	int start_song = (int)lss_song_list_scroll_pos / lss_song_list_space;
 	const char * val;
+	int i_val;
 	char buf[256];
 	char * type[3] = {"Artist", "Title", "Collection"};
 
@@ -474,8 +476,9 @@ void lss_state_song_list_song_select_render(APP_INSTANCE * app)
 	val = al_get_config_value(app->game.player[0].profile->config, app->song_list->entry[app->selected_song]->id, buf);
 	if(val)
 	{
-		al_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 4, 540 - lss_song_list_space + 4, 0, "High Score: %s", val);
-		al_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, 0, 540 - lss_song_list_space, 0, "High Score: %s", val);
+		i_val = atoi(val);
+		al_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 4, 540 - lss_song_list_space + 4, 0, "High Score: %d", lss_unobfuscate_value(i_val));
+		al_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, 0, 540 - lss_song_list_space, 0, "High Score: %d", lss_unobfuscate_value(i_val));
 	}
 }
 
