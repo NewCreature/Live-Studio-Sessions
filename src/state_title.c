@@ -56,7 +56,7 @@ int lss_menu_proc_quit(void * data, int i, void * p)
 int lss_menu_proc_profiles_select(void * data, int i, void * p)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
-	
+
 	app->game.player[0].profile = &app->profiles->entry[i - 1];
 	t3f_clear_touch_data();
 	app->state = LSS_STATE_SONG_SELECT;
@@ -66,7 +66,7 @@ int lss_menu_proc_profiles_select(void * data, int i, void * p)
 int lss_menu_proc_profiles_new(void * data, int i, void * p)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
-	
+
 	lss_begin_text_entry(data, "", lss_new_profile_buffer, 32, lss_new_profile_entry_callback);
 	t3f_show_soft_keyboard(true);
 	lss_select_menu(&app->title, LSS_MENU_NEW_PROFILE);
@@ -84,7 +84,7 @@ int lss_menu_proc_profiles_back(void * data, int i, void * p)
 static bool lss_is_string_empty(const char * text)
 {
 	int i;
-	
+
 	if(strlen(text) < 1)
 	{
 		return true;
@@ -356,7 +356,7 @@ bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp, LSS_SONG_LIST
 	int pos, space;
 	t3f_set_gui_driver(NULL);
 	memset(dp->menu, 0, sizeof(T3F_GUI *) * LSS_MAX_MENUS);
-	
+
 	space = al_get_font_line_height(rp->font[LSS_FONT_LARGE]);
 
 	t3f_srand(&dp->rng, time(0));
@@ -380,7 +380,7 @@ bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp, LSS_SONG_LIST
 	t3f_add_gui_text_element(dp->menu[LSS_MENU_MAIN], lss_menu_proc_options, "Options", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 	pos += space;
 	t3f_add_gui_text_element(dp->menu[LSS_MENU_MAIN], lss_menu_proc_quit, "Quit", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
-	
+
 	/* new profile menu */
 	dp->menu[LSS_MENU_NEW_PROFILE] = t3f_create_gui(0, 0);
 	if(!dp->menu[LSS_MENU_NEW_PROFILE])
@@ -395,7 +395,7 @@ bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp, LSS_SONG_LIST
 	t3f_add_gui_text_element(dp->menu[LSS_MENU_NEW_PROFILE], lss_menu_proc_profiles_new_ok, "Okay", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 	pos += space;
 	t3f_add_gui_text_element(dp->menu[LSS_MENU_NEW_PROFILE], lss_menu_proc_profiles_new_cancel, "Cancel", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
-	
+
 	/* options menu */
 	dp->menu[LSS_MENU_OPTIONS] = t3f_create_gui(0, 0);
 	if(!dp->menu[LSS_MENU_OPTIONS])
@@ -414,27 +414,31 @@ bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp, LSS_SONG_LIST
 		pos += space;
 	#endif
 	t3f_add_gui_text_element(dp->menu[LSS_MENU_OPTIONS], lss_menu_proc_options_back, "Back", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
-	
+
 	/* start song audio */
 	dp->song_audio = lss_load_song_audio(lp->entry[t3f_rand(&dp->rng) % lp->entries]->path);
 	if(dp->song_audio)
 	{
 		lss_set_song_audio_playing(dp->song_audio, true);
 	}
-	
+
 	return true;
 }
 
 void lss_title_exit(LSS_TITLE_DATA * dp)
 {
 	int i;
-	
+
 	if(dp->song_audio)
 	{
 		lss_destroy_song_audio(dp->song_audio);
 		dp->song_audio = NULL;
 	}
-	al_destroy_bitmap(dp->logo_bitmap);
+	if(dp->logo_bitmap)
+	{
+		t3f_destroy_resource(dp->logo_bitmap);
+		dp->logo_bitmap = NULL;
+	}
 	for(i = 0; i < LSS_MAX_MENUS; i++)
 	{
 		if(dp->menu[i])
@@ -490,7 +494,7 @@ void lss_title_logic(LSS_TITLE_DATA * dp, APP_INSTANCE * app)
 				t3f_key[ALLEGRO_KEY_BACK] = 0;
 			}
 		}
-		
+
 		/* only update the GUI colors if we are still on the title screen */
 		if(app->state == LSS_STATE_TITLE)
 		{
