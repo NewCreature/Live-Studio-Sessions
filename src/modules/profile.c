@@ -8,7 +8,7 @@ LSS_PROFILES * lss_load_profiles(void)
 	LSS_PROFILES * pp;
 	char fn[1024];
 	int i;
-	
+
 	old_interface = al_get_new_file_interface();
 	al_set_standard_file_interface();
 	pp = malloc(sizeof(LSS_PROFILES));
