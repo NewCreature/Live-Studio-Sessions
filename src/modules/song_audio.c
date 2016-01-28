@@ -189,7 +189,7 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 			if(ap->stream[i])
 			{
 				al_set_audio_stream_playing(ap->stream[i], false);
-//				al_detach_audio_stream(ap->stream[i]); // don't detach until Allegro mutex bug is fixed
+				al_detach_audio_stream(ap->stream[i]);
 			}
 		}
 //		al_detach_mixer(ap->mixer);
