@@ -13,11 +13,11 @@
    height="480"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.2 r9819"
-   sodipodi:docname="lss_logo3.svg"
-   inkscape:export-filename="/Users/toddcope/Downloads/ldd/icon_24.png"
-   inkscape:export-xdpi="4.5"
-   inkscape:export-ydpi="4.5">
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="icon.svg"
+   inkscape:export-filename="/home/todd/code/projects/Live-Studio-Sessions/icons/1024.png"
+   inkscape:export-xdpi="192"
+   inkscape:export-ydpi="192">
   <defs
      id="defs4">
     <inkscape:perspective
@@ -477,10 +477,10 @@
      showgrid="false"
      inkscape:showpageshadow="false"
      borderlayer="true"
-     inkscape:window-width="1680"
-     inkscape:window-height="1002"
+     inkscape:window-width="1024"
+     inkscape:window-height="576"
      inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-y="24"
      inkscape:window-maximized="1"
      showguides="true"
      inkscape:guide-bbox="true" />
@@ -492,7 +492,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -534,7 +534,7 @@
            sodipodi:cy="292.29007"
            sodipodi:rx="52.495152"
            sodipodi:ry="52.495152"
-           d="m 206.0037,292.29007 c 0,28.99227 -23.50288,52.49515 -52.49516,52.49515 -28.99227,0 -52.49515,-23.50288 -52.49515,-52.49515 0,-28.99227 23.50288,-52.49515 52.49515,-52.49515 28.99228,0 52.49516,23.50288 52.49516,52.49515 z"
+           d="m 206.0037,292.29007 a 52.495152,52.495152 0 0 1 -52.49516,52.49515 52.495152,52.495152 0 0 1 -52.49515,-52.49515 52.495152,52.495152 0 0 1 52.49515,-52.49515 52.495152,52.495152 0 0 1 52.49516,52.49515 z"
            transform="translate(40.564435,524.63932)" />
         <path
            sodipodi:type="arc"
@@ -544,7 +544,7 @@
            sodipodi:cy="292.29007"
            sodipodi:rx="52.495152"
            sodipodi:ry="52.495152"
-           d="m 206.0037,292.29007 c 0,28.99227 -23.50288,52.49515 -52.49516,52.49515 -28.99227,0 -52.49515,-23.50288 -52.49515,-52.49515 0,-28.99227 23.50288,-52.49515 52.49515,-52.49515 28.99228,0 52.49516,23.50288 52.49516,52.49515 z"
+           d="m 206.0037,292.29007 a 52.495152,52.495152 0 0 1 -52.49516,52.49515 52.495152,52.495152 0 0 1 -52.49515,-52.49515 52.495152,52.495152 0 0 1 52.49515,-52.49515 52.495152,52.495152 0 0 1 52.49516,52.49515 z"
            transform="matrix(0.16702475,0,0,0.16702475,168.43326,768.10971)" />
         <path
            inkscape:connector-curvature="0"
@@ -582,7 +582,7 @@
            sodipodi:cy="292.29007"
            sodipodi:rx="52.495152"
            sodipodi:ry="52.495152"
-           d="m 206.0037,292.29007 c 0,28.99227 -23.50288,52.49515 -52.49516,52.49515 -28.99227,0 -52.49515,-23.50288 -52.49515,-52.49515 0,-28.99227 23.50288,-52.49515 52.49515,-52.49515 28.99228,0 52.49516,23.50288 52.49516,52.49515 z"
+           d="m 206.0037,292.29007 a 52.495152,52.495152 0 0 1 -52.49516,52.49515 52.495152,52.495152 0 0 1 -52.49515,-52.49515 52.495152,52.495152 0 0 1 52.49515,-52.49515 52.495152,52.495152 0 0 1 52.49516,52.49515 z"
            transform="translate(40.564435,524.63932)" />
         <path
            sodipodi:type="arc"
@@ -592,7 +592,7 @@
            sodipodi:cy="292.29007"
            sodipodi:rx="52.495152"
            sodipodi:ry="52.495152"
-           d="m 206.0037,292.29007 c 0,28.99227 -23.50288,52.49515 -52.49516,52.49515 -28.99227,0 -52.49515,-23.50288 -52.49515,-52.49515 0,-28.99227 23.50288,-52.49515 52.49515,-52.49515 28.99228,0 52.49516,23.50288 52.49516,52.49515 z"
+           d="m 206.0037,292.29007 a 52.495152,52.495152 0 0 1 -52.49516,52.49515 52.495152,52.495152 0 0 1 -52.49515,-52.49515 52.495152,52.495152 0 0 1 52.49515,-52.49515 52.495152,52.495152 0 0 1 52.49516,52.49515 z"
            transform="matrix(0.16702475,0,0,0.16702475,168.43326,768.10971)" />
         <path
            inkscape:connector-curvature="0"
