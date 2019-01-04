@@ -1,7 +1,7 @@
 Live Studio Sessions Issues
 ---------------------------
 
-[ ]Update icon set to comply with new T3F requirements.
+[X]Update icon set to comply with new T3F requirements.
 
 [ ]Investigate why no songs are displayed in the song list.
 
