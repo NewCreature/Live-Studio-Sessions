@@ -1,6 +1,10 @@
 Live Studio Sessions Issues
 ---------------------------
 
+[ ]Update icon set to comply with new T3F requirements.
+
+[ ]Investigate why no songs are displayed in the song list.
+
 [X]Fix song loading issues for GH, RB, etc. GH shows no notes, BH crashes, etc.
 
 [X]Add profile system.
@@ -35,7 +39,7 @@ Live Studio Sessions Issues
 [X]Add touch screen controls.
 
    [X]Add on-screen display of controller layout.
-   
+
    [X]Allow song list to be navigated with touch.
 
 [X]Add song results screen.
@@ -51,7 +55,7 @@ Live Studio Sessions Issues
 
 [X]Implement "perfect" bonus for hitting the notes sufficiently accurately.
 
-   [X]This should play into the awards system. We might require getting all 
+   [X]This should play into the awards system. We might require getting all
       perfect hits to qualify for a multiplatinum award.
 
 [X]Select song folder from options screen or the first time the song list is
@@ -84,9 +88,9 @@ Live Studio Sessions Issues
       this port running.
 
    [X]Figure out why AV Setup isn't working.
-   
+
    [X]Figure out why game crashes when trying to start a song.
-   
+
 [X]Fix buggy touch input on menus. Menu items should only activate when
    releasing a touch.
 
@@ -101,19 +105,19 @@ Live Studio Sessions Issues
 [ ]Investigate crash issues.
 
    [X]Crashes on game init.
-   
+
    [ ]Crashes on song audio start.
 
 [ ]Use smart logic to determine how many beats to add before the song audio. We
    should ensure there are at least two measures before the first playable note
    and we should only add enough beats to make two measure before time to play.
-   
+
    We can probably assume the first beat starts a measure and we should count
    beats in groups of 4. If a note occurs within a measure, we can take note of
    which measure it is in. If the note occurs before the third measure, we
    should add the necessary measures worth of beats to get the pre-play measures
    up to 2.
-   
+
    This will ensure that songs with extra delay added will not have excessive
    delay, while songs that use the original CD audio can work well with the game
    as well.
@@ -124,11 +128,11 @@ Live Studio Sessions Issues
    affected by these proposed changes.
 
    [ ]Store note z-coordinates at init and use those during rendering.
-   
+
    [ ]Add camera so we can traverse the board.
-   
+
    [ ]Change camera speed when crossing a tempo event.
-   
+
       [ ]Store tempo events in LSS_SONG. We want to keep real-time calculations
          to a minimum so we should store a copy of each tempo event with time
          converted to in-game ticks.
@@ -136,9 +140,9 @@ Live Studio Sessions Issues
 [X]Fix beat lines.
 
    [X]When two beat markers are sufficiently close, they should be merged.
-   
+
    [X]Figure out why beat line accuracy is off for songs with no tempo changes.
-   
+
    [ ]Make beat line generation code more robust so it can handle "non-standard"
       positioning of tempo changes.
 
@@ -152,4 +156,3 @@ Live Studio Sessions Issues
    some samples are being sent to the sound driver. If we start the streams at
    that moment, we should have enough time to start the streams before the next
    buffer fill is required and get more conistent timing as a result.
-
