@@ -19,8 +19,6 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "debug.h"
-
 #define T3F_USE_KEYBOARD    1
 #define T3F_USE_MOUSE       2
 #define T3F_USE_JOYSTICK    4
@@ -61,33 +59,45 @@ typedef struct
 } T3F_TOUCH;
 
 /* include all T3F modules */
-#include "sound.h"
-#include "music.h"
-#include "bitmap.h"
+#include "android.h"
 #include "animation.h"
-#include "font.h"
+#include "atlas.h"
+#include "bitmap.h"
 #include "collision.h"
 #include "controller.h"
+#include "debug.h"
+#include "draw.h"
+#include "font.h"
 #include "gui.h"
-//#include "tilemap.h"
+#include "memory.h"
+#ifndef ALLEGRO_ANDROID
+    #include "menu.h"
+#endif
+#include "music.h"
+#include "primitives.h"
+#include "resource.h"
+#include "rng.h"
+#include "sound.h"
+#include "tilemap.h"
 #include "vector.h"
+#include "view.h"
 
 extern int t3f_virtual_display_width;
 extern int t3f_virtual_display_height;
 extern int t3f_display_offset_x;
 extern int t3f_display_offset_y;
+extern float t3f_display_scale_x;
+extern float t3f_display_scale_y;
 extern int t3f_display_width;
 extern int t3f_display_height;
-extern float t3f_display_top;
-extern float t3f_display_bottom;
-extern float t3f_display_left;
-extern float t3f_display_right;
 
 extern bool t3f_key[ALLEGRO_KEY_MAX];
 extern bool t3f_quit;
 extern int t3f_flags;
 extern int t3f_option[T3F_MAX_OPTIONS];
 
+extern int t3f_real_mouse_x;
+extern int t3f_real_mouse_y;
 extern int t3f_mouse_x;
 extern int t3f_mouse_y;
 extern int t3f_mouse_z;
@@ -116,14 +126,17 @@ extern ALLEGRO_COLOR t3f_color_black;
 
 int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_proc)(void * data), void (*render_proc)(void * data), int flags, void * data);
 void t3f_set_option(int option, int value);
+void t3f_get_base_transform(void);
 int t3f_set_gfx_mode(int w, int h, int flags);
 void t3f_set_clipping_rectangle(int x, int y, int w, int h);
 void t3f_set_event_handler(void (*proc)(ALLEGRO_EVENT * event, void * data));
 void t3f_exit(void);
+bool t3f_save_config(void);
 void t3f_event_handler(ALLEGRO_EVENT * event);
-void t3f_process_events(void);
+void t3f_process_events(bool ignore);
 void t3f_render(bool flip);
 void t3f_run(void);
+void t3f_finish(void);
 
 float t3f_distance(float x1, float y1, float x2, float y2);
 
@@ -144,16 +157,17 @@ bool t3f_push_state(int flags);
 bool t3f_pop_state(void);
 
 int t3f_get_joystick_number(ALLEGRO_JOYSTICK * jp);
-float t3f_fread_float(ALLEGRO_FILE * fp);
-int t3f_fwrite_float(ALLEGRO_FILE * fp, float f);
 
 ALLEGRO_FILE * t3f_open_file(ALLEGRO_PATH * pp, const char * fn, const char * m);
 unsigned long t3f_checksum_file(const char * fn);
 bool t3f_copy_file(const char * src, const char * dest);
 void t3f_setup_directories(ALLEGRO_PATH * final);
-const char * t3f_get_filename(ALLEGRO_PATH * path, const char * fn);
+char * t3f_get_filename(ALLEGRO_PATH * path, const char * fn, char * buffer, int buffer_size);
 bool t3f_save_bitmap_f(ALLEGRO_FILE * fp, ALLEGRO_BITMAP * bp);
 ALLEGRO_BITMAP * t3f_load_bitmap_f(ALLEGRO_FILE * fp);
+
+/* threading */
+bool t3f_queue_call(void (*proc)(void * data), void * data);
 
 #ifdef __cplusplus
    }

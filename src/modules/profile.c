@@ -7,6 +7,7 @@ LSS_PROFILES * lss_load_profiles(void)
 	const ALLEGRO_FILE_INTERFACE * old_interface;
 	LSS_PROFILES * pp;
 	char fn[1024];
+	char buf[1024];
 	int i;
 
 	old_interface = al_get_new_file_interface();
@@ -17,7 +18,7 @@ LSS_PROFILES * lss_load_profiles(void)
 		memset(pp, 0, sizeof(LSS_PROFILES));
 		for(i = 0; i < LSS_MAX_PROFILES; i++)
 		{
-			sprintf(fn, "%s%d.dat", t3f_get_filename(t3f_data_path, "profile"), i);
+			sprintf(fn, "%s%d.dat", t3f_get_filename(t3f_data_path, "profile", buf, 1024), i);
 			pp->entry[pp->entries].config = al_load_config_file(fn);
 			if(pp->entry[pp->entries].config)
 			{
@@ -44,6 +45,7 @@ bool lss_save_profiles(LSS_PROFILES * pp)
 {
 	const ALLEGRO_FILE_INTERFACE * old_interface;
 	char fn[1024];
+	char buf[1024];
 	int i;
 
 	old_interface = al_get_new_file_interface();
@@ -51,7 +53,7 @@ bool lss_save_profiles(LSS_PROFILES * pp)
 	for(i = 0; i < pp->entries; i++)
 	{
 		/* save config file */
-		sprintf(fn, "%s%d.dat", t3f_get_filename(t3f_data_path, "profile"), i);
+		sprintf(fn, "%s%d.dat", t3f_get_filename(t3f_data_path, "profile", buf, 1024), i);
 		al_save_config_file(fn, pp->entry[i].config);
 	}
 	al_set_new_file_interface(old_interface);

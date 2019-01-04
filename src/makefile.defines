@@ -1,3 +1,5 @@
+include makefile.include
+
 #########################
 # application variables #
 #########################
@@ -8,11 +10,12 @@
 APP_COMPANY = t3-i
 APP_NAME = live-studio-sessions
 APP_TITLE = Live\ Studio\ Sessions
-APP_VERSION = 0.2
-APP_RELEASE = 2
-APP_PUBLISHER = T\^3\ Software
-APP_COPYRIGHT = Copyright\ (C)\ 2014\ T\^3\ Software
+APP_VERSION = 0.2.1
+APP_RELEASE = 3
+APP_PUBLISHER = T³\ Software
+APP_COPYRIGHT = Copyright\ (C)\ 2018\ T³\ Software.
 APP_ANDROID_PACKAGE = com.t3i.livestudiosessions
+APP_ORIENTATION = landscape
 APP_URL = http://www.t3-i.com
 APP_OBJECTS = rtk/io.o rtk/midi.o rtk/io_allegro.o t3net/t3net.o modules/song_list.o \
               modules/song_audio.o modules/song.o modules/controller.o \
@@ -20,15 +23,10 @@ APP_OBJECTS = rtk/io.o rtk/midi.o rtk/io_allegro.o t3net/t3net.o modules/song_li
               modules/gui.o main.o state.o state_game.o state_game_results.o \
               resources.o state_game_player.o state_title.o state_av_setup.o \
               state_song_list.o t3net/leaderboard.o
-APP_LIBS = -lmxml
-APP_CFLAGS =
+APP_PACKAGE_DIR = ../packages
+APP_CFLAGS = -O2 -Wall -I. -DCURL_STATICLIB
 app_clean:
 #	@
-
-################
-# global stuff #
-################
-GLOBAL_CFLAGS = -O2 -fomit-frame-pointer -funroll-loops -Wall -I. -DT3F_DEVELOPER_NAME="\"$(APP_COMPANY)\"" -DT3F_PACKAGE_NAME="\"$(APP_NAME)\"" -DT3F_APP_VERSION="\"$(APP_VERSION)\""
 
 ##################
 # Mac OS X stuff #
@@ -62,8 +60,7 @@ LINUX_STATIC_DEPEND_LIBS = -lcurl `pkg-config --libs gtk+-2.0` -lallegro_dialog$
 ##############################
 #MINGW_CROSS_CFLAGS =
 #MINGW_CROSS_PLATFORM_OBJECTS =
-#MINGW_CROSS_PLATFORM_LIBS =
-MINGW_CROSS_DEPEND_LIBS = -lcurldll -lws2_32 -lwinmm -lallegro_dialog$(LIB_SUFFIX)
+MINGW_CROSS_PLATFORM_LIBS = -lcurl -lwldap32
 #MINGW_CROSS_PLATFORM_TARGET =
 
 ###############
@@ -71,8 +68,7 @@ MINGW_CROSS_DEPEND_LIBS = -lcurldll -lws2_32 -lwinmm -lallegro_dialog$(LIB_SUFFI
 ###############
 #MINGW_CFLAGS =
 #MINGW_PLATFORM_OBJECTS =
-#MINGW_PLATFORM_LIBS =
-MINGW_DEPEND_LIBS = -lcurldll -lallegro_dialog$(LIB_SUFFIX)
+MINGW_PLATFORM_LIBS = -lcurl -lwldap32
 #MINGW_PLATFORM_TARGET =
 
 #################
@@ -89,7 +85,10 @@ ANDROID_PLATFORM_LIBS = -lcurl
 ##########################
 DEBIAN_APP_NAME = $(subst _,-,$(APP_NAME))
 DEBIAN_SECTION = games
-DEBIAN_DEPENDS = libc6,\ libmxml1,\ libcurl3-gnutls
+DEBIAN_MENU_SECTION = Games
+DEBIAN_DESKTOP_CATEGORIES = Game
+DEBIAN_DIR = games
+DEBIAN_DEPENDS = libc6
 DEBIAN_MAINTAINER = Todd\ Cope\ \<todd\@t3-i.com\>
 DEBIAN_DESCRIPTION = A\ rhythm\ game\ where\ you\ make\ records\ in\ the\ studio.
 DEBIAN_LONG_DESCRIPTION = A\ rhythm\ game\ based\ on\ Frets\ On\ Fire\ where\ you\ make\ records\ in\ the\ studio.

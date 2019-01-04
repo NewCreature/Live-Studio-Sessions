@@ -1,8 +1,5 @@
-#include <allegro5/allegro5.h>
-#include <allegro5/allegro_audio.h>
-#include <allegro5/allegro_acodec.h>
-#include "t3f/t3f.h"
-#include "t3f/music.h"
+#include "t3f.h"
+#include "music.h"
 
 ALLEGRO_AUDIO_STREAM * t3f_stream = NULL;
 ALLEGRO_MUTEX * t3f_music_mutex = NULL;
@@ -13,6 +10,7 @@ static float t3f_new_music_volume = 1.0;
 static float t3f_music_target_volume = 1.0;
 static float t3f_music_fade_speed = 0.0;
 static float t3f_music_gain = 1.0;
+static bool t3f_music_looping_disabled = false;
 
 static char t3f_music_thread_fn[4096] = {0};
 static const ALLEGRO_FILE_INTERFACE * t3f_music_thread_file_interface = NULL;
@@ -126,6 +124,10 @@ static void * t3f_play_music_thread(void * arg)
 		}
 		al_destroy_path(path);
 	}
+	if(t3f_music_looping_disabled)
+	{
+		loop_disabled = true;
+	}
 
 	if(loop_disabled)
 	{
@@ -227,7 +229,6 @@ void t3f_stop_music(void)
 {
 	if(t3f_stream)
 	{
-		al_drain_audio_stream(t3f_stream);
 		al_destroy_audio_stream(t3f_stream);
 		t3f_stream = NULL;
 		t3f_set_music_state(T3F_MUSIC_STATE_OFF);
@@ -297,4 +298,9 @@ int t3f_get_music_state(void)
 		return state;
 	}
 	return T3F_MUSIC_STATE_OFF;
+}
+
+void t3f_disable_music_looping(void)
+{
+	t3f_music_looping_disabled = true;
 }

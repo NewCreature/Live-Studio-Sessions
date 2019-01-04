@@ -58,11 +58,12 @@ static bool lss_setup_default_controllers(APP_INSTANCE * app)
 bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
 	int f, c;
+	char buf[1024];
 	ALLEGRO_PATH * included_songs_path;
 	ALLEGRO_PATH * free_songs_path;
 	ALLEGRO_PATH * songs_path = NULL;
 	const char * val;
-	
+
 	/* initialize T3F */
 	if(!t3f_initialize("Live Studio Sessions", 960, 540, 60.0, app_logic, app_render, T3F_DEFAULT, app))
 	{
@@ -76,7 +77,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 			return false;
 		}
 	#endif
-	
+
 	#ifndef T3F_ANDROID
 		t3f_debug_message("Initializing dialog add-on...\n");
 		if(!al_init_native_dialog_addon())
@@ -108,7 +109,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Could not load global resources!\n");
 		return false;
 	}
-	
+
 	/* create song database */
 	t3f_debug_message("Creating songs database...\n");
 	free_songs_path = al_create_path("data/songs");
@@ -155,7 +156,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		printf("No collections found!\n");
 	}
-	app->song_list = lss_create_song_list(t3f_get_filename(t3f_data_path, "song_list.cache"), f, c);
+	app->song_list = lss_create_song_list(t3f_get_filename(t3f_data_path, "song_list.cache", buf, 1024), f, c);
 	if(!app->song_list)
 	{
 		printf("Could create song list!\n");
@@ -169,7 +170,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 	lss_song_list_collect_files(app->song_list);
 	lss_song_list_sort(app->song_list, 0, NULL);
-	
+
 	t3f_debug_message("Loading profiles...\n");
 	app->profiles = lss_load_profiles();
 	if(!app->profiles)
@@ -201,9 +202,9 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	app->game.player[0].selected_track = 0;
 	app->game.player[0].selected_difficulty = 0;
 	lss_select_menu(&app->title, LSS_MENU_MAIN);
-	
+
 	rtk_io_set_allegro_driver();
-	
+
 	t3f_debug_message("Done...\n");
 	return true;
 }
@@ -223,7 +224,7 @@ void app_exit(APP_INSTANCE * app)
 int main(int argc, char * argv[])
 {
 	APP_INSTANCE app;
-	
+
 	if(app_initialize(&app, argc, argv))
 	{
 		t3f_run();
