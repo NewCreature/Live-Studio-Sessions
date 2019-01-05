@@ -226,3 +226,31 @@ void lss_set_song_audio_position(LSS_SONG_AUDIO * ap, double pos)
 		}
 	}
 }
+
+double lss_get_song_audio_length(LSS_SONG_AUDIO * ap)
+{
+	int i;
+
+	for(i = 0; i < LSS_SONG_AUDIO_MAX_STREAMS; i++)
+	{
+		if(ap->stream[i])
+		{
+			return al_get_audio_stream_length_secs(ap->stream[i]);
+		}
+	}
+	return 0.0;
+}
+
+double lss_get_song_audio_position(LSS_SONG_AUDIO * ap)
+{
+	int i;
+
+	for(i = 0; i < LSS_SONG_AUDIO_MAX_STREAMS; i++)
+	{
+		if(ap->stream[i])
+		{
+			return al_get_audio_stream_position_secs(ap->stream[i]);
+		}
+	}
+	return 0.0;
+}

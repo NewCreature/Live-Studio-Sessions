@@ -312,10 +312,14 @@ void lss_game_logic(LSS_GAME * gp)
 
 void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)
 {
+	double completed;
 	int n;
+	int progress_height = 2;
 
 	al_draw_bitmap(gp->studio_image, 0, 0, 0);
 	lss_player_render_board(gp, 0);
+	completed = lss_get_song_audio_position(gp->song_audio) / lss_get_song_audio_length(gp->song_audio);
+	al_draw_filled_rectangle(0, t3f_default_view->bottom - progress_height, t3f_virtual_display_width * completed, t3f_default_view->bottom, al_map_rgba_f(1.0, 1.0, 0.0, 1.0));
 	al_hold_bitmap_drawing(true);
 	n = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes;
 	al_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 2, 0 + 2, 0, "Streak: %d", gp->player[0].streak);
