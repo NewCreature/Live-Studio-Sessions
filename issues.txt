@@ -1,6 +1,9 @@
 Live Studio Sessions Issues
 ---------------------------
 
+[ ]Update Android code to use the platform edit box instead of relying on the
+   soft keyboard.
+
 [X]Calculate song speed multiplier from song's BPM data.
 
 [X]Add song progress indicator. We will probably just have a rectangle at the
