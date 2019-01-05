@@ -1,15 +1,15 @@
 Live Studio Sessions Issues
 ---------------------------
 
-[ ]Investigate why no songs are displayed in the song list.
-
-   [ ]The clipping rectangle isn't working properly. It probably has something
-      to do with the updated view code.
-
 [ ]Calculate song speed multiplier from song's BPM data.
 
 [ ]Add song progress indicator. We will probably just have a rectangle at the
    bottom of the screen that fills up as you play.
+
+[X]Investigate why no songs are displayed in the song list.
+
+   [X]The clipping rectangle isn't working properly. It probably has something
+      to do with the updated view code.
 
 [X]Update icon set to comply with new T3F requirements.
 
