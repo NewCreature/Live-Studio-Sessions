@@ -14,6 +14,18 @@ void lss_add_bitmap_to_atlas(T3F_ATLAS * ap, ALLEGRO_BITMAP ** bp, int type)
 	t3f_add_bitmap_to_atlas(ap, bp, type);
 }
 
+static double get_board_speed(LSS_GAME * gp)
+{
+	double BPM = 120.0;
+
+	if(gp->song->beats > 0)
+	{
+		BPM = 60.0 / (lss_get_song_audio_length(gp->song_audio) / (double)gp->song->beats);
+	}
+
+	return 16.0 * (BPM / 120.0);
+}
+
 bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 {
 	t3f_debug_message("lss_game_initialize() enter\n");
@@ -122,12 +134,12 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 	}
 	gp->board_y = 420.0;
 //	gp->board_speed = 1.0;
-	gp->board_speed = 12.0;
 	gp->delay_z = gp->av_delay * LSS_SONG_PLACEMENT_SCALE;
 	t3f_debug_message("\tInitializing player...\n");
 	lss_initialize_player(gp, 0);
 	t3f_debug_message("\tGenerating beat markers...\n");
 	lss_song_mark_beats(gp->song, gp->song_audio->length);
+	gp->board_speed = get_board_speed(gp);
 	gp->current_tick = gp->song->beat[0]->tick;
 	gp->current_beat = 0;
 	gp->camera_z = gp->song->beat[0]->z - gp->delay_z;
