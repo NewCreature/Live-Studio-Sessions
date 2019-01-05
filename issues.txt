@@ -1,9 +1,14 @@
 Live Studio Sessions Issues
 ---------------------------
 
-[X]Update icon set to comply with new T3F requirements.
-
 [ ]Investigate why no songs are displayed in the song list.
+
+[ ]Calculate song speed multiplier from song's BPM data.
+
+[ ]Add song progress indicator. We will probably just have a rectangle at the
+   bottom of the screen that fills up as you play.
+
+[X]Update icon set to comply with new T3F requirements.
 
 [X]Fix song loading issues for GH, RB, etc. GH shows no notes, BH crashes, etc.
 
