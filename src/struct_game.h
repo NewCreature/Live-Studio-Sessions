@@ -25,7 +25,7 @@ typedef struct
 
 	LSS_PROFILE * profile;
 	LSS_CONTROLLER * controller; //pointer to controller used by player
-	
+
 	int selected_track;
 	int selected_difficulty;
 	double song_pos;
@@ -34,7 +34,6 @@ typedef struct
 	int life;
 	int miss_streak;
 	int multiplier;
-	
 	bool full_combo;
 
 	LSS_PLAYER_NOTE_GROUP next_notes;
@@ -47,7 +46,7 @@ typedef struct
 	int last_visible_note;
 	int first_visible_beat;
 	int last_visible_beat;
-	
+
 	/* cache game results so we only need to calculate them once */
 	int stars;
 	double accuracy;
@@ -71,11 +70,13 @@ typedef struct
 	ALLEGRO_BITMAP * strum_bar_image;
 	T3F_ATLAS * atlas;
 	T3F_PRIMITIVES_CACHE * primitives;
+	T3F_GUI * pause_menu;
 
 	LSS_PLAYER player[LSS_MAX_PLAYERS];
 	int current_tick, current_beat;
 	float camera_z, camera_vz;
 	float delay_z;
+	bool paused;
 	bool done;
 
 	int av_delay;

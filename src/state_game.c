@@ -26,11 +26,52 @@ static double get_board_speed(LSS_GAME * gp)
 	return 16.0 * (BPM / 120.0);
 }
 
-bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
+static int menu_proc_paused_resume(void * data, int i, void * p)
+{
+	LSS_GAME * gp = (LSS_GAME *)data;
+
+	gp->paused = false;
+	return 1;
+}
+
+static int menu_proc_paused_quit(void * data, int i, void * p)
+{
+	LSS_GAME * gp = (LSS_GAME *)data;
+
+	gp->done = true;
+	return 1;
+}
+
+static T3F_GUI * create_pause_menu(LSS_RESOURCES * rp)
+{
+	T3F_GUI * gp;
+	int pos, space;
+
+	gp = t3f_create_gui(0, 0);
+	if(gp)
+	{
+		pos = 0;
+		space = al_get_font_line_height(rp->font[LSS_FONT_LARGE]);
+		t3f_add_gui_text_element(gp, NULL, "Paused", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
+		pos += space * 2;
+		t3f_add_gui_text_element(gp, menu_proc_paused_resume, "Resume", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+		pos += space;
+		t3f_add_gui_text_element(gp, menu_proc_paused_quit, "Quit", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+		pos += space;
+	}
+	return gp;
+}
+
+bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path, LSS_RESOURCES * rp)
 {
 	t3f_debug_message("lss_game_initialize() enter\n");
 	al_stop_timer(t3f_timer);
 	t3f_debug_message("\tLoading textures...\n");
+	gp->pause_menu = create_pause_menu(rp);
+	if(!gp->pause_menu)
+	{
+		return false;
+	}
 	gp->note_texture[0] = t3f_load_resource((void *)(&gp->note_texture[0]), T3F_RESOURCE_TYPE_BITMAP, "data/note_green_strum.png", 0, 0, 0);
 	if(!gp->note_texture[0])
 	{
@@ -146,6 +187,7 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path)
 	gp->camera_vz = (float)LSS_SONG_PLACEMENT_SCALE * (gp->board_speed * (gp->song->beat[0]->BPM / 120.0));
 	al_start_timer(t3f_timer);
 	gp->done = false;
+	gp->paused = false;
 	t3f_debug_message("lss_game_initialize() exit\n");
 	return true;
 }
@@ -173,6 +215,7 @@ void lss_game_exit(LSS_GAME * gp)
 	t3f_destroy_resource(gp->strum_bar_image);
 	t3f_debug_message("\tDestroying atlas...\n");
 	t3f_destroy_atlas(gp->atlas);
+	t3f_destroy_gui(gp->pause_menu);
 	t3f_debug_message("lss_game_exit() exit\n");
 }
 
@@ -280,6 +323,15 @@ static void lss_game_get_player_results(LSS_GAME * gp, int player)
 
 void lss_game_logic(LSS_GAME * gp)
 {
+	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
+	{
+		gp->paused = true;
+	}
+	if(gp->paused)
+	{
+		t3f_process_gui(gp->pause_menu, gp);
+		return;
+	}
 	lss_player_logic(gp, 0);
 	if(t3f_key[ALLEGRO_KEY_UP])
 	{
@@ -291,7 +343,7 @@ void lss_game_logic(LSS_GAME * gp)
 		gp->board_speed -= 1.0;
 		t3f_key[ALLEGRO_KEY_DOWN] = 0;
 	}
-	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || gp->player[0].life <= 0 || gp->current_tick >= (gp->song_audio->length + gp->song->offset) * 60.0)
+	if(gp->player[0].life <= 0 || gp->current_tick >= (gp->song_audio->length + gp->song->offset) * 60.0)
 	{
 		lss_set_song_audio_playing(gp->song_audio, false);
 		lss_game_get_player_results(gp, 0);
@@ -343,4 +395,9 @@ void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)
 	al_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 480 + 2, 0 + 2, ALLEGRO_ALIGN_CENTRE, "Score: %d", gp->player[0].score);
 	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 480, 0, ALLEGRO_ALIGN_CENTRE, "Score: %d", gp->player[0].score);
 	al_hold_bitmap_drawing(false);
+	if(gp->paused)
+	{
+		al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width, t3f_virtual_display_height, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
+		t3f_render_gui(gp->pause_menu);
+	}
 }

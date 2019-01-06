@@ -176,7 +176,7 @@ int lss_menu_proc_options_av_setup(void * data, int ip, void * p)
 		app->game.song_id = app->song_list->entry[0]->id;
 		app->game.player[0].profile = &app->profiles->entry[0];
 		app->game.player[0].controller = &app->controller[0];
-		if(lss_game_initialize(&app->game, app->song_list->entry[0]->path))
+		if(lss_game_initialize(&app->game, app->song_list->entry[0]->path, &app->resources))
 		{
 			lss_title_exit(&app->title);
 			t3f_clear_touch_data();
