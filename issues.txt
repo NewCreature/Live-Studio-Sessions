@@ -1,6 +1,17 @@
 Live Studio Sessions Issues
 ---------------------------
 
+[ ]Look into keeping the logic and audio synced in case of audio stutter. We
+   should be able to detect when the audio has fallen behind and seek ahead when
+   that occurs.
+
+[ ]Finish implementing pause menu.
+
+   [ ]Pause/resume song audio. The position should be rewound by 5 seconds so
+      the player can get their bearings on resume. We need to ensure the song
+      audio is synced properly so we should copy the mechanism we use to
+      initially start the audio.
+
 [ ]Update Android code to use the platform edit box instead of relying on the
    soft keyboard.
 
