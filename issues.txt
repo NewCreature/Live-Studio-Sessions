@@ -1,6 +1,14 @@
 Live Studio Sessions Issues
 ---------------------------
 
+[ ]Investigate crash on song completion. This might have something to do with
+   T3Net. I've seen similar crashing in other games that use T3Net. It seems to
+   happen when internet access is down.
+
+   [ ]We should put in some debug messages where the T3Net code is called and
+      also inside T3Net and run the game a bunch to see if we can pinpoint
+      where it's crashing.
+
 [ ]Look into keeping the logic and audio synced in case of audio stutter. We
    should be able to detect when the audio has fallen behind and seek ahead when
    that occurs.
