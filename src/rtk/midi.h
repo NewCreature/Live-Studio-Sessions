@@ -1,10 +1,9 @@
 #ifndef LIBRTK_MIDI_H
 #define LIBRTK_MIDI_H
 
-#define RTK_MAX_MIDI_TRACKS               32
-#define RTK_MAX_MIDI_EVENT_DATA_LENGTH   256
+//#define RTK_MAX_MIDI_EVENT_DATA_LENGTH   256
 #define RTK_MAX_MIDI_EVENT_DATA           16
-#define RTK_MAX_MIDI_TRACK_NAME_LENGTH    64
+//#define RTK_MAX_MIDI_TRACK_NAME_LENGTH    64
 #define RTK_MAX_MIDI_EVENTS            65536
 
 /* event types */
@@ -38,7 +37,7 @@
 /* structure to hold data for a single MIDI track */
 typedef struct
 {
-	
+
 	unsigned char * data;            /* MIDI message stream */
 	int len;                         /* length of the track data */
 
@@ -47,56 +46,55 @@ typedef struct
 /* structure to hold raw MIDI data */
 typedef struct
 {
-	
+
 	int divisions;                      /* number of ticks per quarter note */
 	int tracks;
-	RTK_RAW_MIDI_TRACK track[RTK_MAX_MIDI_TRACKS];
-	
+	RTK_RAW_MIDI_TRACK * track;
+
 } RTK_MIDI_DATA;
 
 /* a parsed MIDI event */
 typedef struct
 {
-	
+
 	int type, channel, meta_type;
-	
+
 	int tick; /* absolute MIDI tick */
-	char raw_data[RTK_MAX_MIDI_EVENT_DATA_LENGTH]; /* event data as provided through MIDI */
-	
+
 	/* real time position */
 	double pos_sec;
 	unsigned long pos_msec;
-	
-	char text[RTK_MAX_MIDI_EVENT_DATA_LENGTH];
-	char data[RTK_MAX_MIDI_EVENT_DATA_LENGTH];
+
+	char * text;
+	char * data;
 	unsigned long data_i[RTK_MAX_MIDI_EVENT_DATA]; /* data such as note number or velocity, depends on event type */
-	
+
 	int flags;
-	
+
 } RTK_MIDI_EVENT;
 
 /* a parsed MIDI track */
 typedef struct
 {
-	
-	char name[RTK_MAX_MIDI_TRACK_NAME_LENGTH];
-	
+
+	char * name;
+
 	RTK_MIDI_EVENT ** event; /* dynamically allocated array of events */
 	int events;
-	
+
 } RTK_MIDI_TRACK;
 
 /* this is the main structure we will operate on, it will store a copy of the
  * raw MIDI data and parsed MIDI data */
 typedef struct
 {
-	
+
 	RTK_MIDI_DATA * raw_data;
 
 	/* tracks */
 	RTK_MIDI_TRACK ** track;
 	int tracks;
-	
+
 	/* store copy of all tempo change events here */
 	RTK_MIDI_EVENT ** tempo_event;
 	int tempo_events;
@@ -110,5 +108,10 @@ void rtk_destroy_midi(RTK_MIDI * mp);
 
 /* utility functions */
 double rtk_ppqn_to_bpm(unsigned long ppqn);
+int rtk_sec_to_tick(RTK_MIDI * mp, float sec);
+
+/* editing functions */
+int rtk_add_midi_event_sec(RTK_MIDI * mp, int track, float sec, int type, int meta, int channel, char * data, int data_size);
+void rtk_delete_midi_event(RTK_MIDI * mp, int track, int event);
 
 #endif
