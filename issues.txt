@@ -23,6 +23,9 @@ Live Studio Sessions Issues
       hopefully make the game more stable. There's a chance that this whole
       issue was a result of the old RTK bugs.
 
+[ ]Allow pause menu to be controlled like any other menu (currently only works)
+   with mouse).
+
 [ ]Look into keeping the logic and audio synced in case of audio stutter. We
    should be able to detect when the audio has fallen behind and seek ahead when
    that occurs.
