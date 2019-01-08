@@ -9,6 +9,15 @@ Live Studio Sessions Issues
       also inside T3Net and run the game a bunch to see if we can pinpoint
       where it's crashing.
 
+   [ ]The game crashes with a segmentation fault after score upload or
+      leaderboard download fails. We need to audit the T3Net code to ensure we
+      are properly handling failure. Whatever it's doing, it is messing up bad
+      enough to cause simple drawing calls to crash.
+
+      [ ]We should probably review the entire code path for the two leaderboard
+         functions to ensure we aren't doing anything crazy that would be
+         overwriting memory.
+
 [ ]Look into keeping the logic and audio synced in case of audio stutter. We
    should be able to detect when the audio has fallen behind and seek ahead when
    that occurs.
