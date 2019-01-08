@@ -18,6 +18,11 @@ Live Studio Sessions Issues
          functions to ensure we aren't doing anything crazy that would be
          overwriting memory.
 
+   [ ]I remember there being some crashing issues in Rhythm Toolkit which were
+      fixed when I was working on OMO. I upgraded to the new version which will
+      hopefully make the game more stable. There's a chance that this whole
+      issue was a result of the old RTK bugs.
+
 [ ]Look into keeping the logic and audio synced in case of audio stutter. We
    should be able to detect when the audio has fallen behind and seek ahead when
    that occurs.
