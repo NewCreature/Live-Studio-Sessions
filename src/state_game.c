@@ -30,6 +30,12 @@ static int menu_proc_paused_resume(void * data, int i, void * p)
 {
 	LSS_GAME * gp = (LSS_GAME *)data;
 
+	if(gp->current_tick >= 0)
+	{
+		al_stop_timer(t3f_timer);
+		lss_set_song_audio_playing(gp->song_audio, true);
+		al_start_timer(t3f_timer);
+	}
 	gp->paused = false;
 	return 1;
 }
@@ -323,9 +329,25 @@ static void lss_game_get_player_results(LSS_GAME * gp, int player)
 
 void lss_game_logic(LSS_GAME * gp)
 {
+	double old_pos;
+
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 	{
+		lss_set_song_audio_playing(gp->song_audio, false);
+		old_pos = lss_get_song_audio_position(gp->song_audio);
+		old_pos -= 5.0;
+		if(old_pos < 0.0)
+		{
+			old_pos = 0.0;
+		}
+		gp->current_tick -= 300;
+		if(gp->current_tick >= 0)
+		{
+			lss_set_song_audio_position(gp->song_audio, gp->current_tick / 60.0);
+		}
 		gp->paused = true;
+		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+		t3f_key[ALLEGRO_KEY_BACK] = 0;
 	}
 	if(gp->paused)
 	{
