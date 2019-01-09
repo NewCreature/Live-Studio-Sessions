@@ -8,6 +8,7 @@
 #include "resources.h"
 #include "state_game.h"
 #include "state_game_player.h"
+#include "state_title.h"
 
 void lss_add_bitmap_to_atlas(T3F_ATLAS * ap, ALLEGRO_BITMAP ** bp, int type)
 {
@@ -333,25 +334,34 @@ void lss_game_logic(LSS_GAME * gp)
 
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 	{
-		lss_set_song_audio_playing(gp->song_audio, false);
-		old_pos = lss_get_song_audio_position(gp->song_audio);
-		old_pos -= 5.0;
-		if(old_pos < 0.0)
+		if(gp->paused)
 		{
-			old_pos = 0.0;
+			menu_proc_paused_resume(gp, 0, NULL);
 		}
-		gp->current_tick -= 300;
-		if(gp->current_tick >= 0)
+		else
 		{
-			lss_set_song_audio_position(gp->song_audio, gp->current_tick / 60.0);
+			lss_set_song_audio_playing(gp->song_audio, false);
+			old_pos = lss_get_song_audio_position(gp->song_audio);
+			old_pos -= 5.0;
+			if(old_pos < 0.0)
+			{
+				old_pos = 0.0;
+			}
+			gp->current_tick -= 300;
+			if(gp->current_tick >= 0)
+			{
+				lss_set_song_audio_position(gp->song_audio, gp->current_tick / 60.0);
+			}
+			gp->pause_menu->hover_element = -1;
+			t3f_select_next_gui_element(gp->pause_menu);
+			gp->paused = true;
 		}
-		gp->paused = true;
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 		t3f_key[ALLEGRO_KEY_BACK] = 0;
 	}
 	if(gp->paused)
 	{
-		t3f_process_gui(gp->pause_menu, gp);
+		lss_title_menu_logic(gp->pause_menu, gp->player[0].controller, 0, false, gp);
 		return;
 	}
 	lss_player_logic(gp, 0);
