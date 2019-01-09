@@ -450,6 +450,47 @@ void lss_title_exit(LSS_TITLE_DATA * dp)
 	}
 }
 
+void lss_title_menu_logic(T3F_GUI * gp, LSS_CONTROLLER * cp, int block_count, bool back_enabled, void * data)
+{
+	t3f_process_gui(gp, data);
+	if(cp->source != LSS_CONTROLLER_SOURCE_TOUCH)
+	{
+		lss_read_controller(cp);
+	}
+	if(!block_count)
+	{
+		if(!lss_process_text_entry())
+		{
+			if(t3f_key[ALLEGRO_KEY_ENTER] || cp->controller->state[LSS_CONTROLLER_BINDING_GUITAR_GREEN].pressed)
+			{
+				t3f_activate_selected_gui_element(gp, data);
+				t3f_key[ALLEGRO_KEY_ENTER] = 0;
+			}
+			else if(t3f_key[ALLEGRO_KEY_UP] || cp->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].pressed)
+			{
+				t3f_select_previous_gui_element(gp);
+				t3f_key[ALLEGRO_KEY_UP] = 0;
+			}
+			else if(t3f_key[ALLEGRO_KEY_DOWN] || cp->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed)
+			{
+				t3f_select_next_gui_element(gp);
+				t3f_key[ALLEGRO_KEY_DOWN] = 0;
+			}
+		}
+		if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || cp->controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
+		{
+			if(back_enabled)
+			{
+				gp->hover_element = 0;
+				t3f_select_previous_gui_element(gp);
+				t3f_activate_selected_gui_element(gp, data);
+			}
+			t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+			t3f_key[ALLEGRO_KEY_BACK] = 0;
+		}
+	}
+}
+
 void lss_title_logic(LSS_TITLE_DATA * dp, APP_INSTANCE * app)
 {
 	if(dp->block_count > 0)
@@ -458,44 +499,7 @@ void lss_title_logic(LSS_TITLE_DATA * dp, APP_INSTANCE * app)
 	}
 	if(dp->current_menu >= 0)
 	{
-		t3f_process_gui(dp->menu[dp->current_menu], app);
-		if(app->controller[0].source != LSS_CONTROLLER_SOURCE_TOUCH)
-		{
-			lss_read_controller(&app->controller[0]);
-		}
-		if(!dp->block_count)
-		{
-			if(!lss_process_text_entry())
-			{
-				if(t3f_key[ALLEGRO_KEY_ENTER] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_GREEN].pressed)
-				{
-					t3f_activate_selected_gui_element(dp->menu[dp->current_menu], app);
-					t3f_key[ALLEGRO_KEY_ENTER] = 0;
-				}
-				else if(t3f_key[ALLEGRO_KEY_UP] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].pressed)
-				{
-					t3f_select_previous_gui_element(dp->menu[dp->current_menu]);
-					t3f_key[ALLEGRO_KEY_UP] = 0;
-				}
-				else if(t3f_key[ALLEGRO_KEY_DOWN] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed)
-				{
-					t3f_select_next_gui_element(dp->menu[dp->current_menu]);
-					t3f_key[ALLEGRO_KEY_DOWN] = 0;
-				}
-			}
-			if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
-			{
-				if(app->state == LSS_STATE_TITLE)
-				{
-					dp->menu[dp->current_menu]->hover_element = 0;
-					t3f_select_previous_gui_element(dp->menu[dp->current_menu]);
-					t3f_activate_selected_gui_element(dp->menu[dp->current_menu], app);
-				}
-				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-				t3f_key[ALLEGRO_KEY_BACK] = 0;
-			}
-		}
-
+		lss_title_menu_logic(dp->menu[dp->current_menu], &app->controller[0], dp->block_count, true, app);
 		/* only update the GUI colors if we are still on the title screen */
 		if(app->state == LSS_STATE_TITLE)
 		{
