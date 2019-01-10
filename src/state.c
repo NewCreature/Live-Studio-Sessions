@@ -89,6 +89,7 @@ void lss_state_logic(APP_INSTANCE * app)
 
 				sprintf(buf[0], "%d%d", app->game.player[0].selected_track, app->game.player[0].selected_difficulty);
 				sprintf(buf[1], "%s", app->game.player[0].profile->name);
+				al_stop_timer(t3f_timer);
 				if(app->game.player[0].score > 0)
 				{
 					if(!t3net_upload_score("http://www.t3-i.com/t3net2/leaderboards/insert.php", "live_studio_sessions", "0.1", buf[0], app->song_list->entry[app->selected_song]->id, buf[1], lss_obfuscate_value(app->game.player[0].score), NULL))
@@ -101,6 +102,7 @@ void lss_state_logic(APP_INSTANCE * app)
 				{
 					printf("Failed to download leaderboard\n");
 				}
+				al_start_timer(t3f_timer);
 				app->state = LSS_STATE_GAME_RESULTS;
 			}
 			break;
@@ -111,6 +113,11 @@ void lss_state_logic(APP_INSTANCE * app)
 			lss_read_controller(&app->controller[0]);
 			if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
 			{
+				if(app->leaderboard)
+				{
+					t3net_destroy_leaderboard(app->leaderboard);
+					app->leaderboard = NULL;
+				}
 				lss_game_exit(&app->game);
 				lss_title_initialize(&app->title, &app->resources, app->song_list);
 				app->state = LSS_STATE_SONG_SELECT;
