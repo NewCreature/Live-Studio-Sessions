@@ -23,16 +23,16 @@ Live Studio Sessions Issues
       hopefully make the game more stable. There's a chance that this whole
       issue was a result of the old RTK bugs.
 
-[ ]Allow pause menu to be controlled like any other menu (currently only works)
+[X]Allow pause menu to be controlled like any other menu (currently only works)
    with mouse).
 
 [ ]Look into keeping the logic and audio synced in case of audio stutter. We
    should be able to detect when the audio has fallen behind and seek ahead when
    that occurs.
 
-[ ]Finish implementing pause menu.
+[X]Finish implementing pause menu.
 
-   [ ]Pause/resume song audio. The position should be rewound by 5 seconds so
+   [X]Pause/resume song audio. The position should be rewound by 5 seconds so
       the player can get their bearings on resume. We need to ensure the song
       audio is synced properly so we should copy the mechanism we use to
       initially start the audio.
