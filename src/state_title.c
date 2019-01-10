@@ -28,6 +28,18 @@ void lss_select_menu(LSS_TITLE_DATA * tp, int menu)
 	t3f_select_next_gui_element(tp->menu[tp->current_menu]);
 }
 
+#ifdef ALLEGRO_ANDROID
+	static void lss_menu_proc_network_id_callback(void * data)
+	{
+		APP_INSTANCE * app = (APP_INSTANCE *)data;
+		if(strlen(lss_new_profile_buffer) <= 0)
+		{
+			strcpy(lss_new_profile_buffer, "Anonymous");
+		}
+		lss_new_profile_entry_callback(&app->title, '\r');
+	}
+#endif
+
 /* main menu */
 int lss_menu_proc_play(void * data, int i, void * p)
 {
@@ -67,8 +79,11 @@ int lss_menu_proc_profiles_new(void * data, int i, void * p)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	lss_begin_text_entry(data, "", lss_new_profile_buffer, 32, lss_new_profile_entry_callback);
-	t3f_show_soft_keyboard(true);
+	#ifdef ALLEGRO_ANDROID
+		t3f_open_edit_box("Enter Name", lss_new_profile_buffer, 32, "CapWords", lss_menu_proc_network_id_callback, NULL);
+	#else
+		lss_begin_text_entry(data, "", lss_new_profile_buffer, 32, lss_new_profile_entry_callback);
+	#endif
 	lss_select_menu(&app->title, LSS_MENU_NEW_PROFILE);
 	return 1;
 }
@@ -103,8 +118,9 @@ int lss_menu_proc_profiles_new_ok(void * data, int i, void * p)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	t3f_show_soft_keyboard(false);
-	lss_end_text_entry();
+	#ifndef ALLEGRO_ANDROID
+		lss_end_text_entry();
+	#endif
 	if(!lss_is_string_empty(lss_new_profile_buffer))
 	{
 		app->profiles->entry[app->profiles->entries].config = al_create_config();
@@ -124,8 +140,9 @@ int lss_menu_proc_profiles_new_cancel(void * data, int i, void * p)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	t3f_show_soft_keyboard(false);
-	lss_end_text_entry();
+	#ifndef ALLEGRO_ANDROID
+		lss_end_text_entry();
+	#endif
 	lss_select_menu(&app->title, LSS_MENU_PROFILES);
 	return 1;
 }
