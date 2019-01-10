@@ -14,7 +14,7 @@ void lss_game_results_render(APP_INSTANCE * app)
 {
 	int pos = 0;
 	int i;
-	
+
 	al_clear_to_color(t3f_color_black);
 	al_hold_bitmap_drawing(true);
 	for(i = 0; i < app->game.player[0].stars; i++)
@@ -23,9 +23,9 @@ void lss_game_results_render(APP_INSTANCE * app)
 	}
 	al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Results for %s", app->game.player[0].profile->name);
 	pos += 48;
-	al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Score: %d", app->game.player[0].score); 
+	al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Score: %d", app->game.player[0].score);
 	pos += 24;
-	al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Completion: %3.2f%%", app->game.player[0].completion); 
+	al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Completion: %3.2f%%", app->game.player[0].completion);
 	pos += 24;
 	if(app->game.player[0].accuracy >= 0.0)
 	{
@@ -36,7 +36,7 @@ void lss_game_results_render(APP_INSTANCE * app)
 		al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Accuracy: N/A");
 	}
 	pos += 24;
-	al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Note Timing: Perfect %d, Good %d, Okay %d, Bad %d", app->game.player[0].perfect_notes, app->game.player[0].good_notes, app->game.player[0].hit_notes - app->game.player[0].perfect_notes - app->game.player[0].good_notes - app->game.player[0].bad_notes, app->game.player[0].bad_notes); 
+	al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "Note Timing: Perfect %d, Good %d, Okay %d, Bad %d", app->game.player[0].perfect_notes, app->game.player[0].good_notes, app->game.player[0].hit_notes - app->game.player[0].perfect_notes - app->game.player[0].good_notes - app->game.player[0].bad_notes, app->game.player[0].bad_notes);
 	pos += 24;
 	al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, pos, 0, "High Score: %d", app->game.player[0].high_score);
 	if(app->leaderboard)
