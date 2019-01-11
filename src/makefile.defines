@@ -34,7 +34,7 @@ app_clean:
 #MACOSX_CFLAGS =
 #MACOSX_PLATFORM_OBJECTS =
 #MACOSX_PLATFORM_LIBS =
-MACOSX_DEPEND_LIBS = -lcurl-static -lallegro_dialog$(LIB_SUFFIX)
+MACOSX_DEPEND_LIBS = -lcurl-static -lldap -lallegro_dialog$(LIB_SUFFIX)
 #MACOSX_PLATFORM_TARGET =
 
 ###############
