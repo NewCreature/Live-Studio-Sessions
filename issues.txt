@@ -1,6 +1,13 @@
 Live Studio Sessions Issues
 ---------------------------
 
+[ ]See about cleaning up stray note bits and missed notes after they leave the
+   screen. When pausing, we see the stray note bits and missed notes remain on
+   the board.
+
+[ ]See about keeping the past beat markers or making them visible again when we
+   rewind the game state.
+
 [ ]Investigate crash on song completion. This might have something to do with
    T3Net. I've seen similar crashing in other games that use T3Net. It seems to
    happen when internet access is down.
