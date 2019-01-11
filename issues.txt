@@ -8,6 +8,9 @@ Live Studio Sessions Issues
 [ ]See about keeping the past beat markers or making them visible again when we
    rewind the game state.
 
+[ ]See if we can get the Android version working again. It crashes when we
+   create a new profile and when we start a song.
+
 [ ]Investigate crash on song completion. This might have something to do with
    T3Net. I've seen similar crashing in other games that use T3Net. It seems to
    happen when internet access is down.
@@ -50,7 +53,7 @@ Live Studio Sessions Issues
       audio is synced properly so we should copy the mechanism we use to
       initially start the audio.
 
-[ ]Update Android code to use the platform edit box instead of relying on the
+[X]Update Android code to use the platform edit box instead of relying on the
    soft keyboard.
 
 [X]Calculate song speed multiplier from song's BPM data.
