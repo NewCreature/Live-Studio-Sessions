@@ -5,9 +5,13 @@ Live Studio Sessions Issues
    T3Net. I've seen similar crashing in other games that use T3Net. It seems to
    happen when internet access is down.
 
-   [ ]We should put in some debug messages where the T3Net code is called and
-      also inside T3Net and run the game a bunch to see if we can pinpoint
-      where it's crashing.
+   [ ]I suspect it might be a bug or issue with libcurl. The crash only occurs
+      when the network is in a specific state (the internet connection is down)
+      and libcurl times out when trying to perform the action. It's not a bug
+      in our write function, which never gets called. Basically, if we do a
+      curl_easy_perform(), a segmentation fault occurs after that call when the
+      network is in the aforementioned state. I have updated libcurl to the
+      latest version to see if that will resolve the issue.
 
    [ ]The game crashes with a segmentation fault after score upload or
       leaderboard download fails. We need to audit the T3Net code to ensure we
@@ -18,10 +22,12 @@ Live Studio Sessions Issues
          functions to ensure we aren't doing anything crazy that would be
          overwriting memory.
 
-   [ ]I remember there being some crashing issues in Rhythm Toolkit which were
+   [X]I remember there being some crashing issues in Rhythm Toolkit which were
       fixed when I was working on OMO. I upgraded to the new version which will
       hopefully make the game more stable. There's a chance that this whole
       issue was a result of the old RTK bugs.
+
+      [X]Upgrading RTK didn't solve the issue.
 
 [X]Allow pause menu to be controlled like any other menu (currently only works)
    with mouse).
