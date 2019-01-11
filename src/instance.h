@@ -37,4 +37,7 @@ typedef struct
 
 } APP_INSTANCE;
 
+APP_INSTANCE * lss_create_instance(void);
+void lss_destroy_instance(APP_INSTANCE * app);
+
 #endif

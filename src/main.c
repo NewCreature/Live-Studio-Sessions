@@ -223,9 +223,15 @@ void app_exit(APP_INSTANCE * app)
 
 int main(int argc, char * argv[])
 {
-	APP_INSTANCE app;
+	APP_INSTANCE * app;
 
-	if(app_initialize(&app, argc, argv))
+	app = lss_create_instance();
+	if(!app)
+	{
+		printf("Error: could not create instance!\n");
+		return -1;
+	}
+	if(app_initialize(app, argc, argv))
 	{
 		t3f_run();
 	}
@@ -233,10 +239,11 @@ int main(int argc, char * argv[])
 	{
 		printf("Error: could not initialize T3F!\n");
 	}
-	if(app.state == LSS_STATE_GAME)
+	if(app->state == LSS_STATE_GAME)
 	{
-		lss_game_exit(&app.game);
+		lss_game_exit(&app->game);
 	}
-	app_exit(&app);
+	app_exit(app);
+	lss_destroy_instance(app);
 	return 0;
 }
