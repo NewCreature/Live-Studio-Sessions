@@ -440,19 +440,19 @@ void lss_state_song_list_song_select_render(APP_INSTANCE * app)
 	al_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, 0, 0, 0, "Sort By %s", type[lss_song_list_sort_type]);
 	if(lss_song_list_sort_type < 2)
 	{
-		al_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_display_width + 4, 0 + 4, ALLEGRO_ALIGN_RIGHT, "%s", lss_song_list_sort_filter);
-		al_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, t3f_display_width, 0, ALLEGRO_ALIGN_RIGHT, "%s", lss_song_list_sort_filter);
+		al_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_default_view->right + 4, 0 + 4, ALLEGRO_ALIGN_RIGHT, "%s", lss_song_list_sort_filter);
+		al_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, t3f_default_view->right, 0, ALLEGRO_ALIGN_RIGHT, "%s", lss_song_list_sort_filter);
 	}
 	else if(lss_song_list_collection >= 0)
 	{
-		al_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_display_width + 4, 0 + 4, ALLEGRO_ALIGN_RIGHT, "%s", app->song_list->collection[lss_song_list_collection]->name);
-		al_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, t3f_display_width, 0, ALLEGRO_ALIGN_RIGHT, "%s", app->song_list->collection[lss_song_list_collection]->name);
+		al_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_default_view->right + 4, 0 + 4, ALLEGRO_ALIGN_RIGHT, "%s", app->song_list->collection[lss_song_list_collection]->name);
+		al_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, t3f_default_view->right, 0, ALLEGRO_ALIGN_RIGHT, "%s", app->song_list->collection[lss_song_list_collection]->name);
 	}
 	al_hold_bitmap_drawing(false);
 
 	/* render song list entries */
 	al_hold_bitmap_drawing(true);
-	t3f_set_clipping_rectangle(0, lss_song_list_space * 1, t3f_display_width, t3f_display_height - lss_song_list_space * 2);
+	t3f_set_clipping_rectangle(0, lss_song_list_space * 1, t3f_default_view->right, t3f_default_view->bottom - lss_song_list_space * 2);
 	for(i = start_song; i < start_song + lss_song_list_visible && i < app->song_list->visible_entries; i++)
 	{
 		if(i == app->selected_song)
