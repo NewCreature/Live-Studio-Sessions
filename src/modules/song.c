@@ -36,7 +36,7 @@ static int lss_song_get_note_forced_hopo_status(LSS_SONG * sp, int track, int ev
 	int current_event = event;
 	int last_event;
 	int mark;
-	
+
 	difficulty = lss_song_get_event_difficulty(sp, track, event);
 	/* find first event that occurs at the same tick as 'event' */
 	while(sp->source_midi->track[track]->event[current_event]->tick == sp->source_midi->track[track]->event[event]->tick)
@@ -50,7 +50,7 @@ static int lss_song_get_note_forced_hopo_status(LSS_SONG * sp, int track, int ev
 		}
 	}
 	current_event = last_event;
-	
+
 	/* check all events that occur at the same tick as 'event' to see if any of
 	 * them are forced-HOPO marks */
 	while(sp->source_midi->track[track]->event[current_event]->tick == sp->source_midi->track[track]->event[event]->tick)
@@ -66,7 +66,7 @@ static int lss_song_get_note_forced_hopo_status(LSS_SONG * sp, int track, int ev
 				{
 					return 1;
 				}
-				
+
 				/* found forced HOPO off */
 				else if(mark == 6)
 				{
@@ -103,7 +103,7 @@ static bool lss_song_allocate_notes(LSS_SONG * sp)
 			}
 		}
 	}
-	
+
 	/* allocate memory for notes */
 	for(i = 0; i < LSS_SONG_MAX_TRACKS; i++)
 	{
@@ -134,7 +134,7 @@ static bool lss_song_allocate_notes(LSS_SONG * sp)
 static int lss_song_get_note_end_event(LSS_SONG * sp, int track, int note_on_event)
 {
 	int i;
-	
+
 	for(i = note_on_event; i < sp->source_midi->track[track]->events; i++)
 	{
 		if(sp->source_midi->track[track]->event[i]->type == RTK_MIDI_EVENT_TYPE_NOTE_OFF && sp->source_midi->track[track]->event[i]->data_i[0] == sp->source_midi->track[track]->event[note_on_event]->data_i[0])
@@ -178,7 +178,7 @@ static double lss_song_get_z(RTK_MIDI * mp, unsigned long tick, double offset)
 			}
 		}
 	}
-	
+
 	/* add the remaining time from the tempo change to the desired tick */
 	time_span = rtk_tick_to_real_time(mp->raw_data->divisions, current_bpm, tick - current_tick);
 	z += (((time_span + offset) * 60.0) * (double)LSS_SONG_PLACEMENT_SCALE) * (current_bpm / 120.0);
@@ -205,27 +205,27 @@ static bool lss_song_populate_tracks(LSS_SONG * sp)
 			chord[j] = false;
 		}
 		stream = -1;
-		if(!strcmp(sp->source_midi->track[i]->name, "T1 GEMS"))
+		if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "T1 GEMS"))
 		{
 			stream = 1;
 		}
-		if(!strcmp(sp->source_midi->track[i]->name, "PART GUITAR"))
+		if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART GUITAR"))
 		{
 			stream = 1;
 		}
-		if(!strcmp(sp->source_midi->track[i]->name, "PART BASS"))
+		if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART BASS"))
 		{
 			stream = 2;
 		}
-		if(!strcmp(sp->source_midi->track[i]->name, "PART GUITAR COOP"))
+		if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART GUITAR COOP"))
 		{
 			stream = 2;
 		}
-		if(!strcmp(sp->source_midi->track[i]->name, "PART RHYTHM"))
+		if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART RHYTHM"))
 		{
 			stream = 2;
 		}
-		if(!strcmp(sp->source_midi->track[i]->name, "PART DRUMS"))
+		if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART DRUMS"))
 		{
 			stream = 3;
 		}
@@ -248,7 +248,7 @@ static bool lss_song_populate_tracks(LSS_SONG * sp)
 						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->visible = true;
 						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->start_z = lss_song_get_z(sp->source_midi, sp->source_midi->track[i]->event[j]->tick, sp->offset);
 						sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->end_z = lss_song_get_z(sp->source_midi, sp->source_midi->track[i]->event[note_off_event]->tick, sp->offset);
-						
+
 						hopo_forced = lss_song_get_note_forced_hopo_status(sp, i, j);
 
 						/* check for auto HOPO status (12th note or shorter) */
@@ -274,7 +274,7 @@ static bool lss_song_populate_tracks(LSS_SONG * sp)
 							else if(hopo_forced == 0)
 							{
 								sp->track[i][difficulty].note[sp->track[i][difficulty].note_count]->hopo = false;
-								
+
 								/* make sure previous note is not marked HOPO */
 								if(sp->track[i][difficulty].note_count > 0)
 								{
@@ -311,7 +311,7 @@ bool lss_song_mark_beats(LSS_SONG * sp, double total_length)
 	double beat_time;
 	int current_beat = 0;
 	double current_z = (((sp->offset) * 60.0) * (double)LSS_SONG_PLACEMENT_SCALE) * (BPM / 120.0);;
-	
+
 	/* count beats */
 	sp->beats = 0;
 	beat_time = 60.0 / BPM;
@@ -411,7 +411,7 @@ LSS_SONG * lss_load_song(ALLEGRO_PATH * pp)
 	ALLEGRO_PATH * pcp;
 	const char * val;
 	LSS_SONG * sp;
-	
+
 	sp = malloc(sizeof(LSS_SONG));
 	if(!sp)
 	{
@@ -435,7 +435,7 @@ LSS_SONG * lss_load_song(ALLEGRO_PATH * pp)
 		free(sp);
 		return NULL;
 	}
-	
+
 	/* load song tags file */
 	al_set_path_filename(pcp, "song.ini");
 	sp->tags = al_load_config_file(al_path_cstr(pcp, '/'));
@@ -443,34 +443,34 @@ LSS_SONG * lss_load_song(ALLEGRO_PATH * pp)
 	{
 		return NULL;
 	}
-	
+
 	/* load relevant tags */
 	val = al_get_config_value(sp->tags, "song", "delay");
 	if(val)
 	{
 		sp->offset = (double)atoi(val) / 1000.0;
 	}
-	
+
 	if(!lss_song_allocate_notes(sp))
 	{
 		return NULL;
 	}
-	
+
 	if(!lss_song_populate_tracks(sp))
 	{
 		return NULL;
 	}
-	
+
 	/* clean up */
 	al_destroy_path(pcp);
-	
+
 	return sp;
 }
 
 void lss_destroy_song(LSS_SONG * sp)
 {
 	int i, j, k;
-	
+
 	for(i = 0; i < LSS_SONG_MAX_TRACKS; i++)
 	{
 		for(j = 0; j < LSS_SONG_MAX_DIFFICULTIES; j++)
