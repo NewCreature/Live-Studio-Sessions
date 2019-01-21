@@ -353,6 +353,10 @@ void lss_game_logic(LSS_GAME * gp)
 			{
 				lss_set_song_audio_position(gp->song_audio, gp->current_tick / 60.0);
 			}
+			else
+			{
+				lss_set_song_audio_position(gp->song_audio, 0.0);
+			}
 			gp->pause_menu->hover_element = -1;
 			t3f_select_next_gui_element(gp->pause_menu);
 			gp->paused = true;
