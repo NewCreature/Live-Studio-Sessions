@@ -74,6 +74,7 @@ typedef struct
 
 	LSS_PLAYER player[LSS_MAX_PLAYERS];
 	int current_tick, current_beat;
+	int rewind_tick;
 	float camera_z, camera_vz;
 	float delay_z;
 	bool paused;

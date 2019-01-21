@@ -190,6 +190,7 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path, LSS_RESOURCES 
 	lss_song_mark_beats(gp->song, gp->song_audio->length);
 	gp->board_speed = get_board_speed(gp);
 	gp->current_tick = gp->song->beat[0]->tick;
+	gp->rewind_tick = gp->current_tick;
 	gp->current_beat = 0;
 	gp->camera_z = gp->song->beat[0]->z - gp->delay_z;
 	gp->camera_vz = (float)LSS_SONG_PLACEMENT_SCALE * (gp->board_speed * (gp->song->beat[0]->BPM / 120.0));
@@ -331,8 +332,6 @@ static void lss_game_get_player_results(LSS_GAME * gp, int player)
 
 void lss_game_logic(LSS_GAME * gp)
 {
-	double old_pos;
-
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 	{
 		if(gp->paused)
@@ -342,13 +341,7 @@ void lss_game_logic(LSS_GAME * gp)
 		else
 		{
 			lss_set_song_audio_playing(gp->song_audio, false);
-			old_pos = lss_get_song_audio_position(gp->song_audio);
-			old_pos -= 5.0;
-			if(old_pos < 0.0)
-			{
-				old_pos = 0.0;
-			}
-			gp->current_tick -= 300;
+			gp->current_tick = gp->rewind_tick;
 			if(gp->current_tick >= 0)
 			{
 				lss_set_song_audio_position(gp->song_audio, gp->current_tick / 60.0);
@@ -398,6 +391,10 @@ void lss_game_logic(LSS_GAME * gp)
 		al_start_timer(t3f_timer);
 	}
 	gp->current_tick++;
+	if(gp->current_tick - 300 > gp->rewind_tick)
+	{
+		gp->rewind_tick++;
+	}
 	gp->camera_z += gp->camera_vz;
 
 	/* update camera speed if we crossed over beat line */
