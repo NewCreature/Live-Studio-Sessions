@@ -492,3 +492,13 @@ void lss_destroy_song(LSS_SONG * sp)
 	free(sp->beat);
 	free(sp);
 }
+
+void lss_song_hide_prior_notes(LSS_SONG * sp, int track, int difficulty, int note)
+{
+	int i;
+
+	for(i = 0; i < note; i++)
+	{
+		sp->track[track][difficulty].note[i]->hidden = true;
+	}
+}
