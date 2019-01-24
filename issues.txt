@@ -1,9 +1,6 @@
 Live Studio Sessions Issues
 ---------------------------
 
-[ ]See about keeping the past beat markers or making them visible again when we
-   rewind the game state.
-
 [ ]See if we can get the Android version working again. It crashes when we
    create a new profile and when we start a song.
 
@@ -34,6 +31,9 @@ Live Studio Sessions Issues
       issue was a result of the old RTK bugs.
 
       [X]Upgrading RTK didn't solve the issue.
+
+[X]See about keeping the past beat markers or making them visible again when we
+   rewind the game state.
 
 [X]See about cleaning up stray note bits and missed notes after they leave the
    screen. When pausing, we see the stray note bits and missed notes remain on
