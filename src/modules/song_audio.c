@@ -90,7 +90,7 @@ static void lss_song_audio_callback(void * buf, unsigned int samples, void * dat
 	lss_song_audio_callback_counter++;
 }
 
-static void wait_for_callback(void)
+static bool wait_for_callback(void)
 {
 	double start_time = 0.0;
 
@@ -100,9 +100,10 @@ static void wait_for_callback(void)
 	{
 		if(al_get_time() - start_time >= 1.0)
 		{
-			break;
+			return false;
 		}
 	}
+	return true;
 }
 
 bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
