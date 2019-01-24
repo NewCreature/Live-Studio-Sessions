@@ -35,6 +35,10 @@ static int menu_proc_paused_resume(void * data, int i, void * p)
 	if(gp->current_tick >= 0)
 	{
 		al_stop_timer(t3f_timer);
+		if(gp->player[0].next_notes.notes)
+		{
+			lss_song_hide_prior_notes(gp->song, gp->player[0].selected_track, gp->player[0].selected_difficulty, gp->player[0].next_notes.note[0]);
+		}
 		for(j = 0; j < LSS_SONG_AUDIO_MAX_STREAMS; j++)
 		{
 			if(gp->song_audio->stream[j])

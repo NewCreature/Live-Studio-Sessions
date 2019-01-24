@@ -766,7 +766,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 		for(i = gp->player[0].last_visible_note; i >= gp->player[0].first_visible_note; i--)
 		{
 			playing = false;
-			if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->active)
+			if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->active && !gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->hidden)
 			{
 				color = color_chart[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val];
 				for(j = 0; j < gp->player[0].playing_notes.notes; j++)
@@ -838,7 +838,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 		for(i = gp->player[0].last_visible_note; i >= gp->player[0].first_visible_note; i--)
 		{
 			playing = false;
-			if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->active)
+			if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->active && !gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->hidden)
 			{
 //				z = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->start_z - gp->camera_z)) * gp->board_speed;
 				z = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
