@@ -30,10 +30,18 @@ static double get_board_speed(LSS_GAME * gp)
 static int menu_proc_paused_resume(void * data, int i, void * p)
 {
 	LSS_GAME * gp = (LSS_GAME *)data;
+	int j;
 
 	if(gp->current_tick >= 0)
 	{
 		al_stop_timer(t3f_timer);
+		for(j = 0; j < LSS_SONG_AUDIO_MAX_STREAMS; j++)
+		{
+			if(gp->song_audio->stream[j])
+			{
+				al_set_audio_stream_gain(gp->song_audio->stream[j], 1.0);
+			}
+		}
 		lss_set_song_audio_playing(gp->song_audio, true);
 		al_start_timer(t3f_timer);
 	}
