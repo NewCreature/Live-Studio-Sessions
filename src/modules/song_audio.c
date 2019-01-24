@@ -92,7 +92,7 @@ static void lss_song_audio_callback(void * buf, unsigned int samples, void * dat
 
 bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 {
-	double start_pos;
+	double start_pos = 0.0;
 	int i;
 
 	t3f_debug_message("lss_set_song_audio_playing() enter\n");
