@@ -1,14 +1,11 @@
 Live Studio Sessions Issues
 ---------------------------
 
-[ ]See if we can get the Android version working again. It crashes when we
-   create a new profile and when we start a song.
-
-[ ]Investigate crash on song completion. This might have something to do with
+[X]Investigate crash on song completion. This might have something to do with
    T3Net. I've seen similar crashing in other games that use T3Net. It seems to
    happen when internet access is down.
 
-   [ ]I suspect it might be a bug or issue with libcurl. The crash only occurs
+   [X]I suspect it might be a bug or issue with libcurl. The crash only occurs
       when the network is in a specific state (the internet connection is down)
       and libcurl times out when trying to perform the action. It's not a bug
       in our write function, which never gets called. Basically, if we do a
@@ -16,12 +13,12 @@ Live Studio Sessions Issues
       network is in the aforementioned state. I have updated libcurl to the
       latest version to see if that will resolve the issue.
 
-   [ ]The game crashes with a segmentation fault after score upload or
+   [X]The game crashes with a segmentation fault after score upload or
       leaderboard download fails. We need to audit the T3Net code to ensure we
       are properly handling failure. Whatever it's doing, it is messing up bad
       enough to cause simple drawing calls to crash.
 
-      [ ]We should probably review the entire code path for the two leaderboard
+      [X]We should probably review the entire code path for the two leaderboard
          functions to ensure we aren't doing anything crazy that would be
          overwriting memory.
 
@@ -31,6 +28,9 @@ Live Studio Sessions Issues
       issue was a result of the old RTK bugs.
 
       [X]Upgrading RTK didn't solve the issue.
+
+[X]See if we can get the Android version working again. It crashes when we
+   create a new profile and when we start a song.
 
 [X]See about keeping the past beat markers or making them visible again when we
    rewind the game state.
