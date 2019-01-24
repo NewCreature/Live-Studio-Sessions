@@ -4,6 +4,7 @@
 #include "state_game.h"
 
 void lss_initialize_player(LSS_GAME * gp, int player);
+void lss_player_reset_beat_markers(LSS_GAME * gp, int player);
 void lss_player_logic(LSS_GAME * gp, int player);
 void lss_player_render_board(LSS_GAME * gp, int player);
 

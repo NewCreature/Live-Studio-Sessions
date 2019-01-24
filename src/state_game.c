@@ -32,20 +32,20 @@ static int menu_proc_paused_resume(void * data, int i, void * p)
 	LSS_GAME * gp = (LSS_GAME *)data;
 	int j;
 
+	if(gp->player[0].next_notes.notes)
+	{
+		lss_song_hide_prior_notes(gp->song, gp->player[0].selected_track, gp->player[0].selected_difficulty, gp->player[0].next_notes.note[0]);
+	}
+	for(j = 0; j < LSS_SONG_AUDIO_MAX_STREAMS; j++)
+	{
+		if(gp->song_audio->stream[j])
+		{
+			al_set_audio_stream_gain(gp->song_audio->stream[j], 1.0);
+		}
+	}
 	if(gp->current_tick >= 0)
 	{
 		al_stop_timer(t3f_timer);
-		if(gp->player[0].next_notes.notes)
-		{
-			lss_song_hide_prior_notes(gp->song, gp->player[0].selected_track, gp->player[0].selected_difficulty, gp->player[0].next_notes.note[0]);
-		}
-		for(j = 0; j < LSS_SONG_AUDIO_MAX_STREAMS; j++)
-		{
-			if(gp->song_audio->stream[j])
-			{
-				al_set_audio_stream_gain(gp->song_audio->stream[j], 1.0);
-			}
-		}
 		lss_set_song_audio_playing(gp->song_audio, true);
 		al_start_timer(t3f_timer);
 	}
@@ -362,6 +362,7 @@ void lss_game_logic(LSS_GAME * gp)
 			{
 				lss_set_song_audio_position(gp->song_audio, 0.0);
 			}
+			lss_player_reset_beat_markers(gp, 0);
 			gp->pause_menu->hover_element = -1;
 			t3f_select_next_gui_element(gp->pause_menu);
 			gp->paused = true;
