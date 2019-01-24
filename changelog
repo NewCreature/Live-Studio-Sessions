@@ -1,6 +1,9 @@
 live-studio-sessions (0.2) maverick; urgency=low
 
   * Fix build script source code packaging to include all the necessary files.
+  * Board speed is now calculated from the song BPM data.
+  * Added song progress meter to the bottom of the in-game display.
+  * Game can now be paused and resumed during gameplay.
 
  -- Todd Cope <todd@t3-i.com>  BUILD_DATE +0000
 
