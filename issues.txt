@@ -1,6 +1,8 @@
 Live Studio Sessions Issues
 ---------------------------
 
+[ ]Bring all audio back to full volume when unpausing the game.
+
 [ ]See about cleaning up stray note bits and missed notes after they leave the
    screen. When pausing, we see the stray note bits and missed notes remain on
    the board.
