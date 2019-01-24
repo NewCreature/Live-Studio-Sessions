@@ -921,4 +921,5 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 		}
 		t3f_draw_bitmap(gp->strum_bar_image, al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 960 - 64 - 64, 270 - 4, 0, 0);
 	}
+	al_hold_bitmap_drawing(false);
 }
