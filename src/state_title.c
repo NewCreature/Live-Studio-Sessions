@@ -36,7 +36,7 @@ void lss_select_menu(LSS_TITLE_DATA * tp, int menu)
 		{
 			strcpy(lss_new_profile_buffer, "Anonymous");
 		}
-		lss_new_profile_entry_callback(&app->title, '\r');
+		lss_new_profile_entry_callback(data, '\r');
 	}
 #endif
 
@@ -80,7 +80,7 @@ int lss_menu_proc_profiles_new(void * data, int i, void * p)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	#ifdef ALLEGRO_ANDROID
-		t3f_open_edit_box("Enter Name", lss_new_profile_buffer, 32, "CapWords", lss_menu_proc_network_id_callback, NULL);
+		t3f_open_edit_box("Enter Name", lss_new_profile_buffer, 32, "CapWords", lss_menu_proc_network_id_callback, data);
 	#else
 		lss_begin_text_entry(data, "", lss_new_profile_buffer, 32, lss_new_profile_entry_callback);
 	#endif
