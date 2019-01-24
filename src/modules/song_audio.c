@@ -90,6 +90,21 @@ static void lss_song_audio_callback(void * buf, unsigned int samples, void * dat
 	lss_song_audio_callback_counter++;
 }
 
+static void wait_for_callback(void)
+{
+	double start_time = 0.0;
+
+	lss_song_audio_callback_counter = 0;
+	start_time = al_get_time();
+	while(lss_song_audio_callback_counter == 0)
+	{
+		if(al_get_time() - start_time >= 1.0)
+		{
+			break;
+		}
+	}
+}
+
 bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 {
 	double start_pos = 0.0;
@@ -144,10 +159,7 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 		} */
 		/* attach the streams to the mixer and set them to playing */
 		t3f_debug_message("\tWaiting for callback counter...\n");
-		lss_song_audio_callback_counter = 0;
-		while(lss_song_audio_callback_counter == 0)
-		{
-		}
+		wait_for_callback();
 		t3f_debug_message("\tStarting audio streams...\n");
 		for(i = 0; i < LSS_SONG_AUDIO_MAX_STREAMS; i++)
 		{
@@ -170,10 +182,7 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 		if(lss_song_audio_callback_counter > 1)
 		{
 			t3f_debug_message("\tAudio stream start took too long, waiting for callback counter...\n");
-			lss_song_audio_callback_counter = 0;
-			while(lss_song_audio_callback_counter == 0)
-			{
-			}
+			wait_for_callback();
 			t3f_debug_message("\tRewinding audio streams...\n");
 			lss_set_song_audio_position(ap, start_pos);
 		}
