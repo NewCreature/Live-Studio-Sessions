@@ -599,6 +599,14 @@ static int t3f_set_new_gfx_mode(int w, int h, int flags)
 	/* update settings if we successfully set the new mode */
 	if(ret == 1)
 	{
+		if(t3f_flags & T3F_USE_FULLSCREEN)
+		{
+			al_set_config_value(t3f_config, "T3F", "force_fullscreen", "true");
+		}
+		else
+		{
+			al_set_config_value(t3f_config, "T3F", "force_fullscreen", "false");
+		}
 		sprintf(val, "%d", al_get_display_width(t3f_display));
 		al_set_config_value(t3f_config, "T3F", "display_width", val);
 		sprintf(val, "%d", al_get_display_height(t3f_display));
