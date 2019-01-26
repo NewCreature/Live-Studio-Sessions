@@ -7,6 +7,8 @@ Live Studio Sessions Issues
 
 [ ]Look into folder select not working on Linux.
 
+[ ]Investigate crash when loading Super Mario Galacy chart.
+
 [ ]Update changelog.
 
 [X]Add "no fail" mode.
