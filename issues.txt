@@ -9,6 +9,8 @@ Live Studio Sessions Issues
 
 [ ]Confirm exit to OS.
 
+[ ]Look into folder select not working on Linux.
+
 [X]Add option to run the game in full screen.
 
 [X]Investigate crash on song completion. This might have something to do with
