@@ -24,6 +24,39 @@
 /* main logic routine */
 void app_logic(void * data)
 {
+	bool toggle_fullscreen = false;
+	int flags;
+	int ret;
+
+	if(t3f_key[ALLEGRO_KEY_COMMAND] && (t3f_key[ALLEGRO_KEY_LSHIFT] || t3f_key[ALLEGRO_KEY_RSHIFT]) && t3f_key[ALLEGRO_KEY_F])
+	{
+		t3f_key[ALLEGRO_KEY_F] = 0;
+		toggle_fullscreen = true;
+	}
+	else if((t3f_key[ALLEGRO_KEY_LCTRL] || t3f_key[ALLEGRO_KEY_RCTRL]) && t3f_key[ALLEGRO_KEY_F])
+	{
+		t3f_key[ALLEGRO_KEY_F] = 0;
+		toggle_fullscreen = true;
+	}
+	else if((t3f_key[ALLEGRO_KEY_ALT] || t3f_key[ALLEGRO_KEY_ALTGR]) && t3f_key[ALLEGRO_KEY_ENTER])
+	{
+		t3f_key[ALLEGRO_KEY_ENTER] = 0;
+		toggle_fullscreen = true;
+	}
+	if(toggle_fullscreen)
+	{
+		flags = t3f_flags;
+		flags ^= T3F_USE_FULLSCREEN;
+		ret = t3f_set_gfx_mode(960, 540, flags);
+		if(!ret || ret == 2)
+		{
+			t3f_unload_resources();
+			al_destroy_display(t3f_display);
+			t3f_display = NULL;
+			t3f_set_gfx_mode(960, 540, flags);
+			t3f_reload_resources();
+		}
+	}
 	lss_state_logic((APP_INSTANCE *)data);
 }
 
