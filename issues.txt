@@ -3,13 +3,13 @@ Live Studio Sessions Issues
 
 [ ]Add "no fail" mode.
 
-[ ]Add controller pause/menu button.
-
 [ ]Add proper graphics for elements that interact with the game board.
 
 [ ]Confirm exit to OS.
 
 [ ]Look into folder select not working on Linux.
+
+[X]Add controller pause/menu button.
 
 [X]Add option to run the game in full screen.
 
