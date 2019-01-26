@@ -401,6 +401,10 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 		lss_state_song_list_center(app);
 		t3f_key[ALLEGRO_KEY_PGDN] = 0;
 	}
+	else if(app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_ORANGE].pressed)
+	{
+		app->game.no_fail = !app->game.no_fail;
+	}
 	if(lss_song_list_sort_query)
 	{
 		lss_process_text_entry();
@@ -431,7 +435,14 @@ void lss_state_song_list_song_select_render(APP_INSTANCE * app)
 	char buf[256];
 	char * type[3] = {"Artist", "Title", "Collection"};
 
-	al_clear_to_color(LSS_TITLE_COLOR_BG);
+	if(app->game.no_fail)
+	{
+		al_clear_to_color(LSS_TITLE_COLOR_BG_ALT);
+	}
+	else
+	{
+		al_clear_to_color(LSS_TITLE_COLOR_BG);
+	}
 	al_draw_tinted_bitmap(app->title.logo_bitmap, al_map_rgba_f(0.0, 0.0, 0.0, 0.125), 480 - al_get_bitmap_width(app->title.logo_bitmap) / 2, 270 - al_get_bitmap_height(app->title.logo_bitmap) / 2, 0);
 
 	/* render filter info */
@@ -519,6 +530,10 @@ void lss_state_song_list_track_select_logic(APP_INSTANCE * app)
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 		t3f_key[ALLEGRO_KEY_BACK] = 0;
 	}
+	else if(app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_ORANGE].pressed)
+	{
+		app->game.no_fail = !app->game.no_fail;
+	}
 	if(lss_song_list_menu)
 	{
 		lss_update_gui_colors(lss_song_list_menu, LSS_TITLE_COLOR_HEADER, LSS_TITLE_COLOR_SELECTED, LSS_TITLE_COLOR_NORMAL);
@@ -527,7 +542,14 @@ void lss_state_song_list_track_select_logic(APP_INSTANCE * app)
 
 void lss_state_song_list_track_select_render(APP_INSTANCE * app)
 {
-	al_clear_to_color(LSS_TITLE_COLOR_BG);
+	if(app->game.no_fail)
+	{
+		al_clear_to_color(LSS_TITLE_COLOR_BG_ALT);
+	}
+	else
+	{
+		al_clear_to_color(LSS_TITLE_COLOR_BG);
+	}
 	al_draw_tinted_bitmap(app->title.logo_bitmap, al_map_rgba_f(0.0, 0.0, 0.0, 0.125), 480 - al_get_bitmap_width(app->title.logo_bitmap) / 2, 270 - al_get_bitmap_height(app->title.logo_bitmap) / 2, 0);
 	al_hold_bitmap_drawing(true);
 	t3f_render_gui(lss_song_list_menu);
@@ -546,6 +568,10 @@ void lss_state_song_list_difficulty_select_logic(APP_INSTANCE * app)
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 		t3f_key[ALLEGRO_KEY_BACK] = 0;
 	}
+	else if(app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_ORANGE].pressed)
+	{
+		app->game.no_fail = !app->game.no_fail;
+	}
 	if(lss_song_list_menu)
 	{
 		lss_update_gui_colors(lss_song_list_menu, LSS_TITLE_COLOR_HEADER, LSS_TITLE_COLOR_SELECTED, LSS_TITLE_COLOR_NORMAL);
@@ -554,7 +580,14 @@ void lss_state_song_list_difficulty_select_logic(APP_INSTANCE * app)
 
 void lss_state_song_list_difficulty_select_render(APP_INSTANCE * app)
 {
-	al_clear_to_color(LSS_TITLE_COLOR_BG);
+	if(app->game.no_fail)
+	{
+		al_clear_to_color(LSS_TITLE_COLOR_BG_ALT);
+	}
+	else
+	{
+		al_clear_to_color(LSS_TITLE_COLOR_BG);
+	}
 	al_draw_tinted_bitmap(app->title.logo_bitmap, al_map_rgba_f(0.0, 0.0, 0.0, 0.125), 480 - al_get_bitmap_width(app->title.logo_bitmap) / 2, 270 - al_get_bitmap_height(app->title.logo_bitmap) / 2, 0);
 	al_hold_bitmap_drawing(true);
 	t3f_render_gui(lss_song_list_menu);

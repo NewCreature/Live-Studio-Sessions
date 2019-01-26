@@ -79,6 +79,7 @@ typedef struct
 	float delay_z;
 	bool paused;
 	bool done;
+	bool no_fail;
 
 	int av_delay;
 	double offset;

@@ -643,7 +643,10 @@ void lss_player_logic(LSS_GAME * gp, int player)
 			{
 				gp->player[0].miss_streak = 4;
 			}
-			gp->player[0].life -= gp->player[0].miss_streak;
+			if(!gp->no_fail)
+			{
+				gp->player[0].life -= gp->player[0].miss_streak;
+			}
 		}
 	}
 }
