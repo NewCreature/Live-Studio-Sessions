@@ -344,7 +344,8 @@ static void lss_game_get_player_results(LSS_GAME * gp, int player)
 
 void lss_game_logic(LSS_GAME * gp)
 {
-	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
+	lss_read_controller(gp->player[0].controller);
+	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_MENU].pressed)
 	{
 		if(gp->paused)
 		{

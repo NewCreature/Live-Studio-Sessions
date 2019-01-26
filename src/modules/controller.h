@@ -20,13 +20,14 @@
 #define LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN 5
 #define LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP   6
 #define LSS_CONTROLLER_BINDING_GUITAR_STAR_POWER 7
+#define LSS_CONTROLLER_BINDING_MENU              8
 
 typedef struct
 {
 
 	T3F_CONTROLLER * controller;
 	int type, source;
-	
+
 	/* touch-specific info */
 	float old_strum_pos;
 	int strum_touch;

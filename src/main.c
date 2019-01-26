@@ -84,6 +84,7 @@ static bool lss_setup_default_controllers(APP_INSTANCE * app)
 	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].button = ALLEGRO_KEY_ENTER;
 	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STAR_POWER].type = T3F_CONTROLLER_BINDING_KEY;
 	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STAR_POWER].button = ALLEGRO_KEY_SPACE;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_MENU].button = ALLEGRO_KEY_BACKSPACE;
 	return true;
 }
 
@@ -120,7 +121,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		}
 	#endif
 	t3f_debug_message("Initializing controllers...\n");
-	app->controller[0].controller = t3f_create_controller(8);
+	app->controller[0].controller = t3f_create_controller(9);
 	if(!app->controller[0].controller)
 	{
 		printf("Could not set up controllers!\n");

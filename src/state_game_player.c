@@ -284,7 +284,6 @@ void lss_player_logic(LSS_GAME * gp, int player)
 	bool hopo_strum_check = false; // true if we needed to check next_notes for valid strummable note
 	bool hopo_strum_pass = false;
 
-	lss_read_controller(gp->player[0].controller);
 	lss_player_detect_visible_notes(gp, 0);
 	lss_player_detect_visible_beats(gp, 0);
 
