@@ -1,8 +1,6 @@
 Live Studio Sessions Issues
 ---------------------------
 
-[ ]Add option to run the game in full screen.
-
 [ ]Add "no fail" mode.
 
 [ ]Add controller pause/menu button.
@@ -10,6 +8,8 @@ Live Studio Sessions Issues
 [ ]Add proper graphics for elements that interact with the game board.
 
 [ ]Confirm exit to OS.
+
+[X]Add option to run the game in full screen.
 
 [X]Investigate crash on song completion. This might have something to do with
    T3Net. I've seen similar crashing in other games that use T3Net. It seems to
