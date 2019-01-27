@@ -4,6 +4,11 @@ live-studio-sessions (0.2) maverick; urgency=low
   * Board speed is now calculated from the song BPM data.
   * Added song progress meter to the bottom of the in-game display.
   * Game can now be paused and resumed during gameplay.
+  * Added full screen toggle shortcut keys.
+  * Added controller binding to access the menu.
+  * Added toggle for "no fail" mode.
+  * Added exit confirmation menu to make it harder to accidentally exit the
+    game.
 
  -- Todd Cope <todd@t3-i.com>  BUILD_DATE +0000
 
