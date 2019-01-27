@@ -103,6 +103,7 @@ void lss_state_logic(APP_INSTANCE * app)
 					printf("Failed to download leaderboard\n");
 				}
 				al_start_timer(t3f_timer);
+				al_show_mouse_cursor(t3f_display);
 				app->state = LSS_STATE_GAME_RESULTS;
 			}
 			break;
@@ -132,6 +133,7 @@ void lss_state_logic(APP_INSTANCE * app)
 			if(app->game.done)
 			{
 				lss_title_initialize(&app->title, &app->resources, app->song_list);
+				al_show_mouse_cursor(t3f_display);
 				app->state = LSS_STATE_TITLE;
 			}
 			break;

@@ -199,6 +199,7 @@ int lss_menu_proc_options_av_setup(void * data, int ip, void * p)
 		{
 			lss_title_exit(&app->title);
 			t3f_clear_touch_data();
+			al_hide_mouse_cursor(t3f_display);
 			app->state = LSS_STATE_AV_SETUP;
 		}
 	}

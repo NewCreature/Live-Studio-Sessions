@@ -83,6 +83,7 @@ static int lss_song_list_proc_select_difficulty(void * data, int i, void * p)
 	lss_title_exit(&app->title);
 	if(lss_game_initialize(&app->game, app->song_list->entry[app->selected_song]->path, &app->resources))
 	{
+		al_hide_mouse_cursor(t3f_display);
 		app->state = LSS_STATE_GAME;
 	}
 	else

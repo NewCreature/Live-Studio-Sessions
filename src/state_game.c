@@ -49,6 +49,7 @@ static int menu_proc_paused_resume(void * data, int i, void * p)
 		lss_set_song_audio_playing(gp->song_audio, true);
 		al_start_timer(t3f_timer);
 	}
+	al_hide_mouse_cursor(t3f_display);
 	gp->paused = false;
 	return 1;
 }
@@ -388,6 +389,7 @@ void lss_game_logic(LSS_GAME * gp)
 		}
 		else
 		{
+			al_show_mouse_cursor(t3f_display);
 			lss_set_song_audio_playing(gp->song_audio, false);
 			gp->current_tick = gp->rewind_tick;
 			if(gp->current_tick >= 0)
