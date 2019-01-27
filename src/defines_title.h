@@ -15,5 +15,6 @@
 #define LSS_MENU_NEW_PROFILE  3
 #define LSS_MENU_CONTROLLERS  4
 #define LSS_MENU_CONTROLLER   5
+#define LSS_MENU_CONFIRM_EXIT 6
 
 #endif

@@ -60,7 +60,9 @@ int lss_menu_proc_options(void * data, int i, void * p)
 
 int lss_menu_proc_quit(void * data, int i, void * p)
 {
-	t3f_exit();
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	lss_select_menu(&app->title, LSS_MENU_CONFIRM_EXIT);
 	return 1;
 }
 
@@ -295,6 +297,20 @@ int lss_menu_proc_options_controller_back(void * data, int i, void * p)
 	return 1;
 }
 
+int lss_menu_proc_exit_yes(void * data, int i, void * p)
+{
+	t3f_exit();
+	return 1;
+}
+
+int lss_menu_proc_exit_no(void * data, int i, void * p)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	lss_select_menu(&app->title, LSS_MENU_MAIN);
+	return 1;
+}
+
 bool lss_create_profiles_menu(APP_INSTANCE * app)
 {
 	int i, pos, space;
@@ -435,6 +451,19 @@ bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp, LSS_SONG_LIST
 		pos += space;
 	#endif
 	t3f_add_gui_text_element(dp->menu[LSS_MENU_OPTIONS], lss_menu_proc_options_back, "Back", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+
+	/* confirm exit menu */
+	dp->menu[LSS_MENU_CONFIRM_EXIT] = t3f_create_gui(0, 0);
+	if(!dp->menu[LSS_MENU_CONFIRM_EXIT])
+	{
+		return false;
+	}
+	pos = 0;
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_CONFIRM_EXIT], NULL, "Exit to OS?", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
+	pos += space * 2;
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_CONFIRM_EXIT], lss_menu_proc_exit_yes, "Yes", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	pos += space;
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_CONFIRM_EXIT], lss_menu_proc_exit_no, "No", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 
 	/* start song audio */
 	dp->song_audio = lss_load_song_audio(lp->entry[t3f_rand(&dp->rng) % lp->entries]->path);
