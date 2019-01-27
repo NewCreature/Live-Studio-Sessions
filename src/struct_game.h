@@ -63,8 +63,10 @@ typedef struct
 	const char * song_id;
 
 	ALLEGRO_BITMAP * note_texture[10];
+	ALLEGRO_BITMAP * fret_button_texture[5];
 	ALLEGRO_BITMAP * studio_image;
 	ALLEGRO_BITMAP * fret_board_image;
+	ALLEGRO_BITMAP * fret_buttons_image;
 	ALLEGRO_BITMAP * beat_line_image;
 	ALLEGRO_BITMAP * fret_button_image;
 	ALLEGRO_BITMAP * strum_bar_image;

@@ -713,6 +713,68 @@ static void lss_player_render_primitive_fretboard(LSS_GAME * gp, int player)
 	al_draw_prim(v, NULL, NULL, 0, 15, ALLEGRO_PRIM_TRIANGLE_FAN);
 }
 
+static void lss_player_render_primitive_buttons(LSS_GAME * gp, int player)
+{
+	float oy[5] = {3.0 - 4.0, 1.0 - 4.0, 0.0 - 4.0, 1.0 - 4.0, 3.0 - 4.0};
+	float c, cy, z, end_z;
+	ALLEGRO_VERTEX v[32];
+
+	c = al_get_bitmap_width(gp->note_texture[0]) / 2;
+	cy = c + c / 4 - 2;
+	z = -32;
+	end_z = 32;
+	v[0].x = t3f_project_x(320 - 40, z);
+	v[0].y = t3f_project_y(420 + cy + oy[0] + 2.0, z);
+	v[0].z = 0;
+	v[0].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
+	v[1].x = t3f_project_x(320 + 4 * 80 + 40, z);
+	v[1].y = t3f_project_y(420 + cy + oy[0] + 2.0, z);
+	v[1].z = 0;
+	v[1].color = al_map_rgba_f(0.0, 0.0, 0.0, 0.5);
+	v[2].x = t3f_project_x(320 + 4 * 80 + 40, end_z);
+	v[2].y = t3f_project_y(420 + cy + oy[0] + 2.0, end_z);
+	v[2].z = 0;
+	v[2].color = al_map_rgba_f(0.5, 0.5, 0.5, 1.0);
+
+	memcpy(&v[3], &v[2], sizeof(ALLEGRO_VERTEX));
+	v[4].x = t3f_project_x(320 + 4 * 80, end_z);
+	v[4].y = t3f_project_y(420 + cy + oy[4], end_z);
+	v[4].z = 0;
+	v[4].color = al_map_rgba_f(0.5, 0.5, 0.5, 1.0);
+
+	memcpy(&v[5], &v[4], sizeof(ALLEGRO_VERTEX));
+	v[6].x = t3f_project_x(320 + 3 * 80, end_z);
+	v[6].y = t3f_project_y(420 + cy + oy[3], end_z);
+	v[6].z = 0;
+	v[6].color = al_map_rgba_f(0.5, 0.5, 0.5, 1.0);
+
+	memcpy(&v[7], &v[6], sizeof(ALLEGRO_VERTEX));
+	v[8].x = t3f_project_x(320 + 2 * 80, end_z);
+	v[8].y = t3f_project_y(420 + cy + oy[2], end_z);
+	v[8].z = 0;
+	v[8].color = al_map_rgba_f(0.5, 0.5, 0.5, 1.0);
+
+	memcpy(&v[9], &v[8], sizeof(ALLEGRO_VERTEX));
+	v[10].x = t3f_project_x(320 + 1 * 80, end_z);
+	v[10].y = t3f_project_y(420 + cy + oy[1], end_z);
+	v[10].z = 0;
+	v[10].color = al_map_rgba_f(0.5, 0.5, 0.5, 1.0);
+
+	memcpy(&v[11], &v[10], sizeof(ALLEGRO_VERTEX));
+	v[12].x = t3f_project_x(320 + 0 * 80, end_z);
+	v[12].y = t3f_project_y(420 + cy + oy[0], end_z);
+	v[12].z = 0;
+	v[12].color = al_map_rgba_f(0.5, 0.5, 0.5, 1.0);
+
+	memcpy(&v[13], &v[12], sizeof(ALLEGRO_VERTEX));
+	v[14].x = t3f_project_x(320 + 0 * 80 - 40, end_z);
+	v[14].y = t3f_project_y(420 + cy + oy[0] + 2.0, end_z);
+	v[14].z = 0;
+	v[14].color = al_map_rgba_f(0.5, 0.5, 0.5, 1.0);
+
+	al_draw_prim(v, NULL, NULL, 0, 15, ALLEGRO_PRIM_TRIANGLE_FAN);
+}
+
 static void lss_player_render_primitive_beat_line(LSS_GAME * gp, int player, double z)
 {
 	float oy[5] = {3.0 - 4.0, 1.0 - 4.0, 0.0 - 4.0, 1.0 - 4.0, 3.0 - 4.0};
@@ -784,6 +846,20 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 		}
 	}
 	al_hold_bitmap_drawing(false);
+	al_draw_bitmap(gp->fret_buttons_image, 200, 320, 0);
+	for(i = 0; i < 5; i++)
+	{
+		if(gp->player[0].controller->controller->state[i].down)
+		{
+			a = 1.0;
+		}
+		else
+		{
+			a = 0.5;
+		}
+		t3f_draw_rotated_bitmap(gp->fret_button_texture[i], al_map_rgba_f(a, a, a, 1.0), c, cy, 320 + i * 80, 420 + cy + oy[i], 0, rotate[i], 0);
+	}
+
 
 	/* render note tails */
 	if(gp->player[0].first_visible_note >= 0)
@@ -865,8 +941,21 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 			playing = false;
 			if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->active && !gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->hidden)
 			{
-//				z = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->start_z - gp->camera_z)) * gp->board_speed;
-				z = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
+				for(j = 0; j < gp->player[0].playing_notes.notes; j++)
+				{
+					if(gp->player[0].playing_notes.note[j] == i)
+					{
+						playing = true;
+					}
+				}
+				if(playing)
+				{
+					z = 0.0;
+				}
+				else
+				{
+					z = ((gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->tick - (gp->current_tick - gp->av_delay))) * gp->board_speed;
+				}
 				a = 1.0;
 				note_type = 0;
 				if(z > 2048.0)
@@ -886,24 +975,12 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 				{
 					note_type = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val;
 				}
-				if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->visible)
+				if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->visible || playing)
 				{
 					t3f_draw_rotated_bitmap(gp->note_texture[note_type], al_map_rgba_f(a, a, a, a), c, cy, 320 + gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val * 80, 420 + cy + oy[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], z, rotate[gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].note[i]->val], 0);
 				}
 			}
 		}
-	}
-	for(i = 0; i < 5; i++)
-	{
-		if(gp->player[0].controller->controller->state[i].down)
-		{
-			a = 1.0;
-		}
-		else
-		{
-			a = 0.5;
-		}
-		t3f_draw_rotated_bitmap(gp->note_texture[i], al_map_rgba_f(a, a, a, a), c, cy, 320 + i * 80, 420 + cy + oy[i], 0, rotate[i], 0);
 	}
 
 	/* render on-screen control helpers when using touch */

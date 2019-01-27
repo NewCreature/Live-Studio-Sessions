@@ -142,6 +142,31 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path, LSS_RESOURCES 
 	{
 		return false;
 	}
+	gp->fret_button_texture[0] = t3f_load_resource((void *)(&gp->fret_button_texture[0]), T3F_RESOURCE_TYPE_BITMAP, "data/fret_button_green.png", 0, 0, 0);
+	if(!gp->fret_button_texture[0])
+	{
+		return false;
+	}
+	gp->fret_button_texture[1] = t3f_load_resource((void *)(&gp->fret_button_texture[1]), T3F_RESOURCE_TYPE_BITMAP, "data/fret_button_red.png", 0, 0, 0);
+	if(!gp->fret_button_texture[1])
+	{
+		return false;
+	}
+	gp->fret_button_texture[2] = t3f_load_resource((void *)(&gp->fret_button_texture[2]), T3F_RESOURCE_TYPE_BITMAP, "data/fret_button_yellow.png", 0, 0, 0);
+	if(!gp->fret_button_texture[2])
+	{
+		return false;
+	}
+	gp->fret_button_texture[3] = t3f_load_resource((void *)(&gp->fret_button_texture[3]), T3F_RESOURCE_TYPE_BITMAP, "data/fret_button_blue.png", 0, 0, 0);
+	if(!gp->fret_button_texture[3])
+	{
+		return false;
+	}
+	gp->fret_button_texture[4] = t3f_load_resource((void *)(&gp->fret_button_texture[4]), T3F_RESOURCE_TYPE_BITMAP, "data/fret_button_orange.png", 0, 0, 0);
+	if(!gp->fret_button_texture[4])
+	{
+		return false;
+	}
 	gp->studio_image = t3f_load_resource((void *)(&gp->studio_image), T3F_RESOURCE_TYPE_BITMAP, "data/studio.png", 0, 0, 0);
 	if(!gp->studio_image)
 	{
@@ -149,6 +174,11 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path, LSS_RESOURCES 
 	}
 	gp->fret_board_image = t3f_load_resource((void *)(&gp->fret_board_image), T3F_RESOURCE_TYPE_BITMAP, "data/fret_board.png", 0, 0, 0);
 	if(!gp->fret_board_image)
+	{
+		return false;
+	}
+	gp->fret_buttons_image = t3f_load_resource((void *)(&gp->fret_buttons_image), T3F_RESOURCE_TYPE_BITMAP, "data/fret_buttons.png", 0, 0, 0);
+	if(!gp->fret_buttons_image)
 	{
 		return false;
 	}
@@ -179,6 +209,11 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path, LSS_RESOURCES 
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[7], T3F_ATLAS_SPRITE);
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[8], T3F_ATLAS_SPRITE);
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->note_texture[9], T3F_ATLAS_SPRITE);
+	lss_add_bitmap_to_atlas(gp->atlas, &gp->fret_button_texture[0], T3F_ATLAS_SPRITE);
+	lss_add_bitmap_to_atlas(gp->atlas, &gp->fret_button_texture[1], T3F_ATLAS_SPRITE);
+	lss_add_bitmap_to_atlas(gp->atlas, &gp->fret_button_texture[2], T3F_ATLAS_SPRITE);
+	lss_add_bitmap_to_atlas(gp->atlas, &gp->fret_button_texture[3], T3F_ATLAS_SPRITE);
+	lss_add_bitmap_to_atlas(gp->atlas, &gp->fret_button_texture[4], T3F_ATLAS_SPRITE);
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->fret_button_image, T3F_ATLAS_SPRITE);
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->strum_bar_image, T3F_ATLAS_SPRITE);
 	t3f_debug_message("\tLoading song audio...\n");

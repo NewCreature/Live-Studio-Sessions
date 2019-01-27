@@ -15,7 +15,7 @@
    inkscape:version="0.92.2 5c3e80d, 2017-08-06"
    width="560"
    height="220"
-   sodipodi:docname="fret_board.svg"
+   sodipodi:docname="fret_buttons.svg"
    inkscape:export-filename="/Users/toddcope/T3/Projects/Games/Live Studio Sessions/bin/data/fret_board.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
@@ -46,9 +46,9 @@
      inkscape:window-height="1035"
      id="namedview3054"
      showgrid="true"
-     inkscape:zoom="1.9728531"
-     inkscape:cx="291.07684"
-     inkscape:cy="63.839021"
+     inkscape:zoom="3.9457062"
+     inkscape:cx="201.89253"
+     inkscape:cy="64.96341"
      inkscape:window-x="0"
      inkscape:window-y="1"
      inkscape:window-maximized="1"
@@ -2254,12 +2254,6 @@ zxd5AAAAAElFTkSuQmCC
      preserveAspectRatio="none"
      height="540"
      width="960" />
-  <path
-     style="fill:#000000;fill-opacity:0.50196078;stroke:none"
-     d="m 1,220 215,-208 8,-1 42,-1 28,0 42,1 8,1 215,208 z"
-     id="path4201"
-     inkscape:connector-curvature="0"
-     sodipodi:nodetypes="ccccccccc" />
   <path
      style="fill:#2e2e3e;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
      d="m 72,151 1,-2 12,-11 6,-1 20,-1 26,-1 40,-1 55,-1 h 96 l 55,1 40,1 26,1 20,1 6,1 13,13 -10,-2 -23,-1 -28,-1 -42,-1 h -56 -98 -56 l -42,1 -28,1 -23,1 z"
