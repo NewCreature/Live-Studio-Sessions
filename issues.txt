@@ -1,12 +1,8 @@
 Live Studio Sessions Issues
 ---------------------------
 
-[ ]Look into segmentation fault when toggling full screen multiple times on
-   Linux.
-
-   [ ]GUI fonts aren't updated when resources are reloaded. We should probably
-      use pointer to pointer in GUI elements so fonts will be updated
-      automatically.
+[ ]Investigate full screen toggle requiring toggling twice to go from full
+   screen to windowed on Linux.
 
 [ ]Allow navigating the song list with the mouse.
 
@@ -21,6 +17,13 @@ Live Studio Sessions Issues
 [ ]Look into folder select not working on Linux.
 
 [ ]Update changelog.
+
+[X]Look into segmentation fault when toggling full screen multiple times on
+   Linux.
+
+   [X]GUI fonts aren't updated when resources are reloaded. We should probably
+      use pointer to pointer in GUI elements so fonts will be updated
+      automatically.
 
 [X]Confirm exit to OS.
 
