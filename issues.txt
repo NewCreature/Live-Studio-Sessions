@@ -4,6 +4,10 @@ Live Studio Sessions Issues
 [ ]Look into segmentation fault when toggling full screen multiple times on
    Linux.
 
+   [ ]GUI fonts aren't updated when resources are reloaded. We should probably
+      use pointer to pointer in GUI elements so fonts will be updated
+      automatically.
+
 [ ]Allow navigating the song list with the mouse.
 
 [ ]Menu binding doesn't map properly from the controller setup menu.
