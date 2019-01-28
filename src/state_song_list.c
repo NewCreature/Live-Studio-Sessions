@@ -107,18 +107,18 @@ static bool lss_create_difficulty_menu(APP_INSTANCE * app)
 		return false;
 	}
 	sprintf(buf, "%s - %s", app->song_list->entry[app->selected_song]->artist, app->song_list->entry[app->selected_song]->title);
-	t3f_add_gui_text_element(lss_song_list_menu, NULL, buf, app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	t3f_add_gui_text_element(lss_song_list_menu, NULL, buf, (void **)&app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += lss_song_list_space;
 	track_name = app->game.song->source_midi->track[lss_track[app->game.player[0].selected_track]]->name;
 	if(!track_name)
 	{
 		track_name = "No Name";
 	}
-	t3f_add_gui_text_element(lss_song_list_menu, NULL, track_name, app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	t3f_add_gui_text_element(lss_song_list_menu, NULL, track_name, (void **)&app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += lss_song_list_space * 2;
 	for(i = 0; i < lss_diffs; i++)
 	{
-		t3f_add_gui_text_element(lss_song_list_menu, lss_song_list_proc_select_difficulty, difficulty_text[lss_diff[i]], app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+		t3f_add_gui_text_element(lss_song_list_menu, lss_song_list_proc_select_difficulty, difficulty_text[lss_diff[i]], (void **)&app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 		pos += lss_song_list_space;
 	}
 	lss_song_list_menu->hover_element = -1;
@@ -152,7 +152,7 @@ static bool lss_create_track_list_menu(APP_INSTANCE * app)
 		return false;
 	}
 	sprintf(buf, "%s - %s", app->song_list->entry[app->selected_song]->artist, app->song_list->entry[app->selected_song]->title);
-	t3f_add_gui_text_element(lss_song_list_menu, NULL, buf, app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	t3f_add_gui_text_element(lss_song_list_menu, NULL, buf, (void **)&app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += lss_song_list_space * 2;
 	for(i = 0; i < lss_tracks; i++)
 	{
@@ -161,7 +161,7 @@ static bool lss_create_track_list_menu(APP_INSTANCE * app)
 		{
 			track_name = "No Name";
 		}
-		t3f_add_gui_text_element(lss_song_list_menu, lss_song_list_proc_select_track, track_name, app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+		t3f_add_gui_text_element(lss_song_list_menu, lss_song_list_proc_select_track, track_name, (void **)&app->resources.font[lss_song_list_font], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 		pos += lss_song_list_space;
 	}
 	lss_song_list_menu->hover_element = -1;

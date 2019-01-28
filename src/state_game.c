@@ -72,11 +72,11 @@ static T3F_GUI * create_pause_menu(LSS_RESOURCES * rp)
 	{
 		pos = 0;
 		space = al_get_font_line_height(rp->font[LSS_FONT_LARGE]);
-		t3f_add_gui_text_element(gp, NULL, "Paused", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
+		t3f_add_gui_text_element(gp, NULL, "Paused", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
 		pos += space * 2;
-		t3f_add_gui_text_element(gp, menu_proc_paused_resume, "Resume", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+		t3f_add_gui_text_element(gp, menu_proc_paused_resume, "Resume", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 		pos += space;
-		t3f_add_gui_text_element(gp, menu_proc_paused_quit, "Quit", rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+		t3f_add_gui_text_element(gp, menu_proc_paused_quit, "Quit", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 		pos += space;
 		t3f_center_gui(gp, t3f_default_view->top, t3f_default_view->bottom);
 	}
