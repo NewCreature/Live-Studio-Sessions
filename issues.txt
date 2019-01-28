@@ -4,6 +4,8 @@ Live Studio Sessions Issues
 [ ]Look into segmentation fault when toggling full screen multiple times on
    Linux.
 
+[ ]Allow navigating the song list with the mouse.
+
 [ ]Menu binding doesn't map properly from the controller setup menu.
 
 [ ]Configured controller doesn't work in in-game pause menu.
