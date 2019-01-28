@@ -55,6 +55,7 @@ void app_logic(void * data)
 			t3f_display = NULL;
 			t3f_set_gfx_mode(960, 540, flags);
 			t3f_reload_resources();
+			t3f_rebuild_atlases();
 		}
 	}
 	lss_state_logic((APP_INSTANCE *)data);
