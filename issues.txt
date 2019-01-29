@@ -11,6 +11,9 @@ Live Studio Sessions Issues
 
 [ ]Look into folder select not working on Linux.
 
+   [ ]Need to test on Ubuntu 18, since that's where I saw the issue. I couldn't
+      reproduce it on my main development machines.
+
 [ ]Update changelog.
 
 [X]Menu binding doesn't map properly from the controller setup menu.
