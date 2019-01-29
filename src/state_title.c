@@ -382,7 +382,7 @@ bool lss_create_controller_menu(APP_INSTANCE * app)
 	sprintf(buf, "Strum Up (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP));
 	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += space;
-	sprintf(buf, "Menu (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_MENU));
+	sprintf(buf, "Menu (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_MENU), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_MENU));
 	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += space;
 	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_back, "Back", (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
