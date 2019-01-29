@@ -50,6 +50,9 @@ void app_logic(void * data)
 		ret = t3f_set_gfx_mode(960, 540, flags);
 		if(!ret || ret == 2)
 		{
+			al_set_config_value(t3f_config, "T3F", "display_width", "960");
+			al_set_config_value(t3f_config, "T3F", "display_height", "540");
+			al_set_config_value(t3f_config, "T3F", "force_fullscreen", flags & T3F_USE_FULLSCREEN ? "true" : "false");
 			t3f_unload_resources();
 			al_destroy_display(t3f_display);
 			t3f_display = NULL;
