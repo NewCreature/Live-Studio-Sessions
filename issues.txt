@@ -3,8 +3,6 @@ Live Studio Sessions Issues
 
 [ ]Allow navigating the song list with the mouse.
 
-[ ]Configured controller doesn't work in in-game pause menu.
-
 [ ]Fret button graphics shouldn't react to player input when the game is
    paused. We should probably just render them as off in that case and ignore
    the input state.
@@ -15,6 +13,8 @@ Live Studio Sessions Issues
       reproduce it on my main development machines.
 
 [ ]Update changelog.
+
+[X]Configured controller doesn't work in in-game pause menu.
 
 [X]Menu binding doesn't map properly from the controller setup menu.
 
