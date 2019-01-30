@@ -9,6 +9,7 @@ live-studio-sessions (0.2) maverick; urgency=low
   * Added toggle for "no fail" mode.
   * Added exit confirmation menu to make it harder to accidentally exit the
     game.
+  * Replaced some placeholder graphics.
 
  -- Todd Cope <todd@t3-i.com>  BUILD_DATE +0000
 
