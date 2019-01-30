@@ -850,7 +850,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	al_draw_bitmap(gp->fret_buttons_image, 200, 320, 0);
 	for(i = 0; i < 5; i++)
 	{
-		if(gp->player[0].controller->controller->state[i].down)
+		if(!gp->paused && gp->player[0].controller->controller->state[i].down)
 		{
 			a = 1.0;
 		}
