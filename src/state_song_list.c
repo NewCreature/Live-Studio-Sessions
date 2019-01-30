@@ -30,10 +30,22 @@ static bool lss_song_list_tapped = false;
 static bool lss_song_list_scrolled = false;
 static int lss_song_list_touch_frames = 0;
 static int lss_song_list_tap_frames = 0;
+static bool lss_song_list_mouse_init = true;
+static int lss_song_list_mouse_x = 0;
+static int lss_song_list_mouse_y = 0;
+static int lss_song_list_mouse_z = 0;
+static bool lss_song_list_mouse_button = false;
+static bool lss_song_list_clicked = false;
 static int lss_song_list_sort_type = 0;
 static char lss_song_list_sort_filter[32] = {0};
 static bool lss_song_list_sort_query = false;
 static int lss_song_list_collection = -1;
+
+void lss_state_song_list_initialize(APP_INSTANCE * app)
+{
+	lss_song_list_mouse_init = true;
+	app->state = LSS_STATE_SONG_SELECT;
+}
 
 static void lss_enumerate_tracks(LSS_SONG * sp)
 {
@@ -169,16 +181,69 @@ static bool lss_create_track_list_menu(APP_INSTANCE * app)
 	return true;
 }
 
+/* detect mouse scroll */
+static void lss_state_song_list_mouse_logic(APP_INSTANCE * app)
+{
+	int old_x, old_y, old_z, diff;
+	bool old_b;
+
+	lss_song_list_clicked = false;
+	if(lss_song_list_mouse_init)
+	{
+		lss_song_list_mouse_x = t3f_mouse_x;
+		old_x = lss_song_list_mouse_x;
+		lss_song_list_mouse_y = t3f_mouse_y;
+		old_y = lss_song_list_mouse_y;
+		lss_song_list_mouse_z = t3f_mouse_z;
+		old_z = lss_song_list_mouse_z;
+		lss_song_list_mouse_button = t3f_mouse_button[0];
+		old_b = lss_song_list_mouse_button;
+		lss_song_list_mouse_init = false;
+	}
+	else
+	{
+		old_x = lss_song_list_mouse_x;
+		lss_song_list_mouse_x = t3f_mouse_x;
+		old_y = lss_song_list_mouse_y;
+		lss_song_list_mouse_y = t3f_mouse_y;
+		old_z = lss_song_list_mouse_z;
+		lss_song_list_mouse_z = t3f_mouse_z;
+		old_b = lss_song_list_mouse_button;
+		lss_song_list_mouse_button = t3f_mouse_button[0];
+	}
+
+	if(old_z != lss_song_list_mouse_z)
+	{
+		diff = old_z - lss_song_list_mouse_z;
+		lss_song_list_scroll_pos += diff * lss_song_list_space;
+	}
+	if(old_y != lss_song_list_mouse_y || old_z != lss_song_list_mouse_z)
+	{
+		app->selected_song = (lss_song_list_mouse_y - lss_song_list_space) / lss_song_list_space + lss_song_list_scroll_pos / lss_song_list_space;
+		if(app->selected_song < 0)
+		{
+			app->selected_song = 0;
+		}
+		else if(app->selected_song >= app->song_list->visible_entries)
+		{
+			app->selected_song = app->song_list->visible_entries - 1;
+		}
+	}
+	if(lss_song_list_mouse_button && old_b != lss_song_list_mouse_button)
+	{
+		lss_song_list_clicked = true;
+	}
+}
+
 /* detect touch screen scroll */
 static void lss_state_song_list_touch_scroll_logic(APP_INSTANCE * app)
 {
 	int i;
 
-	lss_song_list_selected = false;
 	lss_song_list_tapped = false;
 	if(lss_song_list_touch_id < 0)
 	{
-		for(i = 0; i < T3F_MAX_TOUCHES; i++)
+		for(i = 1; i < T3F_MAX_TOUCHES; i++)
 		{
 			if(t3f_touch[i].active)
 			{
@@ -307,11 +372,13 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 	}
 	lss_song_list_space = al_get_font_line_height(app->resources.font[lss_song_list_font]);
 	lss_song_list_visible = (540 - lss_song_list_space * 2) / lss_song_list_space;
+	lss_song_list_selected = false;
+	lss_state_song_list_mouse_logic(app);
 	lss_state_song_list_touch_scroll_logic(app);
 	lss_read_controller(&app->controller[0]);
 	if(t3f_key[ALLEGRO_KEY_ENTER] ||
 	   app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_GREEN].pressed ||
-	   lss_song_list_tap_frames > 15)
+	   lss_song_list_tap_frames > 15 || lss_song_list_clicked)
 	{
 		app->game.song = lss_load_song(app->song_list->entry[app->selected_song]->path);
 		lss_enumerate_tracks(app->game.song);
@@ -539,7 +606,7 @@ void lss_state_song_list_track_select_logic(APP_INSTANCE * app)
 		lss_song_list_menu = NULL;
 		lss_destroy_song(app->game.song);
 		lss_song_list_tap_frames = 0;
-		app->state = LSS_STATE_SONG_SELECT;
+		lss_state_song_list_initialize(app);
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 		t3f_key[ALLEGRO_KEY_BACK] = 0;
 	}

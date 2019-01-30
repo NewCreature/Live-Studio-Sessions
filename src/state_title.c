@@ -15,6 +15,7 @@
 
 #include "state.h"
 #include "state_title.h"
+#include "state_song_list.h"
 #include "state_game.h"
 
 static char lss_new_profile_buffer[256] = {0};
@@ -73,7 +74,7 @@ int lss_menu_proc_profiles_select(void * data, int i, void * p)
 
 	app->game.player[0].profile = &app->profiles->entry[i - 1];
 	t3f_clear_touch_data();
-	app->state = LSS_STATE_SONG_SELECT;
+	lss_state_song_list_initialize(app);
 	return 1;
 }
 
