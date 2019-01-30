@@ -378,9 +378,8 @@ static void lss_game_get_player_results(LSS_GAME * gp, int player)
 	t3f_debug_message("lss_game_get_player_results() exit\n");
 }
 
-void lss_game_logic(LSS_GAME * gp)
+static void check_for_pause(LSS_GAME * gp)
 {
-	lss_read_controller(gp->player[0].controller);
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_MENU].pressed)
 	{
 		if(gp->paused)
@@ -408,6 +407,10 @@ void lss_game_logic(LSS_GAME * gp)
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 		t3f_key[ALLEGRO_KEY_BACK] = 0;
 	}
+}
+
+void lss_game_logic(LSS_GAME * gp)
+{
 	if(gp->paused)
 	{
 		lss_title_menu_logic(gp->pause_menu, gp->player[0].controller, 0, false, gp);
@@ -457,6 +460,8 @@ void lss_game_logic(LSS_GAME * gp)
 			gp->camera_vz = (float)LSS_SONG_PLACEMENT_SCALE * (gp->board_speed * (gp->song->beat[gp->current_beat]->BPM / 120.0));
 		}
 	}
+
+	check_for_pause(gp);
 }
 
 void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)

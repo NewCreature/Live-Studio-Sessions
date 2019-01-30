@@ -346,6 +346,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 	gp->player[0].hittable_notes_groups = group + 1;
 
 	/* check for note hits */
+	lss_read_controller(gp->player[0].controller);
 	if(gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed || gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].pressed)
 	{
 		/* first check to see if we have strummed a HOPO note */
