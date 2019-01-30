@@ -6,6 +6,12 @@ Live Studio Sessions Issues
    [ ]Need to test on Ubuntu 18, since that's where I saw the issue. I couldn't
       reproduce it on my main development machines.
 
+      [ ]I reproduced it on the same machine easily enough. Comparing the file
+         chooser code to that of OMO (which currently doesn't exhibit the same
+         bug on the same machine), it looks like the issue might be with trying
+         to specify '*.*' as the supported file type. When selecting folders,
+         we should be passing NULL, anyway.
+
 [ ]Update changelog.
 
 [X]Allow navigating the song list with the mouse.
