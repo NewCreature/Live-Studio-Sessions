@@ -3,16 +3,16 @@ Live Studio Sessions Issues
 
 [ ]Allow navigating the song list with the mouse.
 
-[ ]Fret button graphics shouldn't react to player input when the game is
-   paused. We should probably just render them as off in that case and ignore
-   the input state.
-
 [ ]Look into folder select not working on Linux.
 
    [ ]Need to test on Ubuntu 18, since that's where I saw the issue. I couldn't
       reproduce it on my main development machines.
 
 [ ]Update changelog.
+
+[X]Fret button graphics shouldn't react to player input when the game is
+   paused. We should probably just render them as off in that case and ignore
+   the input state.
 
 [X]Configured controller doesn't work in in-game pause menu.
 
