@@ -12,6 +12,8 @@ Live Studio Sessions Issues
          to specify '*.*' as the supported file type. When selecting folders,
          we should be passing NULL, anyway.
 
+         [ ]This has been implemented, just need to test it.
+
 [ ]Update changelog.
 
 [X]Allow navigating the song list with the mouse.
