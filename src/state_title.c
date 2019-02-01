@@ -219,7 +219,7 @@ int lss_menu_proc_options_library(void * data, int ip, void * p)
 	int c = 0;
 
 	al_stop_timer(t3f_timer);
-	fc = al_create_native_file_dialog(al_get_config_value(t3f_config, "Live Studio Sessions", "Library Path"), "Choose Song Library Location", "*.*", ALLEGRO_FILECHOOSER_FOLDER);
+	fc = al_create_native_file_dialog(al_get_config_value(t3f_config, "Live Studio Sessions", "Library Path"), "Choose Song Library Location", NULL, ALLEGRO_FILECHOOSER_FOLDER);
 	if(fc)
 	{
 		if(al_show_native_file_dialog(t3f_display, fc))
