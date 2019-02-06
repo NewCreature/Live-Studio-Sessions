@@ -54,7 +54,7 @@ android_sign:
 	$(MAKE) -f makefile.android android_sign
 
 windows_package:
-	$(MAKE) -f makefile.mingw windows_zip
+	$(MAKE) -f makefile.$(SYSTEM) windows_zip
 
 mac_package:
 	$(MAKE) -f makefile.macosx mac_package
