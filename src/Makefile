@@ -3,7 +3,12 @@
 # or cross-compile makefiles)
 
 ifeq ($(OS),Windows_NT)
- SYSTEM=mingw
+ UNAME=$(shell uname)
+ ifneq (,$(findstring MINGW,$(UNAME)))
+  SYSTEM=msys
+ else
+  SYSTEM=mingw
+ endif
 else
  UNAME=$(shell uname)
  ifneq (,$(findstring Linux,$(UNAME)))
