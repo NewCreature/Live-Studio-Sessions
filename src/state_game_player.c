@@ -269,6 +269,21 @@ void lss_initialize_player(LSS_GAME * gp, int player)
 	gp->player[0].stars = 0;
 }
 
+static void handle_auto_strum(LSS_GAME * gp, int player)
+{
+	int i, d;
+
+	for(i = 0; i < gp->player[player].hittable_notes_groups; i++)
+	{
+		/* if note is within hit window */
+		d = ((gp->song->track[gp->player[player].selected_track][gp->player[player].selected_difficulty].note[gp->player[player].hittable_notes[i].note[0]]->tick - (gp->current_tick - gp->av_delay)));
+		if(lss_player_check_notes(gp->song, &gp->player[player], gp->player[player].hittable_notes[i].note, gp->player[player].hittable_notes[i].notes))
+		{
+			gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed = true;
+		}
+	}
+}
+
 void lss_player_logic(LSS_GAME * gp, int player)
 {
 	int i, j, d, d2, t, accuracy = 2;
@@ -347,6 +362,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 
 	/* check for note hits */
 	lss_read_controller(gp->player[0].controller);
+	handle_auto_strum(gp, 0);
 	if(gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed || gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].pressed)
 	{
 		/* first check to see if we have strummed a HOPO note */
