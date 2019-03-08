@@ -38,7 +38,6 @@ Thumbs.db
 #######################################
 bin/live-studio-sessions
 packages/Live Studio Sessions.app
-docs/changelog
 bin/data/songs_copyright
 src/makefile.config
 icons/macosx_icon.icns
