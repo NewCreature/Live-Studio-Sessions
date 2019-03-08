@@ -1,20 +1,24 @@
 Live Studio Sessions Issues
 ---------------------------
 
-[ ]Look into folder select not working on Linux.
+[ ]Implement new touch controls. We should be able put together something that
+   sits on top of the current input system. We need to make it auto-strum if
+   the player touches the correct note when it is within range.
 
-   [ ]Need to test on Ubuntu 18, since that's where I saw the issue. I couldn't
+[X]Look into folder select not working on Linux.
+
+   [X]Need to test on Ubuntu 18, since that's where I saw the issue. I couldn't
       reproduce it on my main development machines.
 
-      [ ]I reproduced it on the same machine easily enough. Comparing the file
+      [X]I reproduced it on the same machine easily enough. Comparing the file
          chooser code to that of OMO (which currently doesn't exhibit the same
          bug on the same machine), it looks like the issue might be with trying
          to specify '*.*' as the supported file type. When selecting folders,
          we should be passing NULL, anyway.
 
-         [ ]This has been implemented, just need to test it.
+         [X]This has been implemented, just need to test it.
 
-[ ]Update changelog.
+[X]Update changelog.
 
 [X]Allow navigating the song list with the mouse.
 
