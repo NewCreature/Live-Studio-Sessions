@@ -5,6 +5,10 @@ Live Studio Sessions Issues
    sits on top of the current input system. We need to make it auto-strum if
    the player touches the correct note when it is within range.
 
+   [ ]Auto-strum is partially implemented. We still need to require the player
+      to hit the notes within their hit window before auto-strumming.
+      Currently, holding down the keys is enough to trigger a note hit.
+
 [X]Look into folder select not working on Linux.
 
    [X]Need to test on Ubuntu 18, since that's where I saw the issue. I couldn't
