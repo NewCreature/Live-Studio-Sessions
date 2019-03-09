@@ -1,7 +1,7 @@
 Live Studio Sessions Issues
 ---------------------------
 
-[ ]Add fast strum button. This button will strum at press as well as release.
+[X]Add fast strum button. This button will strum at press as well as release.
    this will make playing songs with fast strumming notes easier with a
    keyboard.
 
