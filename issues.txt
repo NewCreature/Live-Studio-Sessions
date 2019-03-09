@@ -1,8 +1,11 @@
 Live Studio Sessions Issues
 ---------------------------
 
-[ ]Use fret buttons for adjusting the AV delay settings since we no longer have
+[X]Use fret buttons for adjusting the AV delay settings since we no longer have
    strum buttons on touch devices.
+
+   [X]AV setup already works on touch devices because we implemented a special
+      control scheme for that state.
 
 [X]Add fast strum button. This button will strum at press as well as release.
    this will make playing songs with fast strumming notes easier with a
