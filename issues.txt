@@ -1,17 +1,17 @@
 Live Studio Sessions Issues
 ---------------------------
 
-[ ]Implement new touch controls. We should be able put together something that
-   sits on top of the current input system. We need to make it auto-strum if
-   the player touches the correct note when it is within range.
-
-   [ ]Auto-strum is partially implemented. We still need to require the player
-      to hit the notes within their hit window before auto-strumming.
-      Currently, holding down the keys is enough to trigger a note hit.
-
 [ ]Add fast strum button. This button will strum at press as well as release.
    this will make playing songs with fast strumming notes easier with a
    keyboard.
+
+[X]Implement new touch controls. We should be able put together something that
+   sits on top of the current input system. We need to make it auto-strum if
+   the player touches the correct note when it is within range.
+
+   [X]Auto-strum is partially implemented. We still need to require the player
+      to hit the notes within their hit window before auto-strumming.
+      Currently, holding down the keys is enough to trigger a note hit.
 
 [X]Look into folder select not working on Linux.
 
