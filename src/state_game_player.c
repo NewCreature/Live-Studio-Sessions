@@ -1042,7 +1042,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 			{
 				a = 0.25;
 			}
-			t3f_draw_rotated_bitmap(gp->fret_button_image, lss_alpha_color(color_chart[i], a), c, cy, LSS_TOUCH_OFFSET_X + i * LSS_TOUCH_SPACE_X, LSS_TOUCH_OFFSET_Y, 0, 0, 0);
+			t3f_draw_bitmap(gp->fret_button_image, lss_alpha_color(color_chart[i], a), LSS_TOUCH_OFFSET_X + i * LSS_TOUCH_SPACE_X, LSS_TOUCH_OFFSET_Y, 0, 0);
 		}
 	}
 	al_hold_bitmap_drawing(false);

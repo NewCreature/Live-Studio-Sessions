@@ -23,8 +23,8 @@
 //#define LSS_CONTROLLER_BINDING_GUITAR_STAR_POWER 7
 #define LSS_CONTROLLER_BINDING_MENU              8
 
-#define LSS_TOUCH_OFFSET_X 320
-#define LSS_TOUCH_OFFSET_Y (420 + 96)
+#define LSS_TOUCH_OFFSET_X (320 - 32)
+#define LSS_TOUCH_OFFSET_Y (420 + 96 - 48)
 #define LSS_TOUCH_SPACE_X  80
 
 typedef struct
