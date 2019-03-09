@@ -259,7 +259,7 @@ void lss_initialize_player(LSS_GAME * gp, int player)
 	}
 	if(gp->player[0].controller->source == LSS_CONTROLLER_SOURCE_TOUCH)
 	{
-		gp->player[0].controller->strum_touch = -1;
+		gp->player[0].controller->block_strum = false;
 	}
 	gp->player[0].first_visible_note = -1;
 	gp->player[0].last_visible_note = -1;
@@ -1031,6 +1031,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	/* render on-screen control helpers when using touch */
 	if(gp->player[0].controller->source == LSS_CONTROLLER_SOURCE_TOUCH)
 	{
+		c = al_get_bitmap_width(gp->fret_button_image) / 2;
 		for(i = 0; i < 5; i++)
 		{
 			if(gp->player[0].controller->controller->state[i].down)
@@ -1041,9 +1042,8 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 			{
 				a = 0.25;
 			}
-			t3f_draw_bitmap(gp->fret_button_image, lss_alpha_color(color_chart[i], a), i * 128, 0, 0, 0);
+			t3f_draw_rotated_bitmap(gp->fret_button_image, lss_alpha_color(color_chart[i], a), c, cy, LSS_TOUCH_OFFSET_X + i * LSS_TOUCH_SPACE_X, LSS_TOUCH_OFFSET_Y, 0, 0, 0);
 		}
-		t3f_draw_bitmap(gp->strum_bar_image, al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 960 - 64 - 64, 270 - 4, 0, 0);
 	}
 	al_hold_bitmap_drawing(false);
 }

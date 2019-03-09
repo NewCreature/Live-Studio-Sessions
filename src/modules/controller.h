@@ -23,6 +23,10 @@
 //#define LSS_CONTROLLER_BINDING_GUITAR_STAR_POWER 7
 #define LSS_CONTROLLER_BINDING_MENU              8
 
+#define LSS_TOUCH_OFFSET_X 320
+#define LSS_TOUCH_OFFSET_Y (420 + 96)
+#define LSS_TOUCH_SPACE_X  80
+
 typedef struct
 {
 
@@ -30,8 +34,6 @@ typedef struct
 	int type, source;
 
 	/* touch-specific info */
-	float old_strum_pos;
-	int strum_touch;
 	int fret_button_tick[10];
 	bool block_strum;
 

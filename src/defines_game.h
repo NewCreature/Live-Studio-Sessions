@@ -12,4 +12,8 @@
 #define LSS_NOTE_COLOR_3 al_map_rgb(0, 0, 204)
 #define LSS_NOTE_COLOR_4 al_map_rgb(215, 78, 0)
 
+#define LSS_FRET_OFFSET_X 320
+#define LSS_FRET_OFFSET_Y 420
+#define LSS_FRET_SPACE_X   80
+
 #endif

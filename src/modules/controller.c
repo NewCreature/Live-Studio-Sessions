@@ -25,39 +25,13 @@ void lss_read_controller(LSS_CONTROLLER * cp)
 			}
 			for(i = 0; i < T3F_MAX_TOUCHES; i++)
 			{
-				if(i == cp->strum_touch)
+				if(t3f_touch[i].active)
 				{
-					if(t3f_touch[i].active)
+					x = t3f_touch[i].x;
+					y = t3f_touch[i].y;
+					if(x >= LSS_TOUCH_OFFSET_X && x < LSS_TOUCH_OFFSET_X + LSS_TOUCH_SPACE_X * 5 && y >= LSS_TOUCH_OFFSET_Y)
 					{
-						cp->old_strum_pos = cp->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pos;
-						cp->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pos = t3f_touch[i].y;
-						if((cp->old_strum_pos >= 270 && cp->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pos < 270) ||
-						   (cp->old_strum_pos < 270 && cp->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pos >= 270))
-						{
-							cp->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].down = true;
-						}
-					}
-					else
-					{
-						cp->strum_touch = -1;
-					}
-				}
-				else
-				{
-					if(t3f_touch[i].active)
-					{
-						x = t3f_touch[i].x;
-						y = t3f_touch[i].y;
-						if(x < 128 * 5 && y < 128)
-						{
-							cp->controller->state[x / 128].down = true;
-						}
-						else if(x > 480)
-						{
-							cp->strum_touch = i;
-							cp->old_strum_pos = t3f_touch[i].y;
-							cp->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pos = t3f_touch[i].y;
-						}
+						cp->controller->state[(x - LSS_TOUCH_OFFSET_X) / LSS_TOUCH_SPACE_X].down = true;
 					}
 				}
 			}
