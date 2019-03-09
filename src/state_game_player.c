@@ -391,7 +391,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 	{
 		handle_auto_strum(gp, 0);
 	}
-	if(gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed || gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].pressed)
+	if(gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed || gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].pressed || gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_FAST].pressed || gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_FAST].released)
 	{
 		/* first check to see if we have strummed a HOPO note */
 		if(gp->player[0].playing_notes.notes && gp->player[0].playing_notes.hopo)

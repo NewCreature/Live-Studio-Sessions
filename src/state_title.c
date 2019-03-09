@@ -288,6 +288,8 @@ int lss_menu_proc_options_controller_set(void * data, int i, void * p)
 	app->title.menu[LSS_MENU_CONTROLLER]->hover_element = i;
 	app->title.block_count = 2;
 	al_start_timer(t3f_timer);
+	t3f_process_events(true);
+	t3f_key[ALLEGRO_KEY_ENTER] = 0;
 	return 1;
 }
 
@@ -381,6 +383,9 @@ bool lss_create_controller_menu(APP_INSTANCE * app)
 	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += space;
 	sprintf(buf, "Strum Up (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP));
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	pos += space;
+	sprintf(buf, "Strum Fast (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_STRUM_FAST), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_STRUM_FAST));
 	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += space;
 	sprintf(buf, "Menu (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_MENU), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_MENU));

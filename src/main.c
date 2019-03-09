@@ -85,7 +85,9 @@ static bool lss_setup_default_controllers(APP_INSTANCE * app)
 	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].type = T3F_CONTROLLER_BINDING_KEY;
 	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].button = ALLEGRO_KEY_LSHIFT;
 	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].type = T3F_CONTROLLER_BINDING_KEY;
-	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].button = ALLEGRO_KEY_ENTER;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].button = ALLEGRO_KEY_BACKSLASH;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STRUM_FAST].type = T3F_CONTROLLER_BINDING_KEY;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STRUM_FAST].button = ALLEGRO_KEY_ENTER;
 	//app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STAR_POWER].type = T3F_CONTROLLER_BINDING_KEY;
 	//app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STAR_POWER].button = ALLEGRO_KEY_SPACE;
 	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_MENU].button = ALLEGRO_KEY_BACKSPACE;
