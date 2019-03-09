@@ -271,15 +271,40 @@ void lss_initialize_player(LSS_GAME * gp, int player)
 
 static void handle_auto_strum(LSS_GAME * gp, int player)
 {
-	int i, d;
+	int i;
+	bool allow_strum = true;
+	int held = 0;
+
+	for(i = 0; i < 5; i++)
+	{
+		if(gp->player[player].controller->controller->state[i].held)
+		{
+			gp->player[player].controller->fret_button_tick[i]++;
+			if(gp->player[player].controller->fret_button_tick[i] > 10)
+			{
+				allow_strum = false;
+			}
+			held++;
+		}
+		else
+		{
+			gp->player[player].controller->fret_button_tick[i] = -1;
+		}
+	}
+	if(held <= 0)
+	{
+		gp->player[0].controller->block_strum = false;
+	}
 
 	for(i = 0; i < gp->player[player].hittable_notes_groups; i++)
 	{
-		/* if note is within hit window */
-		d = ((gp->song->track[gp->player[player].selected_track][gp->player[player].selected_difficulty].note[gp->player[player].hittable_notes[i].note[0]]->tick - (gp->current_tick - gp->av_delay)));
 		if(lss_player_check_notes(gp->song, &gp->player[player], gp->player[player].hittable_notes[i].note, gp->player[player].hittable_notes[i].notes))
 		{
-			gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed = true;
+			if(allow_strum && !gp->player[0].controller->block_strum)
+			{
+				gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed = true;
+				gp->player[0].controller->block_strum = true;
+			}
 		}
 	}
 }
@@ -362,7 +387,10 @@ void lss_player_logic(LSS_GAME * gp, int player)
 
 	/* check for note hits */
 	lss_read_controller(gp->player[0].controller);
-	handle_auto_strum(gp, 0);
+	if(gp->player[0].controller->source == LSS_CONTROLLER_SOURCE_TOUCH)
+	{
+		handle_auto_strum(gp, 0);
+	}
 	if(gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed || gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].pressed)
 	{
 		/* first check to see if we have strummed a HOPO note */

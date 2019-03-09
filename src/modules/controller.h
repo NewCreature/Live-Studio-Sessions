@@ -31,6 +31,8 @@ typedef struct
 	/* touch-specific info */
 	float old_strum_pos;
 	int strum_touch;
+	int fret_button_tick[10];
+	bool block_strum;
 
 } LSS_CONTROLLER;
 
