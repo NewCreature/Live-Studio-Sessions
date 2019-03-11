@@ -1,3 +1,11 @@
+live-studio-sessions (0.2.1) maverick; urgency=low
+
+  * New touch controls to make the game playable on Android.
+  * New Fast Strum controller binding which triggers a strum on both press and
+    release.
+
+ -- Todd Cope <todd@t3-i.com>  Mon, 11 Mar 2019 22:27:31 +0000
+
 live-studio-sessions (0.2) maverick; urgency=low
 
   * Fix build script source code packaging to include all the necessary files.
