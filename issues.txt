@@ -1,288 +1,35 @@
 Live Studio Sessions Issues
 ---------------------------
 
-[X]Use fret buttons for adjusting the AV delay settings since we no longer have
-   strum buttons on touch devices.
+[ ]Set default instrument volume for tracks being played by players to 100.
 
-   [X]AV setup already works on touch devices because we implemented a special
-      control scheme for that state.
+[ ]Set instrument volume for non-played tracks to 75% so the instruments players
+   are playing are more prominent.
 
-[X]Add fast strum button. This button will strum at press as well as release.
-   this will make playing songs with fast strumming notes easier with a
-   keyboard.
-
-[X]Implement new touch controls. We should be able put together something that
-   sits on top of the current input system. We need to make it auto-strum if
-   the player touches the correct note when it is within range.
-
-   [X]Auto-strum is partially implemented. We still need to require the player
-      to hit the notes within their hit window before auto-strumming.
-      Currently, holding down the keys is enough to trigger a note hit.
-
-[X]Look into folder select not working on Linux.
-
-   [X]Need to test on Ubuntu 18, since that's where I saw the issue. I couldn't
-      reproduce it on my main development machines.
-
-      [X]I reproduced it on the same machine easily enough. Comparing the file
-         chooser code to that of OMO (which currently doesn't exhibit the same
-         bug on the same machine), it looks like the issue might be with trying
-         to specify '*.*' as the supported file type. When selecting folders,
-         we should be passing NULL, anyway.
-
-         [X]This has been implemented, just need to test it.
-
-[X]Update changelog.
-
-[X]Allow navigating the song list with the mouse.
-
-[X]Fret button graphics shouldn't react to player input when the game is
-   paused. We should probably just render them as off in that case and ignore
-   the input state.
-
-[X]Configured controller doesn't work in in-game pause menu.
-
-[X]Menu binding doesn't map properly from the controller setup menu.
-
-[X]Investigate full screen toggle requiring toggling twice to go from full
-   screen to windowed on Linux.
-
-[X]Look into segmentation fault when toggling full screen multiple times on
-   Linux.
-
-   [X]GUI fonts aren't updated when resources are reloaded. We should probably
-      use pointer to pointer in GUI elements so fonts will be updated
-      automatically.
-
-[X]Confirm exit to OS.
-
-[X]Add proper graphics for elements that interact with the game board.
-
-[X]Investigate crash when loading Super Mario Galaxy chart.
-
-[X]Add "no fail" mode.
-
-[X]Add controller pause/menu button.
-
-[X]Add option to run the game in full screen.
-
-[X]Investigate crash on song completion. This might have something to do with
-   T3Net. I've seen similar crashing in other games that use T3Net. It seems to
-   happen when internet access is down.
-
-   [X]I suspect it might be a bug or issue with libcurl. The crash only occurs
-      when the network is in a specific state (the internet connection is down)
-      and libcurl times out when trying to perform the action. It's not a bug
-      in our write function, which never gets called. Basically, if we do a
-      curl_easy_perform(), a segmentation fault occurs after that call when the
-      network is in the aforementioned state. I have updated libcurl to the
-      latest version to see if that will resolve the issue.
-
-   [X]The game crashes with a segmentation fault after score upload or
-      leaderboard download fails. We need to audit the T3Net code to ensure we
-      are properly handling failure. Whatever it's doing, it is messing up bad
-      enough to cause simple drawing calls to crash.
-
-      [X]We should probably review the entire code path for the two leaderboard
-         functions to ensure we aren't doing anything crazy that would be
-         overwriting memory.
-
-   [X]I remember there being some crashing issues in Rhythm Toolkit which were
-      fixed when I was working on OMO. I upgraded to the new version which will
-      hopefully make the game more stable. There's a chance that this whole
-      issue was a result of the old RTK bugs.
-
-      [X]Upgrading RTK didn't solve the issue.
-
-[X]See if we can get the Android version working again. It crashes when we
-   create a new profile and when we start a song.
-
-[X]See about keeping the past beat markers or making them visible again when we
-   rewind the game state.
-
-[X]See about cleaning up stray note bits and missed notes after they leave the
-   screen. When pausing, we see the stray note bits and missed notes remain on
-   the board.
-
-[X]Bring all audio back to full volume when unpausing the game.
-
-[X]Allow pause menu to be controlled like any other menu (currently only works)
-   with mouse).
+[ ]See if we can make note tails for missed notes look better. We might render
+   them below the fret button graphics and/or erase them as they cross over the
+   fret button line.
 
 [ ]Look into keeping the logic and audio synced in case of audio stutter. We
    should be able to detect when the audio has fallen behind and seek ahead when
    that occurs.
 
-[X]Finish implementing pause menu.
+[ ]Look into adjusting board speed on the fly based on the current BPM. This
+   would make songs with major BPM changes work better but might not look good.
 
-   [X]Pause/resume song audio. The position should be rewound by 5 seconds so
-      the player can get their bearings on resume. We need to ensure the song
-      audio is synced properly so we should copy the mechanism we use to
-      initially start the audio.
+[ ]Clean up track select by only showing valid tracks. Check for standard track
+   names and show a cleaner version of the name if we know what it is.
 
-[X]Update Android code to use the platform edit box instead of relying on the
-   soft keyboard.
+[ ]Add multiplayer.
 
-[X]Calculate song speed multiplier from song's BPM data.
+[ ]Look into partial note hit acceptance. Some note combinations aren't playable
+   on keyboards due to hardware limitations.
 
-[X]Add song progress indicator. We will probably just have a rectangle at the
-   bottom of the screen that fills up as you play.
+[ ]Look into ranking issues.
 
-[X]Investigate why no songs are displayed in the song list.
+[ ]Look into measure markers. Not sure if this is feasible.
 
-   [X]The clipping rectangle isn't working properly. It probably has something
-      to do with the updated view code.
+[ ]Traverse MIDI ticks to generate beat markers instead of restarting each time
+   we hit a BPM change. BPM changes are not guaranteed to occur on beat markers.
 
-[X]Update icon set to comply with new T3F requirements.
-
-[X]Fix song loading issues for GH, RB, etc. GH shows no notes, BH crashes, etc.
-
-[X]Add profile system.
-
-[X]Store relevant info in the song list (artist, title, etc.).
-
-[X]Silence audio for current part if note is missed and there is an audio track
-   assigned.
-
-[X]Make song selection screen more intelligent by only allowing valid
-   selections.
-
-[X]Store scores in profile config. Should probably just store each song's score
-   info under a header using its unique ID. The scores should be stored using
-   the same obfuscation technique used by the leaderboard code.
-
-[X]Make controls configurable.
-
-[X]Add a way to adjust AV Delay.
-
-[X]Improve note hit detection.
-
-   [X]Hit closest matching note among hittable notes.
-
-   [X]Allow HOPO notes to be played more sloppily by allowing lower fret buttons to
-      be ignored.
-
-[X]Figure out why last note cannot be played.
-
-[X]Add support for forced HOPO.
-
-[X]Add touch screen controls.
-
-   [X]Add on-screen display of controller layout.
-
-   [X]Allow song list to be navigated with touch.
-
-[X]Add song results screen.
-
-[X]Add online leaderboard support.
-
-[X]Figure out why results screen is giving 0 platinums even when completing
-   song.
-
-[X]Prevent song list from scrolling past the end of the list.
-
-[X]Make icon.
-
-[X]Implement "perfect" bonus for hitting the notes sufficiently accurately.
-
-   [X]This should play into the awards system. We might require getting all
-      perfect hits to qualify for a multiplatinum award.
-
-[X]Select song folder from options screen or the first time the song list is
-   displayed.
-
-[X]Figure out why some HOPO notes aren't marked correctly. So far it looks like
-   it might be something to do with being the second note.
-
-[X]Add some sample songs to the game for people without song libraries to play
-   with.
-
-[X]Don't kill streak when strumming a HOPO note. Player should have the option
-   to strum if they want.
-
-[X]Stummed HOPO notes should count the accuracy of the stum and not the HOPO.
-   This will ensure scoring matches player intent.
-
-[X]Ensure strum actions are used up. Currently, it is possible to strum and then
-   press the appropriate notes and have it count as a hit. Need to check the
-   pressed member to determine if it is being properly reset.
-
-[X]Make sure root changelog gets packaged in the source package.
-
-[X]Fix HOPO being hittable even when previous note was not hit.
-
-[X]Get Android port up and running.
-
-   [X]Fix RTK IO module to allow using non-standard backends. We need it to be
-      able to open and read files through Allegro's IO routines in order to get
-      this port running.
-
-   [X]Figure out why AV Setup isn't working.
-
-   [X]Figure out why game crashes when trying to start a song.
-
-[X]Fix buggy touch input on menus. Menu items should only activate when
-   releasing a touch.
-
-[X]Figure out why there aren't enough beat markers being generated on some
-   songs.
-
-[X]Fix issue where controller input is disabled on menus. I think it is caused
-   by the text entry module being left activated.
-
-[ ]Got full combo, but song completion was marked 99%.
-
-[ ]Investigate crash issues.
-
-   [X]Crashes on game init.
-
-   [ ]Crashes on song audio start.
-
-[ ]Use smart logic to determine how many beats to add before the song audio. We
-   should ensure there are at least two measures before the first playable note
-   and we should only add enough beats to make two measure before time to play.
-
-   We can probably assume the first beat starts a measure and we should count
-   beats in groups of 4. If a note occurs within a measure, we can take note of
-   which measure it is in. If the note occurs before the third measure, we
-   should add the necessary measures worth of beats to get the pre-play measures
-   up to 2.
-
-   This will ensure that songs with extra delay added will not have excessive
-   delay, while songs that use the original CD audio can work well with the game
-   as well.
-
-[ ]Adjust board scroll speed and note positioning according to BPM.
-
-   All the game's logic will operate in ticks. Only the rendering will be
-   affected by these proposed changes.
-
-   [ ]Store note z-coordinates at init and use those during rendering.
-
-   [ ]Add camera so we can traverse the board.
-
-   [ ]Change camera speed when crossing a tempo event.
-
-      [ ]Store tempo events in LSS_SONG. We want to keep real-time calculations
-         to a minimum so we should store a copy of each tempo event with time
-         converted to in-game ticks.
-
-[X]Fix beat lines.
-
-   [X]When two beat markers are sufficiently close, they should be merged.
-
-   [X]Figure out why beat line accuracy is off for songs with no tempo changes.
-
-   [ ]Make beat line generation code more robust so it can handle "non-standard"
-      positioning of tempo changes.
-
-[ ]Adjust balance of failing mechanism. It is way too hard at the moment.
-
-[ ]Find what is causing the game to freeze sometimes when stopping the song
-   audio.
-
-[ ]Figure out a way to make sure the audio and video timing is consistent. I
-   think it can be fixed by using a mixer callback to let us know when some
-   some samples are being sent to the sound driver. If we start the streams at
-   that moment, we should have enough time to start the streams before the next
-   buffer fill is required and get more conistent timing as a result.
+[ ]Monitor audio playback position to ensure it doesn't desync.
