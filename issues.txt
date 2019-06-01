@@ -1,7 +1,7 @@
 Live Studio Sessions Issues
 ---------------------------
 
-[ ]Set default instrument volume for tracks being played by players to 100.
+[X]Set default instrument volume for tracks being played by players to 100.
 
 [ ]Set instrument volume for non-played tracks to 75% so the instruments players
    are playing are more prominent.
@@ -21,6 +21,18 @@ Live Studio Sessions Issues
    names and show a cleaner version of the name if we know what it is.
 
 [ ]Add multiplayer.
+
+   [ ]We'll need to rearrange the menus for this to work. Players will need to
+      be able to join and leave the game at will from the menus.
+
+   [ ]We'll need to allow configuring multiple controllers. Each controller will
+      need to have its own buttons accept and back actions. We might use the
+      color codes to represent these actions. Pressing the accept button should
+      immediately add a new player to the game.
+
+   [ ]The song list screen will need to be able to handle multiple players
+      making selections. Players will be able to select their desired track and
+      difficulty for the currently selected song.
 
 [ ]Look into partial note hit acceptance. Some note combinations aren't playable
    on keyboards due to hardware limitations.
