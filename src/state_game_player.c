@@ -323,6 +323,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 	bool hopo_strum = false;
 	bool hopo_strum_check = false; // true if we needed to check next_notes for valid strummable note
 	bool hopo_strum_pass = false;
+	bool strum = false;
 
 	lss_player_detect_visible_notes(gp, 0);
 	lss_player_detect_visible_beats(gp, 0);
@@ -392,6 +393,13 @@ void lss_player_logic(LSS_GAME * gp, int player)
 		handle_auto_strum(gp, 0);
 	}
 	if(gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed || gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].pressed || gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_FAST].pressed || gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_FAST].released)
+	{
+		if(!gp->player[0].block_menu_strum)
+		{
+			strum = true;
+		}
+	}
+	if(strum)
 	{
 		/* first check to see if we have strummed a HOPO note */
 		if(gp->player[0].playing_notes.notes && gp->player[0].playing_notes.hopo)
@@ -552,6 +560,7 @@ void lss_player_logic(LSS_GAME * gp, int player)
 	}
 	else
 	{
+		gp->player[0].block_menu_strum = false;
 		/* see if we are holding a sustain */
 		if(gp->player[0].playing_notes.notes)
 		{

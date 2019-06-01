@@ -25,6 +25,7 @@ typedef struct
 
 	LSS_PROFILE * profile;
 	LSS_CONTROLLER * controller; //pointer to controller used by player
+	bool block_menu_strum;
 
 	int selected_track;
 	int selected_difficulty;
