@@ -40,7 +40,14 @@ static int menu_proc_paused_resume(void * data, int i, void * p)
 	{
 		if(gp->song_audio->stream[j])
 		{
-			al_set_audio_stream_gain(gp->song_audio->stream[j], 1.0);
+			if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].stream == j)
+			{
+				al_set_audio_stream_gain(gp->song_audio->stream[j], gp->playing_audio_gain);
+			}
+			else
+			{
+				al_set_audio_stream_gain(gp->song_audio->stream[j], gp->backing_audio_gain);
+			}
 		}
 	}
 	if(gp->current_tick >= 0)
@@ -85,6 +92,9 @@ static T3F_GUI * create_pause_menu(LSS_RESOURCES * rp)
 
 bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path, LSS_RESOURCES * rp)
 {
+	const char * val;
+	int j;
+
 	t3f_debug_message("lss_game_initialize() enter\n");
 	al_stop_timer(t3f_timer);
 	t3f_debug_message("\tLoading textures...\n");
@@ -228,6 +238,38 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path, LSS_RESOURCES 
 	if(!gp->primitives)
 	{
 		return false;
+	}
+	gp->backing_audio_gain = 1.0;
+	val = al_get_config_value(t3f_config, "Live Studio Sessions", "Backing Audio Gain");
+	if(val)
+	{
+		gp->backing_audio_gain = atof(val);
+	}
+	gp->playing_audio_gain = 1.0;
+	val = al_get_config_value(t3f_config, "Live Studio Sessions", "Playing Audio Gain");
+	if(val)
+	{
+		gp->playing_audio_gain = atof(val);
+	}
+	gp->missed_audio_gain = 0.0;
+	val = al_get_config_value(t3f_config, "Live Studio Sessions", "Missed Audio Gain");
+	if(val)
+	{
+		gp->missed_audio_gain = atof(val);
+	}
+	for(j = 0; j < LSS_SONG_AUDIO_MAX_STREAMS; j++)
+	{
+		if(gp->song_audio->stream[j])
+		{
+			if(gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].stream == j)
+			{
+				al_set_audio_stream_gain(gp->song_audio->stream[j], gp->playing_audio_gain);
+			}
+			else
+			{
+				al_set_audio_stream_gain(gp->song_audio->stream[j], gp->backing_audio_gain);
+			}
+		}
 	}
 	gp->board_y = 420.0;
 //	gp->board_speed = 1.0;

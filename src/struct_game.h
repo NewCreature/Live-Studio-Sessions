@@ -62,6 +62,9 @@ typedef struct
 	LSS_SONG * song;
 	LSS_SONG_AUDIO * song_audio;
 	const char * song_id;
+	float backing_audio_gain;
+	float playing_audio_gain;
+	float missed_audio_gain;
 
 	ALLEGRO_BITMAP * note_texture[10];
 	ALLEGRO_BITMAP * fret_button_texture[5];
