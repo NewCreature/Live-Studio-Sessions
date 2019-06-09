@@ -93,7 +93,7 @@ static T3F_GUI * create_pause_menu(LSS_RESOURCES * rp)
 bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path, LSS_RESOURCES * rp)
 {
 	const char * val;
-	int j;
+	int j, k;
 
 	t3f_debug_message("lss_game_initialize() enter\n");
 	al_stop_timer(t3f_timer);
@@ -251,6 +251,12 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path, LSS_RESOURCES 
 	{
 		gp->playing_audio_gain = atof(val);
 	}
+	gp->not_playing_audio_gain = 1.0;
+	val = al_get_config_value(t3f_config, "Live Studio Sessions", "Not Playing Audio Gain");
+	if(val)
+	{
+		gp->not_playing_audio_gain = atof(val);
+	}
 	gp->missed_audio_gain = 0.0;
 	val = al_get_config_value(t3f_config, "Live Studio Sessions", "Missed Audio Gain");
 	if(val)
@@ -268,6 +274,16 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path, LSS_RESOURCES 
 			else
 			{
 				al_set_audio_stream_gain(gp->song_audio->stream[j], gp->backing_audio_gain);
+				if(j > 0)
+				{
+					for(k = 0; k < gp->song->source_midi->tracks; k++)
+					{
+						if(gp->song->track[k][gp->player[0].selected_difficulty].stream == j)
+						{
+							al_set_audio_stream_gain(gp->song_audio->stream[j], gp->not_playing_audio_gain);
+						}
+					}
+				}
 			}
 		}
 	}

@@ -64,6 +64,7 @@ typedef struct
 	const char * song_id;
 	float backing_audio_gain;
 	float playing_audio_gain;
+	float not_playing_audio_gain;
 	float missed_audio_gain;
 
 	ALLEGRO_BITMAP * note_texture[10];
