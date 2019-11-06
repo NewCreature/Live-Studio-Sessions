@@ -188,6 +188,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 	c = lss_song_list_count_collections(al_path_cstr(free_songs_path, '/'), 0);
 	c += lss_song_list_count_collections(al_path_cstr(included_songs_path, '/'), 0);
+	c += 1;
 	if(songs_path)
 	{
 		c += lss_song_list_count_collections(al_path_cstr(songs_path, '/'), 0);

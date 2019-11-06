@@ -51,6 +51,7 @@ void lss_destroy_song_list(LSS_SONG_LIST * dp);
 unsigned long lss_song_list_count_files(const char * location, int flags);
 unsigned long lss_song_list_count_collections(const char * location, int flags);
 void lss_song_list_add_files(LSS_SONG_LIST * dp, const ALLEGRO_PATH * path, int flags);
+void lss_song_list_add_collection(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int flags);
 void lss_song_list_collect_files(LSS_SONG_LIST * dp);
 
 void lss_song_list_sort(LSS_SONG_LIST * dp, int field, const char * filter);

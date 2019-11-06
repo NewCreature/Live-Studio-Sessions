@@ -43,6 +43,7 @@ LSS_SONG_LIST * lss_create_song_list(const char * fn, int entries, int collectio
 		free(dp);
 		return NULL;
 	}
+	lss_song_list_add_collection(dp, NULL, 0);
 	return dp;
 }
 
@@ -385,29 +386,39 @@ void lss_song_list_add_file(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int fla
 void lss_song_list_add_collection(LSS_SONG_LIST * dp, const ALLEGRO_PATH * pp, int flags)
 {
 	const char * val;
-	ALLEGRO_CONFIG * cp;
+	ALLEGRO_CONFIG * cp = NULL;
 
-	cp = al_load_config_file(al_path_cstr(pp, '/'));
-	if(!cp)
+	if(pp)
 	{
-		return;
+		cp = al_load_config_file(al_path_cstr(pp, '/'));
 	}
-//	printf("Adding song: %s\n", al_path_cstr(pp, '/'));
 	dp->collection[dp->collections] = malloc(sizeof(LSS_SONG_COLLECTION));
 	if(dp->collection[dp->collections])
 	{
-//		memset(&dp->entry[dp->entries], 0, sizeof(LSS_SONG_LIST_ENTRY));
-		dp->collection[dp->collections]->path = al_clone_path(pp);
-		al_set_path_filename(dp->collection[dp->collections]->path, NULL);
-//		dp->entry[dp->entries]->extra = NULL;
-		val = al_get_config_value(cp, "collection", "name");
-		if(val)
+		memset(dp->collection[dp->collections], 0, sizeof(LSS_SONG_COLLECTION));
+		if(pp)
 		{
-			strcpy(dp->collection[dp->collections]->name, val);
+			dp->collection[dp->collections]->path = al_clone_path(pp);
+			al_set_path_filename(dp->collection[dp->collections]->path, NULL);
+		}
+		if(cp)
+		{
+			val = al_get_config_value(cp, "collection", "name");
+			if(val)
+			{
+				strcpy(dp->collection[dp->collections]->name, val);
+			}
+		}
+		else
+		{
+			strcpy(dp->collection[dp->collections]->name, "No Collection");
 		}
 		dp->collections++;
 	}
-	al_destroy_config(cp);
+	if(cp)
+	{
+		al_destroy_config(cp);
+	}
 }
 
 void lss_song_list_add_files(LSS_SONG_LIST * dp, const ALLEGRO_PATH * path, int flags)
@@ -494,12 +505,15 @@ void lss_song_list_collect_files(LSS_SONG_LIST * dp)
 		for(i = 0; i < dp->entries; i++)
 		{
 			/* see if this song is part of a collection */
-			dp->entry[i]->collection = -1;
+			dp->entry[i]->collection = 0;
 			for(j = 0; j < dp->collections; j++)
 			{
-				if(lss_song_list_file_in_collection(dp->collection[j]->path, dp->entry[i]->path))
+				if(dp->collection[j]->path)
 				{
-					dp->entry[i]->collection = j;
+					if(lss_song_list_file_in_collection(dp->collection[j]->path, dp->entry[i]->path))
+					{
+						dp->entry[i]->collection = j;
+					}
 				}
 			}
 		}
