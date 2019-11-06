@@ -39,7 +39,7 @@ static bool lss_song_list_clicked = false;
 static int lss_song_list_sort_type = 0;
 static char lss_song_list_sort_filter[32] = {0};
 static bool lss_song_list_sort_query = false;
-static int lss_song_list_collection = -1;
+static int lss_song_list_collection = 0;
 
 void lss_state_song_list_initialize(APP_INSTANCE * app)
 {
@@ -416,7 +416,7 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 			lss_song_list_sort_query = false;
 		}
 		lss_song_list_collection--;
-		if(lss_song_list_collection < -1)
+		if(lss_song_list_collection < 0)
 		{
 			lss_song_list_collection = app->song_list->collections - 1;
 		}
@@ -435,7 +435,7 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 		lss_song_list_collection++;
 		if(lss_song_list_collection >= app->song_list->collections)
 		{
-			lss_song_list_collection = -1;
+			lss_song_list_collection = 0;
 		}
 		lss_song_list_sort_collection(app->song_list, lss_song_list_collection);
 		app->selected_song = 0;
