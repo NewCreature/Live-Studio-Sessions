@@ -3,8 +3,13 @@ Live Studio Sessions Issues
 
 [X]Set default instrument volume for tracks being played by players to 100.
 
-[ ]Set instrument volume for non-played tracks to 75% so the instruments players
+[X]Set instrument volume for non-played tracks to 75% so the instruments players
    are playing are more prominent.
+
+[ ]Add a way to select a random song.
+
+[ ]Look into partial note hit acceptance. Some note combinations aren't playable
+   on keyboards due to hardware limitations.
 
 [ ]See if we can make note tails for missed notes look better. We might render
    them below the fret button graphics and/or erase them as they cross over the
@@ -34,14 +39,9 @@ Live Studio Sessions Issues
       making selections. Players will be able to select their desired track and
       difficulty for the currently selected song.
 
-[ ]Look into partial note hit acceptance. Some note combinations aren't playable
-   on keyboards due to hardware limitations.
-
 [ ]Look into ranking issues.
 
 [ ]Look into measure markers. Not sure if this is feasible.
 
 [ ]Traverse MIDI ticks to generate beat markers instead of restarting each time
    we hit a BPM change. BPM changes are not guaranteed to occur on beat markers.
-
-[ ]Monitor audio playback position to ensure it doesn't desync.
