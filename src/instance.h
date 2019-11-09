@@ -30,6 +30,7 @@ typedef struct
 	int selected_track;
 	int selected_difficulty;
 
+	T3F_RNG_STATE rng_state;
 	int state;
 
 	LSS_TITLE_DATA title;

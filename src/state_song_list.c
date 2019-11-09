@@ -486,6 +486,11 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 	{
 		app->game.no_fail = !app->game.no_fail;
 	}
+	else if(app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_BLUE].pressed)
+	{
+		app->selected_song = t3f_rand(&app->rng_state) % app->song_list->visible_entries;
+		lss_state_song_list_center(app);
+	}
 	if(lss_song_list_sort_query)
 	{
 		lss_process_text_entry();

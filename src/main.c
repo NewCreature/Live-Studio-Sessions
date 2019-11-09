@@ -2,6 +2,7 @@
 #include "t3f/draw.h"
 #include "t3f/resource.h"
 #include "t3f/view.h"
+#include "t3f/rng.h"
 #include "t3f/debug.h"
 #ifndef T3F_ANDROID
 	#include <allegro5/allegro_native_dialog.h>
@@ -227,6 +228,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		return false;
 	}
+	t3f_srand(&app->rng_state, time(0));
 	app->title.block_count = 0;
 	app->state = LSS_STATE_TITLE;
 	t3f_debug_message("Loading configuration...\n");
