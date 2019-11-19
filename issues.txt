@@ -20,7 +20,9 @@ Live Studio Sessions Issues
 
    [ ]We'll need to implement a career view in the song list screen. The song
       list screen should support dividers and spacers so we can make the list
-      look nice and be intuitive to use.
+      look nice and be intuitive to use. We'll also need it to not list songs
+      that have not been unlocked in that career yet. We should also have some
+      sort of indicator on each song to show whether it has been passed.
 
 [ ]Look into partial note hit acceptance. Some note combinations aren't playable
    on keyboards due to hardware limitations.
