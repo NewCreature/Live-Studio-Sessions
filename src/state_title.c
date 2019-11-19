@@ -46,8 +46,31 @@ int lss_menu_proc_play(void * data, int i, void * p)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
+	lss_select_menu(&app->title, LSS_MENU_PLAY);
+	return 1;
+}
+
+int lss_menu_proc_play_quick_play(void * data, int i, void * p)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
 	lss_create_profiles_menu(app);
 	lss_select_menu(&app->title, LSS_MENU_PROFILES);
+	return 1;
+}
+
+int lss_menu_proc_play_career(void * data, int i, void * p)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	return 1;
+}
+
+int lss_menu_proc_play_back(void * data, int i, void * p)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	lss_select_menu(&app->title, LSS_MENU_MAIN);
 	return 1;
 }
 
@@ -424,6 +447,20 @@ bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp, LSS_SONG_LIST
 	t3f_add_gui_text_element(dp->menu[LSS_MENU_MAIN], lss_menu_proc_options, "Options", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 	pos += space;
 	t3f_add_gui_text_element(dp->menu[LSS_MENU_MAIN], lss_menu_proc_quit, "Quit", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+
+	dp->menu[LSS_MENU_PLAY] = t3f_create_gui(0, 0);
+	if(!dp->menu[LSS_MENU_PLAY])
+	{
+		return false;
+	}
+	pos = 0;
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_PLAY], NULL, "Live Studio Sessions - Play", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
+	pos += space * 2;
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_PLAY], lss_menu_proc_play_quick_play, "Quick Play", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	pos += space;
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_PLAY], lss_menu_proc_play_career, "Career", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	pos += space;
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_PLAY], lss_menu_proc_play_back, "Back", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 
 	/* new profile menu */
 	dp->menu[LSS_MENU_NEW_PROFILE] = t3f_create_gui(0, 0);

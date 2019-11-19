@@ -10,11 +10,13 @@
 #define LSS_MAX_MENUS        64
 
 #define LSS_MENU_MAIN         0
-#define LSS_MENU_OPTIONS      1
-#define LSS_MENU_PROFILES     2
-#define LSS_MENU_NEW_PROFILE  3
-#define LSS_MENU_CONTROLLERS  4
-#define LSS_MENU_CONTROLLER   5
-#define LSS_MENU_CONFIRM_EXIT 6
+#define LSS_MENU_PLAY         1
+#define LSS_MENU_PLAY_CAREER  2
+#define LSS_MENU_OPTIONS      3
+#define LSS_MENU_PROFILES     4
+#define LSS_MENU_NEW_PROFILE  5
+#define LSS_MENU_CONTROLLERS  6
+#define LSS_MENU_CONTROLLER   7
+#define LSS_MENU_CONFIRM_EXIT 8
 
 #endif
