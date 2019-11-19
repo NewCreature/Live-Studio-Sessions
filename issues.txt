@@ -6,7 +6,21 @@ Live Studio Sessions Issues
 [X]Set instrument volume for non-played tracks to 75% so the instruments players
    are playing are more prominent.
 
-[ ]Add a way to select a random song.
+[X]Add a way to select a random song.
+
+[ ]Add particle effects.
+
+[ ]Implement careers.
+
+   [ ]Careers should be customizable. You should be able to create a new career
+      based on a song collection, or by adding songs yourself. To start, we'll
+      just allow creating from a song collection. We need the underlying code to
+      be structured in such a way that a career is not tied to a specific song
+      collection so we can support custom careers.
+
+   [ ]We'll need to implement a career view in the song list screen. The song
+      list screen should support dividers and spacers so we can make the list
+      look nice and be intuitive to use.
 
 [ ]Look into partial note hit acceptance. Some note combinations aren't playable
    on keyboards due to hardware limitations.
