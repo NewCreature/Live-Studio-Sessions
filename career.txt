@@ -1,0 +1,26 @@
+Live Studio Sessions Career Mode Design Document
+------------------------------------------------
+
+A player's career begins with a humble demo tape. The player will record five
+songs onto a demo tape that will be sent to the record company.
+
+ * The player must select five unique songs from their song library to record.
+ * The songs are recorded in live studio sessions, where the player will play
+   the songs Guitar Hero style. Play accuracy affects the amount of money
+   offered by the record company to produce the first album.
+
+Once the player is an established recording artist, they are free to produce
+new records using songs from their song library.
+
+ * The goal is to accumulate a certain amount of money so that you can start
+   your own record company.
+ * Players choose ten songs from their song library to record for each album.
+ * Studio time costs money. You must spend your money wisely to make a profit on
+   your albums so you can accumulate enough to reach your eventual goal.
+ * Each album must be made of ten unique songs from the player's song library.
+ * Money is earned from records sold from finished albums. The amount is
+   determined by the total number of points and the accuracy of playback. Higher
+   difficulty means more money could be earned, but could also mean bankruptcy
+   if you are unable to produce your album before running out of money. The
+   player must have a certain amount of accuracy for a recording to be able to
+   be included on an album.
