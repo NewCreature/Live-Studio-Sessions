@@ -8,6 +8,9 @@ Live Studio Sessions Issues
 
 [X]Add a way to select a random song.
 
+[ ]Add option to cache song audio to mitigate skips when playing from slower
+   storage devices.
+
 [ ]Add particle effects.
 
 [ ]Implement careers.
