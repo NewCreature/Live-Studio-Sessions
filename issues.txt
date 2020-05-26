@@ -8,6 +8,17 @@ Live Studio Sessions Issues
 
 [X]Add a way to select a random song.
 
+[ ]Improve HOPO logic by not triggering HOPO until the note is reached. We
+   should track when the correct note was hit but not finalize the scoring
+   until the note window has passed or the player has triggered a subsequent
+   note. Basically, we want the visual feedback of the note being hit if the
+   HOPO was triggered by a tap. If the user later strums, we should adjust
+   the accuracy to reflect that.
+
+[ ]Add option to load the audio tracks completely into memory and stream them
+   from there. This will allow the game to work better on systems with slower
+   storage.
+
 [ ]Add particle effects.
 
 [ ]Implement careers.
