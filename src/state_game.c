@@ -467,13 +467,96 @@ static void check_for_pause(LSS_GAME * gp)
 	}
 }
 
+static double get_highest_audio_position(LSS_SONG_AUDIO * song_audio)
+{
+	int i;
+	double highest = 0.0;
+	double current;
+
+	for(i = 0; i < LSS_SONG_AUDIO_MAX_STREAMS; i++)
+	{
+		if(song_audio->stream[i])
+		{
+			current = al_get_audio_stream_position_secs(song_audio->stream[i]);
+			if(current > highest)
+			{
+				highest = current;
+			}
+		}
+	}
+	return highest;
+}
+
+static bool audio_synchronized(LSS_SONG_AUDIO * song_audio)
+{
+	int i;
+	double current_pos = -1.0;
+	double diff;
+
+	for(i = 0; i < LSS_SONG_AUDIO_MAX_STREAMS; i++)
+	{
+		if(song_audio->stream[i])
+		{
+			if(current_pos < 0.0)
+			{
+				current_pos = al_get_audio_stream_position_secs(song_audio->stream[i]);
+			}
+			else
+			{
+				diff = fabs(al_get_audio_stream_position_secs(song_audio->stream[i]) - current_pos);
+				if(diff > 0.1)
+				{
+					printf("diff: %f\n", diff);
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+
+static bool audio_playing(LSS_SONG_AUDIO * song_audio)
+{
+	int i;
+
+	for(i = 0; i < LSS_SONG_AUDIO_MAX_STREAMS; i++)
+	{
+		if(song_audio->stream[i])
+		{
+			if(al_get_audio_stream_playing(song_audio->stream[i]))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 void lss_game_logic(LSS_GAME * gp)
 {
+	int new_tick;
+
 	if(gp->paused)
 	{
 		lss_title_menu_logic(gp->pause_menu, gp->player[0].controller, 0, false, gp);
 		return;
 	}
+
+	/* handle A/V synchronization */
+	if(gp->song_audio->resync_video && audio_playing(gp->song_audio))
+	{
+		if(!audio_synchronized(gp->song_audio))
+		{
+			lss_set_song_audio_position(gp->song_audio, get_highest_audio_position(gp->song_audio));
+		}
+		new_tick = lss_get_song_audio_position(gp->song_audio) * 60.0;
+		if(new_tick - gp->current_tick < 0)
+		{
+			gp->current_tick = new_tick;
+		}
+		gp->song_audio->resync_video = false;
+	}
+
 	lss_player_logic(gp, 0);
 	if(t3f_key[ALLEGRO_KEY_UP])
 	{

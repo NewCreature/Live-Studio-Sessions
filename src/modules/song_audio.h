@@ -16,6 +16,9 @@ typedef struct
 	double length;
 	bool playing;
 
+	/* A/V synchronization */
+	bool resync_video;
+
 } LSS_SONG_AUDIO;
 
 LSS_SONG_AUDIO * lss_load_song_audio(ALLEGRO_PATH * pp);

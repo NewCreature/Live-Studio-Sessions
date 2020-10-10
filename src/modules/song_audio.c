@@ -90,6 +90,13 @@ static void lss_song_audio_callback(void * buf, unsigned int samples, void * dat
 	lss_song_audio_callback_counter++;
 }
 
+static void av_sync_callback(void * buf, unsigned int samples, void * data)
+{
+	LSS_SONG_AUDIO * song_audio = (LSS_SONG_AUDIO *)data;
+
+	song_audio->resync_video = true;
+}
+
 static bool wait_for_callback(void)
 {
 	double start_time = 0.0;
@@ -190,7 +197,7 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 
 		ap->playing = true;
 		t3f_debug_message("\tRemoving mixer callback...\n");
-		al_set_mixer_postprocess_callback(al_get_default_mixer(), NULL, NULL);
+		al_set_mixer_postprocess_callback(al_get_default_mixer(), av_sync_callback, ap);
 	}
 	else if(!playing && ap->playing)
 	{
@@ -204,6 +211,7 @@ bool lss_set_song_audio_playing(LSS_SONG_AUDIO * ap, bool playing)
 				al_detach_audio_stream(ap->stream[i]);
 			}
 		}
+		al_set_mixer_postprocess_callback(al_get_default_mixer(), NULL, NULL);
 //		al_detach_mixer(ap->mixer);
 //		al_destroy_mixer(ap->mixer);
 //		al_destroy_voice(ap->voice);
