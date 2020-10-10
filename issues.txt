@@ -46,6 +46,17 @@ Live Studio Sessions Issues
    should be able to detect when the audio has fallen behind and seek ahead when
    that occurs.
 
+   [ ]We should check the audio position each time the audio is updated. We can
+      to this with a signal processing callback. If we have multiple audio
+      tracks, we should bring all the tracks position to match the furthest
+      track.
+
+      To keep the visual position in check, we should check its accuracy each
+      time the audio is updated. We can set a flag in the signal processing
+      callback that tells the game to ensure the position is correct. We can
+      only do this once for each time the audio is updated or the game will run
+      choppy.
+
 [ ]Look into adjusting board speed on the fly based on the current BPM. This
    would make songs with major BPM changes work better but might not look good.
 
