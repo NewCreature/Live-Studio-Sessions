@@ -23,7 +23,7 @@ void lss_state_av_setup_logic(APP_INSTANCE * app)
 			t3f_touch[i].active = 0;
 		}
 	}
-	
+
 	lss_player_logic(&app->game, 0);
 	if(t3f_key[ALLEGRO_KEY_UP] || touch_up)
 	{
@@ -61,7 +61,7 @@ void lss_state_av_setup_render(APP_INSTANCE * app)
 	al_draw_bitmap(app->game.studio_image, 0, 0, 0);
 	lss_player_render_board(&app->game, 0);
 	al_hold_bitmap_drawing(true);
-	al_draw_textf(app->resources.font[LSS_FONT_LARGE], t3f_color_white, 0, 0, 0, "Live Studio Sessions - AV Setup");
-	al_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, 48, 0, "Delay - %d", app->game.av_delay);
+	t3f_draw_textf(app->resources.font[LSS_FONT_LARGE], t3f_color_white, 0, 0, 0, 0, "Live Studio Sessions - AV Setup");
+	t3f_draw_textf(app->resources.font[LSS_FONT_SMALL], t3f_color_white, 0, 48, 0, 0, "Delay - %d", app->game.av_delay);
 	al_hold_bitmap_drawing(false);
 }

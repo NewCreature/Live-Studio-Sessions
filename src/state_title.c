@@ -343,7 +343,7 @@ bool lss_create_profiles_menu(APP_INSTANCE * app)
 	int i, pos, space;
 	char name_buf[256];
 
-	space = al_get_font_line_height(app->resources.font[LSS_FONT_LARGE]);
+	space = t3f_get_font_line_height(app->resources.font[LSS_FONT_LARGE]);
 	if(app->title.menu[LSS_MENU_PROFILES])
 	{
 		t3f_destroy_gui(app->title.menu[LSS_MENU_PROFILES]);
@@ -376,7 +376,7 @@ bool lss_create_controller_menu(APP_INSTANCE * app)
 	int pos, space;
 	char buf[256];
 
-	space = al_get_font_line_height(app->resources.font[LSS_FONT_LARGE]);
+	space = t3f_get_font_line_height(app->resources.font[LSS_FONT_LARGE]);
 
 	/* controllers menu */
 	app->title.menu[LSS_MENU_CONTROLLER] = t3f_create_gui(0, 0);
@@ -424,10 +424,10 @@ bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp, LSS_SONG_LIST
 	t3f_set_gui_driver(NULL);
 	memset(dp->menu, 0, sizeof(T3F_GUI *) * LSS_MAX_MENUS);
 
-	space = al_get_font_line_height(rp->font[LSS_FONT_LARGE]);
+	space = t3f_get_font_line_height(rp->font[LSS_FONT_LARGE]);
 
 	t3f_srand(&dp->rng, time(0));
-	dp->logo_bitmap = t3f_load_resource((void *)(&dp->logo_bitmap), T3F_RESOURCE_TYPE_BITMAP, "data/lss_logo.png", 0, 0, 0);
+	dp->logo_bitmap = t3f_load_resource((void *)(&dp->logo_bitmap), t3f_bitmap_resource_handler_proc, "data/lss_logo.png", 0, 0, 0);
 	if(!dp->logo_bitmap)
 	{
 		return false;

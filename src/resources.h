@@ -10,7 +10,7 @@
 typedef struct
 {
 
-	ALLEGRO_FONT * font[LSS_MAX_FONTS];
+	T3F_FONT * font[LSS_MAX_FONTS];
 	ALLEGRO_BITMAP * platinum_bitmap;
 
 } LSS_RESOURCES;

@@ -371,7 +371,7 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 			lss_song_list_sort_query = true;
 		}
 	}
-	lss_song_list_space = al_get_font_line_height(app->resources.font[lss_song_list_font]);
+	lss_song_list_space = t3f_get_font_line_height(app->resources.font[lss_song_list_font]);
 	lss_song_list_visible = (540 - lss_song_list_space * 2) / lss_song_list_space;
 	lss_song_list_selected = false;
 	lss_state_song_list_mouse_logic(app);
@@ -533,17 +533,17 @@ void lss_state_song_list_song_select_render(APP_INSTANCE * app)
 
 	/* render filter info */
 	al_hold_bitmap_drawing(true);
-	al_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 4, 0 + 4, 0, "Sort By %s", type[lss_song_list_sort_type]);
-	al_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, 0, 0, 0, "Sort By %s", type[lss_song_list_sort_type]);
+	t3f_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 4, 0 + 4, 0, 0, "Sort By %s", type[lss_song_list_sort_type]);
+	t3f_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, 0, 0, 0, 0, "Sort By %s", type[lss_song_list_sort_type]);
 	if(lss_song_list_sort_type < 2)
 	{
-		al_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_default_view->right + 4, 0 + 4, ALLEGRO_ALIGN_RIGHT, "%s", lss_song_list_sort_filter);
-		al_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, t3f_default_view->right, 0, ALLEGRO_ALIGN_RIGHT, "%s", lss_song_list_sort_filter);
+		t3f_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_default_view->right + 4, 0 + 4, 0, ALLEGRO_ALIGN_RIGHT, "%s", lss_song_list_sort_filter);
+		t3f_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, t3f_default_view->right, 0, 0, ALLEGRO_ALIGN_RIGHT, "%s", lss_song_list_sort_filter);
 	}
 	else if(lss_song_list_collection >= 0)
 	{
-		al_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_default_view->right + 4, 0 + 4, ALLEGRO_ALIGN_RIGHT, "%s", app->song_list->collection[lss_song_list_collection]->name);
-		al_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, t3f_default_view->right, 0, ALLEGRO_ALIGN_RIGHT, "%s", app->song_list->collection[lss_song_list_collection]->name);
+		t3f_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_default_view->right + 4, 0 + 4, 0, ALLEGRO_ALIGN_RIGHT, "%s", app->song_list->collection[lss_song_list_collection]->name);
+		t3f_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, t3f_default_view->right, 0, 0, ALLEGRO_ALIGN_RIGHT, "%s", app->song_list->collection[lss_song_list_collection]->name);
 	}
 	al_hold_bitmap_drawing(false);
 
@@ -562,8 +562,8 @@ void lss_state_song_list_song_select_render(APP_INSTANCE * app)
 			color = al_map_rgba_f(0.75, 0.75, 0.75, 1.0);
 			offset = 2;
 		}
-		al_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 4, lss_song_list_space * 1 + i * lss_song_list_space - lss_song_list_scroll_pos + 4, 0, "%s - %s", app->song_list->entry[i]->artist, app->song_list->entry[i]->title);
-		al_draw_textf(app->resources.font[lss_song_list_font], color, 0 + offset, lss_song_list_space * 1 + i * lss_song_list_space - lss_song_list_scroll_pos + offset, 0, "%s - %s", app->song_list->entry[i]->artist, app->song_list->entry[i]->title);
+		t3f_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 4, lss_song_list_space * 1 + i * lss_song_list_space - lss_song_list_scroll_pos + 4, 0, 0, "%s - %s", app->song_list->entry[i]->artist, app->song_list->entry[i]->title);
+		t3f_draw_textf(app->resources.font[lss_song_list_font], color, 0 + offset, lss_song_list_space * 1 + i * lss_song_list_space - lss_song_list_scroll_pos + offset, 0, 0, "%s - %s", app->song_list->entry[i]->artist, app->song_list->entry[i]->title);
 	}
 	al_hold_bitmap_drawing(false);
 	t3f_set_clipping_rectangle(0, 0, 0, 0);
@@ -574,8 +574,8 @@ void lss_state_song_list_song_select_render(APP_INSTANCE * app)
 	if(val)
 	{
 		i_val = atoi(val);
-		al_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 4, 540 - lss_song_list_space + 4, 0, "High Score: %d", lss_unobfuscate_value(i_val));
-		al_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, 0, 540 - lss_song_list_space, 0, "High Score: %d", lss_unobfuscate_value(i_val));
+		t3f_draw_textf(app->resources.font[lss_song_list_font], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 4, 540 - lss_song_list_space + 4, 0, 0, "High Score: %d", lss_unobfuscate_value(i_val));
+		t3f_draw_textf(app->resources.font[lss_song_list_font], t3f_color_white, 0, 540 - lss_song_list_space, 0, 0, "High Score: %d", lss_unobfuscate_value(i_val));
 	}
 }
 

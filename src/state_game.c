@@ -78,7 +78,7 @@ static T3F_GUI * create_pause_menu(LSS_RESOURCES * rp)
 	if(gp)
 	{
 		pos = 0;
-		space = al_get_font_line_height(rp->font[LSS_FONT_LARGE]);
+		space = t3f_get_font_line_height(rp->font[LSS_FONT_LARGE]);
 		t3f_add_gui_text_element(gp, NULL, "Paused", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
 		pos += space * 2;
 		t3f_add_gui_text_element(gp, menu_proc_paused_resume, "Resume", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
@@ -103,107 +103,107 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path, LSS_RESOURCES 
 	{
 		return false;
 	}
-	gp->note_texture[0] = t3f_load_resource((void *)(&gp->note_texture[0]), T3F_RESOURCE_TYPE_BITMAP, "data/note_green_strum.png", 0, 0, 0);
+	gp->note_texture[0] = t3f_load_resource((void *)(&gp->note_texture[0]), t3f_bitmap_resource_handler_proc, "data/note_green_strum.png", 0, 0, 0);
 	if(!gp->note_texture[0])
 	{
 		return false;
 	}
-	gp->note_texture[1] = t3f_load_resource((void *)(&gp->note_texture[1]), T3F_RESOURCE_TYPE_BITMAP, "data/note_red_strum.png", 0, 0, 0);
+	gp->note_texture[1] = t3f_load_resource((void *)(&gp->note_texture[1]), t3f_bitmap_resource_handler_proc, "data/note_red_strum.png", 0, 0, 0);
 	if(!gp->note_texture[1])
 	{
 		return false;
 	}
-	gp->note_texture[2] = t3f_load_resource((void *)(&gp->note_texture[2]), T3F_RESOURCE_TYPE_BITMAP, "data/note_yellow_strum.png", 0, 0, 0);
+	gp->note_texture[2] = t3f_load_resource((void *)(&gp->note_texture[2]), t3f_bitmap_resource_handler_proc, "data/note_yellow_strum.png", 0, 0, 0);
 	if(!gp->note_texture[2])
 	{
 		return false;
 	}
-	gp->note_texture[3] = t3f_load_resource((void *)(&gp->note_texture[3]), T3F_RESOURCE_TYPE_BITMAP, "data/note_blue_strum.png", 0, 0, 0);
+	gp->note_texture[3] = t3f_load_resource((void *)(&gp->note_texture[3]), t3f_bitmap_resource_handler_proc, "data/note_blue_strum.png", 0, 0, 0);
 	if(!gp->note_texture[3])
 	{
 		return false;
 	}
-	gp->note_texture[4] = t3f_load_resource((void *)(&gp->note_texture[4]), T3F_RESOURCE_TYPE_BITMAP, "data/note_orange_strum.png", 0, 0, 0);
+	gp->note_texture[4] = t3f_load_resource((void *)(&gp->note_texture[4]), t3f_bitmap_resource_handler_proc, "data/note_orange_strum.png", 0, 0, 0);
 	if(!gp->note_texture[4])
 	{
 		return false;
 	}
-	gp->note_texture[5] = t3f_load_resource((void *)(&gp->note_texture[5]), T3F_RESOURCE_TYPE_BITMAP, "data/note_green.png", 0, 0, 0);
+	gp->note_texture[5] = t3f_load_resource((void *)(&gp->note_texture[5]), t3f_bitmap_resource_handler_proc, "data/note_green.png", 0, 0, 0);
 	if(!gp->note_texture[5])
 	{
 		return false;
 	}
-	gp->note_texture[6] = t3f_load_resource((void *)(&gp->note_texture[6]), T3F_RESOURCE_TYPE_BITMAP, "data/note_red.png", 0, 0, 0);
+	gp->note_texture[6] = t3f_load_resource((void *)(&gp->note_texture[6]), t3f_bitmap_resource_handler_proc, "data/note_red.png", 0, 0, 0);
 	if(!gp->note_texture[6])
 	{
 		return false;
 	}
-	gp->note_texture[7] = t3f_load_resource((void *)(&gp->note_texture[7]), T3F_RESOURCE_TYPE_BITMAP, "data/note_yellow.png", 0, 0, 0);
+	gp->note_texture[7] = t3f_load_resource((void *)(&gp->note_texture[7]), t3f_bitmap_resource_handler_proc, "data/note_yellow.png", 0, 0, 0);
 	if(!gp->note_texture[7])
 	{
 		return false;
 	}
-	gp->note_texture[8] = t3f_load_resource((void *)(&gp->note_texture[8]), T3F_RESOURCE_TYPE_BITMAP, "data/note_blue.png", 0, 0, 0);
+	gp->note_texture[8] = t3f_load_resource((void *)(&gp->note_texture[8]), t3f_bitmap_resource_handler_proc, "data/note_blue.png", 0, 0, 0);
 	if(!gp->note_texture[8])
 	{
 		return false;
 	}
-	gp->note_texture[9] = t3f_load_resource((void *)(&gp->note_texture[9]), T3F_RESOURCE_TYPE_BITMAP, "data/note_orange.png", 0, 0, 0);
+	gp->note_texture[9] = t3f_load_resource((void *)(&gp->note_texture[9]), t3f_bitmap_resource_handler_proc, "data/note_orange.png", 0, 0, 0);
 	if(!gp->note_texture[9])
 	{
 		return false;
 	}
-	gp->fret_button_texture[0] = t3f_load_resource((void *)(&gp->fret_button_texture[0]), T3F_RESOURCE_TYPE_BITMAP, "data/fret_button_green.png", 0, 0, 0);
+	gp->fret_button_texture[0] = t3f_load_resource((void *)(&gp->fret_button_texture[0]), t3f_bitmap_resource_handler_proc, "data/fret_button_green.png", 0, 0, 0);
 	if(!gp->fret_button_texture[0])
 	{
 		return false;
 	}
-	gp->fret_button_texture[1] = t3f_load_resource((void *)(&gp->fret_button_texture[1]), T3F_RESOURCE_TYPE_BITMAP, "data/fret_button_red.png", 0, 0, 0);
+	gp->fret_button_texture[1] = t3f_load_resource((void *)(&gp->fret_button_texture[1]), t3f_bitmap_resource_handler_proc, "data/fret_button_red.png", 0, 0, 0);
 	if(!gp->fret_button_texture[1])
 	{
 		return false;
 	}
-	gp->fret_button_texture[2] = t3f_load_resource((void *)(&gp->fret_button_texture[2]), T3F_RESOURCE_TYPE_BITMAP, "data/fret_button_yellow.png", 0, 0, 0);
+	gp->fret_button_texture[2] = t3f_load_resource((void *)(&gp->fret_button_texture[2]), t3f_bitmap_resource_handler_proc, "data/fret_button_yellow.png", 0, 0, 0);
 	if(!gp->fret_button_texture[2])
 	{
 		return false;
 	}
-	gp->fret_button_texture[3] = t3f_load_resource((void *)(&gp->fret_button_texture[3]), T3F_RESOURCE_TYPE_BITMAP, "data/fret_button_blue.png", 0, 0, 0);
+	gp->fret_button_texture[3] = t3f_load_resource((void *)(&gp->fret_button_texture[3]), t3f_bitmap_resource_handler_proc, "data/fret_button_blue.png", 0, 0, 0);
 	if(!gp->fret_button_texture[3])
 	{
 		return false;
 	}
-	gp->fret_button_texture[4] = t3f_load_resource((void *)(&gp->fret_button_texture[4]), T3F_RESOURCE_TYPE_BITMAP, "data/fret_button_orange.png", 0, 0, 0);
+	gp->fret_button_texture[4] = t3f_load_resource((void *)(&gp->fret_button_texture[4]), t3f_bitmap_resource_handler_proc, "data/fret_button_orange.png", 0, 0, 0);
 	if(!gp->fret_button_texture[4])
 	{
 		return false;
 	}
-	gp->studio_image = t3f_load_resource((void *)(&gp->studio_image), T3F_RESOURCE_TYPE_BITMAP, "data/studio.png", 0, 0, 0);
+	gp->studio_image = t3f_load_resource((void *)(&gp->studio_image), t3f_bitmap_resource_handler_proc, "data/studio.png", 0, 0, 0);
 	if(!gp->studio_image)
 	{
 		return false;
 	}
-	gp->fret_board_image = t3f_load_resource((void *)(&gp->fret_board_image), T3F_RESOURCE_TYPE_BITMAP, "data/fret_board.png", 0, 0, 0);
+	gp->fret_board_image = t3f_load_resource((void *)(&gp->fret_board_image), t3f_bitmap_resource_handler_proc, "data/fret_board.png", 0, 0, 0);
 	if(!gp->fret_board_image)
 	{
 		return false;
 	}
-	gp->fret_buttons_image = t3f_load_resource((void *)(&gp->fret_buttons_image), T3F_RESOURCE_TYPE_BITMAP, "data/fret_buttons.png", 0, 0, 0);
+	gp->fret_buttons_image = t3f_load_resource((void *)(&gp->fret_buttons_image), t3f_bitmap_resource_handler_proc, "data/fret_buttons.png", 0, 0, 0);
 	if(!gp->fret_buttons_image)
 	{
 		return false;
 	}
-	gp->beat_line_image = t3f_load_resource((void *)(&gp->beat_line_image), T3F_RESOURCE_TYPE_BITMAP, "data/beat_line.png", 0, 0, 0);
+	gp->beat_line_image = t3f_load_resource((void *)(&gp->beat_line_image), t3f_bitmap_resource_handler_proc, "data/beat_line.png", 0, 0, 0);
 	if(!gp->beat_line_image)
 	{
 		return false;
 	}
-	gp->fret_button_image = t3f_load_resource((void *)(&gp->fret_button_image), T3F_RESOURCE_TYPE_BITMAP, "data/fret_button.png", 0, 0, 0);
+	gp->fret_button_image = t3f_load_resource((void *)(&gp->fret_button_image), t3f_bitmap_resource_handler_proc, "data/fret_button.png", 0, 0, 0);
 	if(!gp->fret_button_image)
 	{
 		return false;
 	}
-	gp->strum_bar_image = t3f_load_resource((void *)(&gp->strum_bar_image), T3F_RESOURCE_TYPE_BITMAP, "data/strum_bar.png", 0, 0, 0);
+	gp->strum_bar_image = t3f_load_resource((void *)(&gp->strum_bar_image), t3f_bitmap_resource_handler_proc, "data/strum_bar.png", 0, 0, 0);
 	if(!gp->strum_bar_image)
 	{
 		return false;
@@ -617,14 +617,14 @@ void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)
 	al_draw_filled_rectangle(0, t3f_default_view->bottom - progress_height, t3f_virtual_display_width * completed, t3f_default_view->bottom, al_map_rgba_f(1.0, 1.0, 0.0, 1.0));
 	al_hold_bitmap_drawing(true);
 	n = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes;
-	al_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 2, 0 + 2, 0, "Streak: %d", gp->player[0].streak);
-	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 0, 0, "Streak: %d", gp->player[0].streak);
-	al_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 2, 24 + 2, 0, "Multiplier: %d", gp->player[0].multiplier);
-	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 24, 0, "Multiplier: %d", gp->player[0].multiplier);
-	al_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 2, 48 + 2, 0, "Life: %d", gp->player[0].life);
-	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 48, 0, "Life: %d", gp->player[0].life);
-	al_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 480 + 2, 0 + 2, ALLEGRO_ALIGN_CENTRE, "Score: %d", gp->player[0].score);
-	al_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 480, 0, ALLEGRO_ALIGN_CENTRE, "Score: %d", gp->player[0].score);
+	t3f_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 2, 0 + 2, 0, 0, "Streak: %d", gp->player[0].streak);
+	t3f_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 0, 0, 0, "Streak: %d", gp->player[0].streak);
+	t3f_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 2, 24 + 2, 0, 0, "Multiplier: %d", gp->player[0].multiplier);
+	t3f_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 24, 0, 0, "Multiplier: %d", gp->player[0].multiplier);
+	t3f_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 2, 48 + 2, 0, 0, "Life: %d", gp->player[0].life);
+	t3f_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 48, 0, 0, "Life: %d", gp->player[0].life);
+	t3f_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 480 + 2, 0 + 2, 0, ALLEGRO_ALIGN_CENTRE, "Score: %d", gp->player[0].score);
+	t3f_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 480, 0, 0, ALLEGRO_ALIGN_CENTRE, "Score: %d", gp->player[0].score);
 	al_hold_bitmap_drawing(false);
 	if(gp->paused)
 	{
