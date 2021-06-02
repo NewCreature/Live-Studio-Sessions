@@ -92,12 +92,12 @@ void lss_state_logic(APP_INSTANCE * app)
 				al_stop_timer(t3f_timer);
 				if(app->game.player[0].score > 0)
 				{
-					if(!t3net_upload_score("http://www.t3-i.com/t3net2/leaderboards/insert.php", "live_studio_sessions", "0.1", buf[0], app->song_list->entry[app->selected_song]->id, buf[1], lss_obfuscate_value(app->game.player[0].score), NULL))
+					if(!t3net_upload_score(T3NET_CURL_DEFAULT, "https://www.t3-i.com/t3net2/leaderboards/insert.php", "live_studio_sessions", "0.1", buf[0], app->song_list->entry[app->selected_song]->id, buf[1], lss_obfuscate_value(app->game.player[0].score), NULL))
 					{
 						printf("failed to upload score\n");
 					}
 				}
-				app->leaderboard = t3net_get_leaderboard("http://www.t3-i.com/t3net2/leaderboards/query.php", "live_studio_sessions", "0.1", buf[0], app->song_list->entry[app->selected_song]->id, 10, 0);
+				app->leaderboard = t3net_get_leaderboard(T3NET_CURL_DEFAULT, "https://www.t3-i.com/t3net2/leaderboards/query.php", "live_studio_sessions", "0.1", buf[0], app->song_list->entry[app->selected_song]->id, 10, 0);
 				if(!app->leaderboard)
 				{
 					printf("Failed to download leaderboard\n");

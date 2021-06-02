@@ -119,6 +119,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		}
 	#endif
 
+	t3net_setup(NULL, al_path_cstr(t3f_temp_path, '/'));
 	t3f_debug_message("Initializing controllers...\n");
 	app->controller[0].controller = t3f_create_controller(9);
 	if(!app->controller[0].controller)
