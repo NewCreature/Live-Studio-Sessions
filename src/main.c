@@ -281,5 +281,6 @@ int main(int argc, char * argv[])
 	}
 	app_exit(app);
 	lss_destroy_instance(app);
+	t3f_finish();
 	return 0;
 }
