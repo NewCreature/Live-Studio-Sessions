@@ -34,6 +34,8 @@
 #define T3F_USE_MENU           2048
 #define T3F_NO_SCALE           4096
 #define T3F_USE_FIXED_PIPELINE 8192
+#define T3F_ANY_ORIENTATION   16384
+#define T3F_RESET_DISPLAY     32768
 #define T3F_DEFAULT (T3F_USE_KEYBOARD | T3F_USE_MOUSE | T3F_USE_JOYSTICK | T3F_USE_TOUCH | T3F_USE_SOUND | T3F_FORCE_ASPECT)
 
 #define T3F_MAX_OPTIONS                 64
@@ -47,16 +49,20 @@
 
 #define T3F_MAX_JOYSTICKS 16
 
-#define T3F_MAX_TOUCHES   64
+#define T3F_MAX_TOUCHES   16
 
 #define T3F_MAX_STACK     16
 
 typedef struct
 {
 
+	int id; // track which id this touch is associated with
+
+	/* user-facing members */
 	bool active; // is this touch active?
+	bool pressed;
 	bool released;
-    float real_x, real_y; // the actual screen coordinates
+	float real_x, real_y; // the actual screen coordinates
 	float x, y; // coordinates transformed to for a view
 	bool primary;
 
@@ -85,6 +91,8 @@ typedef struct
 #include "tilemap.h"
 #include "vector.h"
 #include "view.h"
+#include "achievements.h"
+#include "steam.h"
 
 extern int t3f_virtual_display_width;
 extern int t3f_virtual_display_height;
@@ -99,19 +107,18 @@ extern int t3f_real_mouse_y;
 extern float t3f_mouse_x;
 extern float t3f_mouse_y;
 extern int t3f_mouse_z;
-extern int t3f_mouse_dx;
-extern int t3f_mouse_dy;
-extern int t3f_mouse_dz;
 extern bool t3f_mouse_button[16];
 extern bool t3f_mouse_hidden;
 
 extern ALLEGRO_JOYSTICK * t3f_joystick[T3F_MAX_JOYSTICKS];
 extern ALLEGRO_JOYSTICK_STATE t3f_joystick_state[T3F_MAX_JOYSTICKS];
+extern bool t3f_joystick_state_updated[T3F_MAX_JOYSTICKS];
 extern T3F_TOUCH t3f_touch[T3F_MAX_TOUCHES];
 extern ALLEGRO_DISPLAY * t3f_display;
 extern ALLEGRO_TIMER * t3f_timer;
 extern ALLEGRO_EVENT_QUEUE * t3f_queue;
 extern ALLEGRO_CONFIG * t3f_config;
+extern ALLEGRO_CONFIG * t3f_user_data;
 extern ALLEGRO_PATH * t3f_data_path;
 extern ALLEGRO_PATH * t3f_config_path;
 extern ALLEGRO_PATH * t3f_temp_path;
@@ -124,11 +131,13 @@ extern ALLEGRO_COLOR t3f_color_black;
 
 int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_proc)(void * data), void (*render_proc)(void * data), int flags, void * data);
 void t3f_set_option(int option, int value);
+bool t3f_option_is_set(int option);
 int t3f_set_gfx_mode(int w, int h, int flags);
 void t3f_set_clipping_rectangle(int x, int y, int w, int h);
 void t3f_set_event_handler(void (*proc)(ALLEGRO_EVENT * event, void * data));
 void t3f_exit(void);
 bool t3f_save_config(void);
+bool t3f_save_user_data(void);
 void t3f_event_handler(ALLEGRO_EVENT * event);
 void t3f_process_events(bool ignore);
 void t3f_render(bool flip);
