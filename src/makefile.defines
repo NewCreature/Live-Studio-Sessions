@@ -7,24 +7,30 @@ include makefile.include
 #########################
 # * Android domain and name cannot contain '-' or '_' characters
 #########################
-APP_COMPANY = t3-i
+APP_COMPANY = tcubedsoftware
 APP_NAME = live-studio-sessions
 APP_TITLE = Live\ Studio\ Sessions
+APP_DATA_DIR = $(APP_TITLE)
 APP_VERSION = 0.2.1
 APP_RELEASE = 3
-APP_PUBLISHER = T³\ Software
-APP_COPYRIGHT = Copyright\ (C)\ 2021\ T\ Cubed\ Software.
-APP_ANDROID_PACKAGE = com.t3i.livestudiosessions
+APP_PUBLISHER = T\ Cubed\ Software
+APP_COPYRIGHT = Copyright\ (C)\ 2024\ T\ Cubed\ Software.
+APP_ANDROID_PACKAGE = com.tcubedsoftware.livestudiosessions
 APP_ORIENTATION = landscape
-APP_URL = https://www.t3-i.com
+APP_URL = https://www.tcubedsoftware.com
+APP_STEAM_ID = 0
+APP_BG_COLOR = \#FF2F97DA
 APP_OBJECTS = rtk/io.o rtk/midi.o rtk/io_allegro.o t3net/t3net.o modules/song_list.o \
               modules/song_audio.o modules/song.o modules/controller.o \
               modules/obfuscate.o modules/text_entry.o modules/profile.o \
               modules/gui.o main.o state.o state_game.o state_game_results.o \
               resources.o state_game_player.o state_title.o state_av_setup.o \
               state_song_list.o t3net/leaderboard.o instance.o
-APP_PACKAGE_DIR = ../packages
+#APP_LIBS =
 APP_CFLAGS = -O2 -Wall -I.
+APP_CXXFLAGS = -std=c++11
+#APP_EXTRA_TARGET =
+APP_PACKAGE_DIR = ../packages
 app_clean:
 #	@
 
@@ -34,7 +40,7 @@ app_clean:
 MACOS_CFLAGS = -DT3NET_NO_LIBCURL
 #MACOS_PLATFORM_OBJECTS =
 #MACOS_PLATFORM_LIBS =
-MACOS_DEPEND_LIBS =
+#MACOS_DEPEND_LIBS =
 #MACOS_PLATFORM_TARGET =
 
 ###############
