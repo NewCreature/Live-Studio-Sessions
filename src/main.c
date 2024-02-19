@@ -106,7 +106,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	const char * val;
 
 	/* initialize T3F */
-	if(!t3f_initialize("Live Studio Sessions", 960, 540, 60.0, app_logic, app_render, T3F_DEFAULT, app))
+	if(!t3f_initialize("Live Studio Sessions", 960, 540, 60.0, app_logic, app_render, T3F_DEFAULT | T3F_USE_FIXED_PIPELINE | T3F_USE_FULLSCREEN, app))
 	{
 		printf("Error initializing T3F\n");
 		return false;
