@@ -37,7 +37,7 @@ app_clean:
 ##################
 # Mac OS X stuff #
 ##################
-MACOS_CFLAGS = -DT3NET_NO_LIBCURL
+#MACOS_CFLAGS =
 #MACOS_PLATFORM_OBJECTS =
 #MACOS_PLATFORM_LIBS =
 #MACOS_DEPEND_LIBS =
