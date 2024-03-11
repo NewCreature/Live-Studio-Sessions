@@ -17,6 +17,9 @@
 
 #define LSS_SONG_PLACEMENT_SCALE       12 // 1 tick is equal to 12 z-units
 
+#define LSS_SONG_TRACK_TYPE_INSTRUMENT  0
+#define LSS_SONG_TRACK_TYPE_GAMEPAD     1
+
 typedef struct
 {
 

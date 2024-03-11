@@ -109,6 +109,10 @@ bool lss_save_profiles(LSS_PROFILES * pp)
 	char buf[1024];
 	int i, j;
 
+	if(!pp)
+	{
+		return false;
+	}
 	old_interface = al_get_new_file_interface();
 	al_set_standard_file_interface();
 	for(i = 0; i < pp->entries; i++)

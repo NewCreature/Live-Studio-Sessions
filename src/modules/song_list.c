@@ -51,22 +51,25 @@ void lss_destroy_song_list(LSS_SONG_LIST * dp)
 {
 	int i;
 
-	if(dp->cache)
+	if(dp)
 	{
-		al_save_config_file(dp->cache_filename, dp->cache);
-		al_destroy_config(dp->cache);
+		if(dp->cache)
+		{
+			al_save_config_file(dp->cache_filename, dp->cache);
+			al_destroy_config(dp->cache);
+		}
+		for(i = 0; i < dp->entries; i++)
+		{
+			free(dp->entry[i]);
+		}
+		free(dp->entry);
+		for(i = 0; i < dp->collections; i++)
+		{
+			free(dp->collection[i]);
+		}
+		free(dp->collection);
+		free(dp);
 	}
-	for(i = 0; i < dp->entries; i++)
-	{
-		free(dp->entry[i]);
-	}
-	free(dp->entry);
-	for(i = 0; i < dp->collections; i++)
-	{
-		free(dp->collection[i]);
-	}
-	free(dp->collection);
-	free(dp);
 }
 
 static bool compare_filename(const ALLEGRO_PATH * path, const char * fn)

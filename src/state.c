@@ -92,7 +92,7 @@ void lss_state_logic(APP_INSTANCE * app)
 				al_stop_timer(t3f_timer);
 				if(app->game.player[0].score > 0)
 				{
-					if(!t3net_upload_score("https://www.tcubedsoftware.com/scripts/leaderboards/update.php", "live_studio_sessions", "0.1", buf[0], app->song_list->entry[app->selected_song]->id, NULL, lss_obfuscate_value(app->game.player[0].score), NULL))
+					//if(!t3net_upload_score("https://www.tcubedsoftware.com/scripts/leaderboards/update.php", "live_studio_sessions", "0.1", buf[0], app->song_list->entry[app->selected_song]->id, NULL, lss_obfuscate_value(app->game.player[0].score), NULL))
 					{
 						printf("failed to upload score\n");
 					}
@@ -112,7 +112,7 @@ void lss_state_logic(APP_INSTANCE * app)
 		{
 			lss_game_results_logic(app);
 			lss_read_controller(&app->controller[0]);
-			if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || app->controller[0].controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
+			if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || app->controller[0].input->element[T3F_GAMEPAD_A].pressed)
 			{
 				if(app->leaderboard)
 				{
@@ -148,8 +148,11 @@ void lss_state_render(APP_INSTANCE * app)
 		case LSS_STATE_TITLE_LOGO:
 		{
 			al_clear_to_color(al_map_rgba_f(0.5, 0.25, 0.25, 1.0));
-			al_draw_tinted_bitmap(app->title.logo_bitmap, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 480 - al_get_bitmap_width(app->title.logo_bitmap) / 2 + 4, 270 - al_get_bitmap_height(app->title.logo_bitmap) / 2 + 4, 0);
-			al_draw_bitmap(app->title.logo_bitmap, 480 - al_get_bitmap_width(app->title.logo_bitmap) / 2, 270 - al_get_bitmap_height(app->title.logo_bitmap) / 2, 0);
+			if(app->title.logo_bitmap)
+			{
+				al_draw_tinted_bitmap(app->title.logo_bitmap, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 480 - al_get_bitmap_width(app->title.logo_bitmap) / 2 + 4, 270 - al_get_bitmap_height(app->title.logo_bitmap) / 2 + 4, 0);
+				al_draw_bitmap(app->title.logo_bitmap, 480 - al_get_bitmap_width(app->title.logo_bitmap) / 2, 270 - al_get_bitmap_height(app->title.logo_bitmap) / 2, 0);
+			}
 			break;
 		}
 		case LSS_STATE_TITLE:

@@ -1,6 +1,7 @@
 #include "t3f/t3f.h"
 #include "t3f/view.h"
 #include "t3f/draw.h"
+#include "t3f/input.h"
 
 #include "modules/obfuscate.h"
 
@@ -60,7 +61,7 @@ static bool lss_player_check_notes(LSS_SONG * sp, LSS_PLAYER * pp, int note[], i
 	}
 	for(i = 0; i < 5; i++)
 	{
-		if(pp->controller->controller->state[i].held)
+		if(pp->controller->input->element[pp->controller->map[i]].held)
 		{
 			tap_lane |= (1 << i);
 		}
@@ -84,7 +85,7 @@ static bool lss_player_check_notes_lenient(LSS_SONG * sp, LSS_PLAYER * pp, int n
 	}
 	for(i = 0; i < 5; i++)
 	{
-		if(pp->controller->controller->state[i].held)
+		if(pp->controller->input->element[pp->controller->map[i]].held)
 		{
 			tap_lane |= (1 << i);
 		}
@@ -277,7 +278,7 @@ static void handle_auto_strum(LSS_GAME * gp, int player)
 
 	for(i = 0; i < 5; i++)
 	{
-		if(gp->player[player].controller->controller->state[i].held)
+		if(gp->player[player].controller->input->element[gp->player[player].controller->map[i]].held)
 		{
 			gp->player[player].controller->fret_button_tick[i]++;
 			if(gp->player[player].controller->fret_button_tick[i] > 10)
@@ -302,7 +303,7 @@ static void handle_auto_strum(LSS_GAME * gp, int player)
 		{
 			if(allow_strum && !gp->player[0].controller->block_strum)
 			{
-				gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed = true;
+				gp->player[0].controller->input->element[gp->player[0].controller->map[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN]].pressed = true;
 				gp->player[0].controller->block_strum = true;
 			}
 		}
@@ -388,11 +389,11 @@ void lss_player_logic(LSS_GAME * gp, int player)
 
 	/* check for note hits */
 	lss_read_controller(gp->player[0].controller);
-	if(gp->player[0].controller->source == LSS_CONTROLLER_SOURCE_TOUCH)
+	if(gp->song->track[gp->player[0].selected_track]->type == LSS_SONG_TRACK_TYPE_GAMEPAD)
 	{
 		handle_auto_strum(gp, 0);
 	}
-	if(gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed || gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].pressed || gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_FAST].pressed || gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_FAST].released)
+	if(gp->player[0].controller->input->element[T3F_GAMEPAD_RIGHT_TRIGGER].pressed || gp->player[0].controller->input->element[T3F_GAMEPAD_LEFT_TRIGGER].pressed || gp->player[0].controller->input->element[T3F_GAMEPAD_LEFT_TRIGGER].released)
 	{
 		if(!gp->player[0].block_menu_strum)
 		{
@@ -872,6 +873,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	color_chart[3] = LSS_NOTE_COLOR_3;
 	color_chart[4] = LSS_NOTE_COLOR_4;
 
+	t3f_select_view(gp->player[player].view);
 	al_hold_bitmap_drawing(true);
 //	lss_player_render_primitive_fretboard(gp, player);
 	al_draw_bitmap(gp->fret_board_image, 200, 320, 0);
@@ -903,7 +905,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 	al_draw_bitmap(gp->fret_buttons_image, 200, 320, 0);
 	for(i = 0; i < 5; i++)
 	{
-		if(!gp->paused && gp->player[0].controller->controller->state[i].down)
+		if(!gp->paused && gp->player[0].controller->input->element[gp->player[0].controller->map[i]].held)
 		{
 			a = 1.0;
 		}
@@ -1043,7 +1045,7 @@ void lss_player_render_board(LSS_GAME * gp, int player)
 		c = al_get_bitmap_width(gp->fret_button_image) / 2;
 		for(i = 0; i < 5; i++)
 		{
-			if(gp->player[0].controller->controller->state[i].down)
+			if(gp->player[0].controller->input->element[gp->player[0].controller->map[i]].held)
 			{
 				a = 1.0;
 			}

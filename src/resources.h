@@ -7,11 +7,15 @@
 #define LSS_FONT_SMALL 0
 #define LSS_FONT_LARGE 1
 
+#define LSS_MAX_BITMAPS     16
+#define LSS_BITMAP_TITLE_BG  0
+#define LSS_BITMAP_PLATINUM  1
+
 typedef struct
 {
 
 	T3F_FONT * font[LSS_MAX_FONTS];
-	ALLEGRO_BITMAP * platinum_bitmap;
+	ALLEGRO_BITMAP * bitmap[LSS_MAX_BITMAPS];
 
 } LSS_RESOURCES;
 

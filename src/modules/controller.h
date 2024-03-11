@@ -1,7 +1,7 @@
 #ifndef LSS_CONTROLLER_H
 #define LSS_CONTROLLER_H
 
-#include "t3f/controller.h"
+#include "t3f/input.h"
 
 #define LSS_MAX_CONTROLLERS         16
 
@@ -30,7 +30,8 @@
 typedef struct
 {
 
-	T3F_CONTROLLER * controller;
+	T3F_INPUT_HANDLER * input;
+	int map[32]; // map our controls to 'input'
 	int type, source;
 
 	/* touch-specific info */
@@ -39,6 +40,8 @@ typedef struct
 
 } LSS_CONTROLLER;
 
+void lss_map_keyboard_instrument_controls(LSS_CONTROLLER * cp);
+void lss_map_keyboard_gamepad_controls(LSS_CONTROLLER * cp);
 void lss_read_controller(LSS_CONTROLLER * cp);
 
 #endif

@@ -19,4 +19,8 @@
 #define LSS_MENU_CONTROLLER   7
 #define LSS_MENU_CONFIRM_EXIT 8
 
+#define LSS_MENU_TOP    100
+#define LSS_MENU_BOTTOM t3f_default_view->bottom
+#define LSS_MENU_LEFT   64
+
 #endif

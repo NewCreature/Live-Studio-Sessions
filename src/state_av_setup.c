@@ -58,7 +58,7 @@ void lss_state_av_setup_logic(APP_INSTANCE * app)
 
 void lss_state_av_setup_render(APP_INSTANCE * app)
 {
-	al_draw_bitmap(app->game.studio_image, 0, 0, 0);
+	t3f_draw_scaled_bitmap(app->game.studio_image, t3f_color_white, 0, 0, 0, 960, 540, 0);
 	lss_player_render_board(&app->game, 0);
 	al_hold_bitmap_drawing(true);
 	t3f_draw_textf(app->resources.font[LSS_FONT_LARGE], t3f_color_white, 0, 0, 0, 0, "Live Studio Sessions - AV Setup");

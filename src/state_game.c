@@ -79,21 +79,83 @@ static T3F_GUI * create_pause_menu(LSS_RESOURCES * rp)
 	{
 		pos = 0;
 		space = t3f_get_font_line_height(rp->font[LSS_FONT_LARGE]);
-		t3f_add_gui_text_element(gp, NULL, "Paused", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
+		t3f_add_gui_text_element(gp, NULL, "Paused", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
 		pos += space * 2;
-		t3f_add_gui_text_element(gp, menu_proc_paused_resume, "Resume", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+		t3f_add_gui_text_element(gp, menu_proc_paused_resume, "Resume", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 		pos += space;
-		t3f_add_gui_text_element(gp, menu_proc_paused_quit, "Quit", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+		t3f_add_gui_text_element(gp, menu_proc_paused_quit, "Quit", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 		pos += space;
 		t3f_center_gui(gp, t3f_default_view->top, t3f_default_view->bottom);
 	}
 	return gp;
 }
 
+static bool setup_player_views(LSS_GAME * gp)
+{
+	int i, j, c, x, y, w, h;
+	int w1 = t3f_default_view->right - t3f_default_view->left;
+	int h1 = t3f_default_view->bottom - t3f_default_view->top;
+	int w2 = (t3f_default_view->right - t3f_default_view->left) / 2;
+	int h2 = (t3f_default_view->bottom - t3f_default_view->top) / 2;
+	int w3 = (t3f_default_view->right - t3f_default_view->left) / 4;
+	int h3 = (t3f_default_view->bottom - t3f_default_view->top) / 4;
+	int xywh1[] = {t3f_default_view->left, t3f_default_view->top, w1, h1};
+	int xywh2[] = {t3f_default_view->left, t3f_default_view->top + h2, w2, h2, t3f_default_view->left + w2, t3f_default_view->top + h2, w2, h2};
+	int xywh3[] = {t3f_default_view->left, t3f_default_view->top + h2, w2, h2, t3f_default_view->left + w2, t3f_default_view->top + h2, w2, h2, t3f_default_view->left, t3f_default_view->top, w2, h2};
+	int xywh4[] = {t3f_default_view->left, t3f_default_view->top + h2, w2, h2, t3f_default_view->left + w2, t3f_default_view->top + h2, w2, h2, t3f_default_view->left, t3f_default_view->top, w2, h2, t3f_default_view->left + w2, t3f_default_view->top, w2, h2};
+	int xywh5[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	int xywh6[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	int xywh7[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	int xywh8[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	int * xywh = NULL;
+
+	/* count players so we can set up correct split screen */
+	c = 0;
+	for(i = 0; i < LSS_MAX_PLAYERS; i++)
+	{
+		if(gp->player[i].active)
+		{
+			c++;
+		}
+	}
+
+	/* single player */
+	switch(c)
+	{
+		case 1:
+		{
+			xywh = xywh1;
+			break;
+		}
+		case 2:
+		{
+			xywh = xywh2;
+			break;
+		}
+	}
+	if(!xywh)
+	{
+		return false;
+	}
+	j = 0;
+	for(i = 0; i < LSS_MAX_PLAYERS; i++)
+	{
+		if(gp->player[i].active)
+		{
+			x = xywh[j * 4 + 0];
+			y = xywh[j * 4 + 1];
+			w = xywh[j * 4 + 2];
+			h = xywh[j * 4 + 3];
+			t3f_adjust_view(gp->player[i].view, x, y, w, h, t3f_virtual_display_width / 2, t3f_virtual_display_height / 2, t3f_flags);
+			j++;
+		}
+	}
+}
+
 bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path, LSS_RESOURCES * rp)
 {
 	const char * val;
-	int j, k;
+	int i, j, k;
 
 	t3f_debug_message("lss_game_initialize() enter\n");
 	al_stop_timer(t3f_timer);
@@ -178,7 +240,7 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path, LSS_RESOURCES 
 	{
 		return false;
 	}
-	gp->studio_image = t3f_load_resource((void *)(&gp->studio_image), t3f_bitmap_resource_handler_proc, "data/studio.png", 0, 0, 0);
+	gp->studio_image = t3f_load_resource((void *)(&gp->studio_image), t3f_bitmap_resource_handler_proc, "data/in_game.png", 0, 0, 0);
 	if(!gp->studio_image)
 	{
 		return false;
@@ -227,6 +289,10 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path, LSS_RESOURCES 
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->fret_button_texture[4], T3F_ATLAS_SPRITE);
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->fret_button_image, T3F_ATLAS_SPRITE);
 	lss_add_bitmap_to_atlas(gp->atlas, &gp->strum_bar_image, T3F_ATLAS_SPRITE);
+	for(i = 0; i < LSS_MAX_PLAYERS; i++)
+	{
+		gp->player[i].view = t3f_create_view(0, 0, t3f_virtual_display_width, t3f_virtual_display_height, t3f_virtual_display_width / 2, t3f_virtual_display_height / 2, t3f_flags);
+	}
 	t3f_debug_message("\tLoading song audio...\n");
 	gp->song_audio = lss_load_song_audio(song_path);
 	if(!gp->song_audio)
@@ -292,6 +358,10 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path, LSS_RESOURCES 
 	gp->delay_z = gp->av_delay * LSS_SONG_PLACEMENT_SCALE;
 	t3f_debug_message("\tInitializing player...\n");
 	lss_initialize_player(gp, 0);
+	gp->player[0].active = true;
+	lss_initialize_player(gp, 1);
+	gp->player[1].active = true;
+	setup_player_views(gp);
 	t3f_debug_message("\tGenerating beat markers...\n");
 	lss_song_mark_beats(gp->song, gp->song_audio->length);
 	gp->board_speed = get_board_speed(gp);
@@ -319,6 +389,10 @@ void lss_game_exit(LSS_GAME * gp)
 	t3f_debug_message("\tDestroying song...\n");
 	lss_destroy_song(gp->song);
 	t3f_debug_message("\tDestroying textures...\n");
+	for(i = 0; i < LSS_MAX_PLAYERS; i++)
+	{
+		t3f_destroy_view(gp->player[i].view);
+	}
 	for(i = 0; i < 10; i++)
 	{
 		t3f_destroy_resource(gp->note_texture[i]);
@@ -438,7 +512,7 @@ static void lss_game_get_player_results(LSS_GAME * gp, int player)
 
 static void check_for_pause(LSS_GAME * gp)
 {
-	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || gp->player[0].controller->controller->state[LSS_CONTROLLER_BINDING_MENU].pressed)
+	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || gp->player[0].controller->input->element[T3F_GAMEPAD_START].pressed)
 	{
 		if(gp->paused)
 		{
@@ -535,6 +609,7 @@ static bool audio_playing(LSS_SONG_AUDIO * song_audio)
 void lss_game_logic(LSS_GAME * gp)
 {
 	int new_tick;
+	int i;
 
 	if(gp->paused)
 	{
@@ -557,7 +632,13 @@ void lss_game_logic(LSS_GAME * gp)
 		gp->song_audio->resync_video = false;
 	}
 
-	lss_player_logic(gp, 0);
+	for(i = 0; i < LSS_MAX_PLAYERS; i++)
+	{
+		if(gp->player[i].active)
+		{
+			lss_player_logic(gp, i);
+		}
+	}
 	if(t3f_key[ALLEGRO_KEY_UP])
 	{
 		gp->board_speed += 1.0;
@@ -610,21 +691,30 @@ void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)
 	double completed;
 	int n;
 	int progress_height = 2;
+	int i;
 
-	al_draw_bitmap(gp->studio_image, 0, 0, 0);
-	lss_player_render_board(gp, 0);
+	t3f_select_view(t3f_default_view);
+	t3f_draw_scaled_bitmap(gp->studio_image, t3f_color_white, 0, 0, 0, 960, 540, 0);
+	for(i = 0; i < LSS_MAX_PLAYERS; i++)
+	{
+		if(gp->player[i].active)
+		{
+			lss_player_render_board(gp, i);
+		}
+	}
+	t3f_select_view(t3f_default_view);
 	completed = lss_get_song_audio_position(gp->song_audio) / lss_get_song_audio_length(gp->song_audio);
-	al_draw_filled_rectangle(0, t3f_default_view->bottom - progress_height, t3f_virtual_display_width * completed, t3f_default_view->bottom, al_map_rgba_f(1.0, 1.0, 0.0, 1.0));
+	al_draw_filled_rectangle(t3f_default_view->left, t3f_default_view->bottom - progress_height, t3f_default_view->left + (t3f_default_view->right - t3f_default_view->left) * completed, t3f_default_view->bottom, al_map_rgba_f(1.0, 1.0, 0.0, 1.0));
 	al_hold_bitmap_drawing(true);
 	n = gp->song->track[gp->player[0].selected_track][gp->player[0].selected_difficulty].notes;
-	t3f_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 2, 0 + 2, 0, 0, "Streak: %d", gp->player[0].streak);
-	t3f_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 0, 0, 0, "Streak: %d", gp->player[0].streak);
-	t3f_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 2, 24 + 2, 0, 0, "Multiplier: %d", gp->player[0].multiplier);
-	t3f_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 24, 0, 0, "Multiplier: %d", gp->player[0].multiplier);
-	t3f_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0 + 2, 48 + 2, 0, 0, "Life: %d", gp->player[0].life);
-	t3f_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 0, 48, 0, 0, "Life: %d", gp->player[0].life);
-	t3f_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 480 + 2, 0 + 2, 0, ALLEGRO_ALIGN_CENTRE, "Score: %d", gp->player[0].score);
-	t3f_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 480, 0, 0, ALLEGRO_ALIGN_CENTRE, "Score: %d", gp->player[0].score);
+	t3f_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_default_view->left + 2, t3f_default_view->top + 2, 0, 0, "Streak: %d", gp->player[0].streak);
+	t3f_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, t3f_default_view->left, t3f_default_view->top, 0, 0, "Streak: %d", gp->player[0].streak);
+	t3f_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_default_view->left + 2, t3f_default_view->top + 24 + 2, 0, 0, "Multiplier: %d", gp->player[0].multiplier);
+	t3f_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, t3f_default_view->left, t3f_default_view->top + 24, 0, 0, "Multiplier: %d", gp->player[0].multiplier);
+	t3f_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_default_view->left + 2, t3f_default_view->top + 48 + 2, 0, 0, "Life: %d", gp->player[0].life);
+	t3f_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, t3f_default_view->left, t3f_default_view->top + 48, 0, 0, "Life: %d", gp->player[0].life);
+	t3f_draw_textf(rp->font[LSS_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 480 + 2, 0 + 2, 0, T3F_FONT_ALIGN_CENTER, "Score: %d", gp->player[0].score);
+	t3f_draw_textf(rp->font[LSS_FONT_SMALL], t3f_color_white, 480, 0, 0, T3F_FONT_ALIGN_CENTER, "Score: %d", gp->player[0].score);
 	al_hold_bitmap_drawing(false);
 	if(gp->paused)
 	{

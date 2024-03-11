@@ -8,6 +8,55 @@ Live Studio Sessions Issues
 
 [X]Add a way to select a random song.
 
+[ ]Finish implementing game setup process.
+
+   [ ]Make song list selection handled by first active player.
+
+   [ ]Show separate track select and difficulty select menus for each active
+      player. The menus should be rendered into each player's view. Once
+      difficulty is selected, show player as ready. When all players are ready
+      start the game.
+
+[ ]Modularize gameplay logic by gameplay type. If there's common logic, make a
+   module for this so we can minimize duplicate code for similar gameplay
+   types.
+
+[ ]Rewrite note hit logic to allow hitting chord notes independently.
+
+[ ]Implement controller configuration for different game types. We should
+   detect which controller type is needed for the selected track and use the
+   correct controller mapping for that track.
+
+   [ ]We'll want to add new track names for gamepad tracks in the MIDI file.
+
+      [ ]Add '_C' variants for guitar/lead, bass/rhythm, drums, keyboard, and
+         vocals. The '_C' variants will use the 5 button setup.
+   
+   [ ]Create pool of controllers of each type at initialization. Automatically
+      bind keyboard controls and add a guitar and gamepad for each connected
+      joystick. Guitar and gamepad controls can be bound separately. Save
+      controller configurations.
+   
+   [ ]Guitar Xplorer Mapping:
+      
+      ABYXL (buttons)
+      DPADDOWN/UP (strum)
+      RSX (whammy)
+      RSY (tilt)
+   
+   [X]Map keyboard controls for instrument mode FOF style.
+
+   [X]Map gamepad controls for instrument mode based on Guitar Xplorer mapping.
+
+   [X]Map gamepad controls for gamepad mode based on Fortnite Festival.
+
+   [X]Generate controller map at game init for each player.
+
+   [ ]Detect auto-strum mode based on selected track. Gamepad track should
+      enable auto-strum, instrument track should disable it.
+   
+[ ]Fix sustains not working when playing with keyboard.
+
 [ ]Improve HOPO logic by not triggering HOPO until the note is reached. We
    should track when the correct note was hit but not finalize the scoring
    until the note window has passed or the player has triggered a subsequent

@@ -208,26 +208,66 @@ static bool lss_song_populate_tracks(LSS_SONG * sp)
 		if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "T1 GEMS"))
 		{
 			stream = 1;
+			sp->track[i]->type = LSS_SONG_TRACK_TYPE_INSTRUMENT;
 		}
-		if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART GUITAR"))
+		else if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART GUITAR"))
 		{
 			stream = 1;
+			sp->track[i]->type = LSS_SONG_TRACK_TYPE_INSTRUMENT;
 		}
-		if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART BASS"))
+		else if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART BASS"))
 		{
 			stream = 2;
+			sp->track[i]->type = LSS_SONG_TRACK_TYPE_INSTRUMENT;
 		}
-		if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART GUITAR COOP"))
+		else if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART GUITAR COOP"))
 		{
 			stream = 2;
+			sp->track[i]->type = LSS_SONG_TRACK_TYPE_INSTRUMENT;
 		}
-		if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART RHYTHM"))
+		else if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART RHYTHM"))
 		{
 			stream = 2;
+			sp->track[i]->type = LSS_SONG_TRACK_TYPE_GAMEPAD;
 		}
-		if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART DRUMS"))
+		else if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART DRUMS"))
 		{
 			stream = 3;
+			sp->track[i]->type = LSS_SONG_TRACK_TYPE_INSTRUMENT;
+		}
+		else if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART GUITAR C"))
+		{
+			stream = 1;
+			sp->track[i]->type = LSS_SONG_TRACK_TYPE_GAMEPAD;
+		}
+		else if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "LEAD C"))
+		{
+			stream = 1;
+			sp->track[i]->type = LSS_SONG_TRACK_TYPE_GAMEPAD;
+		}
+		else if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART BASS C"))
+		{
+			stream = 2;
+			sp->track[i]->type = LSS_SONG_TRACK_TYPE_GAMEPAD;
+		}
+		else if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART GUITAR COOP C"))
+		{
+			stream = 2;
+			sp->track[i]->type = LSS_SONG_TRACK_TYPE_GAMEPAD;
+		}
+		else if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART RHYTHM C"))
+		{
+			stream = 2;
+			sp->track[i]->type = LSS_SONG_TRACK_TYPE_GAMEPAD;
+		}
+		else if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "PART DRUMS C"))
+		{
+			stream = 3;
+			sp->track[i]->type = LSS_SONG_TRACK_TYPE_GAMEPAD;
+		}
+		else if(sp->source_midi->track[i]->name && !strcmp(sp->source_midi->track[i]->name, "VOCALS C"))
+		{
+			sp->track[i]->type = LSS_SONG_TRACK_TYPE_GAMEPAD;
 		}
 		for(j = 0; j < sp->source_midi->track[i]->events; j++)
 		{

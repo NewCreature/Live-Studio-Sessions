@@ -73,7 +73,7 @@ void app_render(void * data)
 
 static bool lss_setup_default_controllers(APP_INSTANCE * app)
 {
-	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_GREEN].type = T3F_CONTROLLER_BINDING_KEY;
+/*	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_GREEN].type = T3F_CONTROLLER_BINDING_KEY;
 	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_GREEN].button = ALLEGRO_KEY_F1;
 	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_RED].type = T3F_CONTROLLER_BINDING_KEY;
 	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_RED].button = ALLEGRO_KEY_F2;
@@ -91,14 +91,14 @@ static bool lss_setup_default_controllers(APP_INSTANCE * app)
 	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STRUM_FAST].button = ALLEGRO_KEY_ENTER;
 	//app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STAR_POWER].type = T3F_CONTROLLER_BINDING_KEY;
 	//app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_GUITAR_STAR_POWER].button = ALLEGRO_KEY_SPACE;
-	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_MENU].button = ALLEGRO_KEY_BACKSPACE;
+	app->controller[0].controller->binding[LSS_CONTROLLER_BINDING_MENU].button = ALLEGRO_KEY_BACKSPACE; */
 	return true;
 }
 
 /* initialize our app, load graphics, etc. */
 bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
-	int f, c;
+	int f, c, i;
 	char buf[1024];
 	ALLEGRO_PATH * included_songs_path;
 	ALLEGRO_PATH * free_songs_path;
@@ -106,7 +106,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	const char * val;
 
 	/* initialize T3F */
-	if(!t3f_initialize("Live Studio Sessions", 960, 540, 60.0, app_logic, app_render, T3F_DEFAULT | T3F_USE_FIXED_PIPELINE | T3F_USE_FULLSCREEN, app))
+	if(!t3f_initialize("Live Studio Sessions", 960, 540, 60.0, app_logic, app_render, T3F_DEFAULT | T3F_USE_FIXED_PIPELINE | T3F_USE_FULLSCREEN | T3F_FILL_SCREEN, app))
 	{
 		printf("Error initializing T3F\n");
 		return false;
@@ -121,22 +121,34 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 
 	t3net_setup(NULL, al_path_cstr(t3f_temp_path, '/'));
 	t3f_debug_message("Initializing controllers...\n");
-	app->controller[0].controller = t3f_create_controller(9);
-	if(!app->controller[0].controller)
+	for(i = 0; i < LSS_MAX_CONTROLLERS; i++)
 	{
-		printf("Could not set up controllers!\n");
-		return false;
-	}
-	app->controller[0].type = LSS_CONTROLLER_TYPE_GUITAR;
-	#ifndef T3F_ANDROID
-		app->controller[0].source = LSS_CONTROLLER_SOURCE_CONTROLLER;
-		if(!t3f_read_controller_config(t3f_config, "LSS Guitar", app->controller[0].controller))
+		app->controller[i].input = t3f_create_input_handler(T3F_INPUT_HANDLER_TYPE_GAMEPAD);
+		if(!app->controller[i].input)
 		{
-			lss_setup_default_controllers(app);
+			printf("Could not set up controllers!\n");
+			return false;
 		}
-	#else
-		app->controller[0].source = LSS_CONTROLLER_SOURCE_TOUCH;
-	#endif
+	}
+
+	/* set up controllers */
+	for(i = 0; i < al_get_num_joysticks() && i < LSS_MAX_CONTROLLERS; i++)
+	{
+		t3f_map_input_for_xbox_controller(app->controller[i].input, i);
+	}
+	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_DPAD_LEFT, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_A);
+	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_DPAD_RIGHT, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_D);
+	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_DPAD_UP, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_W);
+	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_DPAD_DOWN, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_S);
+	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_X, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_J);
+	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_Y, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_K);
+	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_B, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_L);
+	if(al_get_num_joysticks() > 0)
+	{
+		al_set_config_value(t3f_config, "Test", "joystick_name", al_get_joystick_name(al_get_joystick(0)));
+	}
+
+
 	t3f_debug_message("Loading resources...\n");
 	if(!lss_load_global_resources(&app->resources))
 	{

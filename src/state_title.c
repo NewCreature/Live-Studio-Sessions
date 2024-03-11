@@ -95,7 +95,7 @@ int lss_menu_proc_profiles_select(void * data, int i, void * p)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	app->game.player[0].profile = &app->profiles->entry[i - 1];
+	app->game.player[0].profile = &app->profiles->entry[i];
 	t3f_clear_touch_data();
 	lss_state_song_list_initialize(app);
 	return 1;
@@ -304,8 +304,8 @@ int lss_menu_proc_options_controller_set(void * data, int i, void * p)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(app->controller[0].controller, i - 1);
-	t3f_write_controller_config(t3f_config, "LSS Guitar", app->controller[0].controller);
+//	t3f_bind_controller(app->controller[0].controller, i - 1);
+//	t3f_write_controller_config(t3f_config, "LSS Guitar", app->controller[0].controller);
 	t3f_destroy_gui(app->title.menu[LSS_MENU_CONTROLLER]);
 	lss_create_controller_menu(app);
 	app->title.menu[LSS_MENU_CONTROLLER]->hover_element = i;
@@ -354,20 +354,21 @@ bool lss_create_profiles_menu(APP_INSTANCE * app)
 		return false;
 	}
 	pos = 0;
-	t3f_add_gui_text_element(app->title.menu[LSS_MENU_PROFILES], NULL, "Live Studio Sessions - Profiles", (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
+//	t3f_add_gui_text_element(app->title.menu[LSS_MENU_PROFILES], NULL, "Live Studio Sessions - Profiles", (void **)&app->resources.font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
 	pos += space * 2;
 	for(i = 0; i < app->profiles->entries; i++)
 	{
 		strcpy(name_buf, app->profiles->entry[i].name);
-		t3f_add_gui_text_element(app->title.menu[LSS_MENU_PROFILES], lss_menu_proc_profiles_select, name_buf, (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+		t3f_add_gui_text_element(app->title.menu[LSS_MENU_PROFILES], lss_menu_proc_profiles_select, name_buf, (void **)&app->resources.font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 		pos += space;
 	}
 	if(app->profiles->entries < LSS_MAX_PROFILES)
 	{
-		t3f_add_gui_text_element(app->title.menu[LSS_MENU_PROFILES], lss_menu_proc_profiles_new, "New Profile", (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+		t3f_add_gui_text_element(app->title.menu[LSS_MENU_PROFILES], lss_menu_proc_profiles_new, "New Profile", (void **)&app->resources.font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 		pos += space;
 	}
-	t3f_add_gui_text_element(app->title.menu[LSS_MENU_PROFILES], lss_menu_proc_profiles_back, "Back", (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_PROFILES], lss_menu_proc_profiles_back, "Back", (void **)&app->resources.font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_center_gui(app->title.menu[LSS_MENU_PROFILES], LSS_MENU_TOP, LSS_MENU_BOTTOM);
 	return true;
 }
 
@@ -385,36 +386,36 @@ bool lss_create_controller_menu(APP_INSTANCE * app)
 		return false;
 	}
 	pos = 0;
-	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], NULL, "Live Studio Sessions - Controller Setup", (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
+/*	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], NULL, "Live Studio Sessions - Controller Setup", (void **)&app->resources.font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
 	pos += space * 2;
 	sprintf(buf, "Green Fret (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_GREEN), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_GREEN));
-	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += space;
 	sprintf(buf, "Red Fret (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_RED), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_RED));
-	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += space;
 	sprintf(buf, "Yellow Fret (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_YELLOW), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_YELLOW));
-	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += space;
 	sprintf(buf, "Blue Fret (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_BLUE), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_BLUE));
-	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += space;
 	sprintf(buf, "Orange Fret (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_ORANGE), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_ORANGE));
-	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += space;
 	sprintf(buf, "Strum Down (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN));
-	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += space;
 	sprintf(buf, "Strum Up (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP));
-	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += space;
 	sprintf(buf, "Strum Fast (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_STRUM_FAST), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_GUITAR_STRUM_FAST));
-	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += space;
 	sprintf(buf, "Menu (%s - %s)", t3f_get_controller_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_MENU), t3f_get_controller_binding_name(app->controller[0].controller, LSS_CONTROLLER_BINDING_MENU));
-	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_set, buf, (void **)&app->resources.font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += space;
-	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_back, "Back", (void **)&app->resources.font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->title.menu[LSS_MENU_CONTROLLER], lss_menu_proc_options_controller_back, "Back", (void **)&app->resources.font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW); */
 	return true;
 }
 
@@ -427,10 +428,15 @@ bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp, LSS_SONG_LIST
 	space = t3f_get_font_line_height(rp->font[LSS_FONT_LARGE]);
 
 	t3f_srand(&dp->rng, time(0));
-	dp->logo_bitmap = t3f_load_resource((void *)(&dp->logo_bitmap), t3f_bitmap_resource_handler_proc, "data/lss_logo.png", 0, 0, 0);
+	dp->bg_bitmap = t3f_load_resource((void *)(&dp->bg_bitmap), t3f_bitmap_resource_handler_proc, "data/title_bg.png", 0, 0, 0);
+	if(!dp->bg_bitmap)
+	{
+//		return false;
+	}
+	dp->logo_bitmap = t3f_load_resource((void *)(&dp->logo_bitmap), t3f_bitmap_resource_handler_proc, "data/logo.png", 0, 0, 0);
 	if(!dp->logo_bitmap)
 	{
-		return false;
+//		return false;
 	}
 
 	/* main menu */
@@ -440,13 +446,14 @@ bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp, LSS_SONG_LIST
 		return false;
 	}
 	pos = 0;
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_MAIN], NULL, "Live Studio Sessions", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
+//	t3f_add_gui_text_element(dp->menu[LSS_MENU_MAIN], NULL, "Live Studio Sessions", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
 	pos += space * 2;
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_MAIN], lss_menu_proc_play, "Play", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_MAIN], lss_menu_proc_play, "Play", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 	pos += space;
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_MAIN], lss_menu_proc_options, "Options", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_MAIN], lss_menu_proc_options, "Options", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 	pos += space;
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_MAIN], lss_menu_proc_quit, "Quit", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_MAIN], lss_menu_proc_quit, "Quit", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_center_gui(dp->menu[LSS_MENU_MAIN], LSS_MENU_TOP, LSS_MENU_BOTTOM);
 
 	dp->menu[LSS_MENU_PLAY] = t3f_create_gui(0, 0);
 	if(!dp->menu[LSS_MENU_PLAY])
@@ -454,13 +461,14 @@ bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp, LSS_SONG_LIST
 		return false;
 	}
 	pos = 0;
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_PLAY], NULL, "Live Studio Sessions - Play", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
+//	t3f_add_gui_text_element(dp->menu[LSS_MENU_PLAY], NULL, "Live Studio Sessions - Play", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
 	pos += space * 2;
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_PLAY], lss_menu_proc_play_quick_play, "Quick Play", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_PLAY], lss_menu_proc_play_quick_play, "Quick Play", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 	pos += space;
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_PLAY], lss_menu_proc_play_career, "Career", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_PLAY], lss_menu_proc_play_career, "Career", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 	pos += space;
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_PLAY], lss_menu_proc_play_back, "Back", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_PLAY], lss_menu_proc_play_back, "Back", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_center_gui(dp->menu[LSS_MENU_PLAY], LSS_MENU_TOP, LSS_MENU_BOTTOM);
 
 	/* new profile menu */
 	dp->menu[LSS_MENU_NEW_PROFILE] = t3f_create_gui(0, 0);
@@ -469,13 +477,14 @@ bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp, LSS_SONG_LIST
 		return false;
 	}
 	pos = 0;
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_NEW_PROFILE], NULL, "Live Studio Sessions - New Profile", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
+//	t3f_add_gui_text_element(dp->menu[LSS_MENU_NEW_PROFILE], NULL, "Live Studio Sessions - New Profile", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
 	pos += space * 2;
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_NEW_PROFILE], NULL, lss_new_profile_buffer, (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_NEW_PROFILE], NULL, lss_new_profile_buffer, (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
 	pos += space;
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_NEW_PROFILE], lss_menu_proc_profiles_new_ok, "Okay", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_NEW_PROFILE], lss_menu_proc_profiles_new_ok, "Okay", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 	pos += space;
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_NEW_PROFILE], lss_menu_proc_profiles_new_cancel, "Cancel", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_NEW_PROFILE], lss_menu_proc_profiles_new_cancel, "Cancel", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_center_gui(dp->menu[LSS_MENU_NEW_PROFILE], LSS_MENU_TOP, LSS_MENU_BOTTOM);
 
 	/* options menu */
 	dp->menu[LSS_MENU_OPTIONS] = t3f_create_gui(0, 0);
@@ -484,17 +493,18 @@ bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp, LSS_SONG_LIST
 		return false;
 	}
 	pos = 0;
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_OPTIONS], NULL, "Live Studio Sessions - Options", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
+//	t3f_add_gui_text_element(dp->menu[LSS_MENU_OPTIONS], NULL, "Live Studio Sessions - Options", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
 	pos += space * 2;
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_OPTIONS], lss_menu_proc_options_controllers, "Controllers", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_OPTIONS], lss_menu_proc_options_controllers, "Controllers", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 	pos += space;
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_OPTIONS], lss_menu_proc_options_av_setup, "A/V Setup", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_OPTIONS], lss_menu_proc_options_av_setup, "A/V Setup", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 	pos += space;
 	#ifndef T3F_ANDROID
-		t3f_add_gui_text_element(dp->menu[LSS_MENU_OPTIONS], lss_menu_proc_options_library, "Select Library Folder", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+		t3f_add_gui_text_element(dp->menu[LSS_MENU_OPTIONS], lss_menu_proc_options_library, "Select Library Folder", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 		pos += space;
 	#endif
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_OPTIONS], lss_menu_proc_options_back, "Back", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_OPTIONS], lss_menu_proc_options_back, "Back", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_center_gui(dp->menu[LSS_MENU_OPTIONS], LSS_MENU_TOP, LSS_MENU_BOTTOM);
 
 	/* confirm exit menu */
 	dp->menu[LSS_MENU_CONFIRM_EXIT] = t3f_create_gui(0, 0);
@@ -503,11 +513,13 @@ bool lss_title_initialize(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp, LSS_SONG_LIST
 		return false;
 	}
 	pos = 0;
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_CONFIRM_EXIT], NULL, "Exit to OS?", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
 	pos += space * 2;
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_CONFIRM_EXIT], lss_menu_proc_exit_yes, "Yes", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_CONFIRM_EXIT], NULL, "Exit to OS?", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW);
+	pos += space * 2;
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_CONFIRM_EXIT], lss_menu_proc_exit_yes, "Yes", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 	pos += space;
-	t3f_add_gui_text_element(dp->menu[LSS_MENU_CONFIRM_EXIT], lss_menu_proc_exit_no, "No", (void **)&rp->font[LSS_FONT_LARGE], 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(dp->menu[LSS_MENU_CONFIRM_EXIT], lss_menu_proc_exit_no, "No", (void **)&rp->font[LSS_FONT_LARGE], t3f_default_view->left + LSS_MENU_LEFT, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_center_gui(dp->menu[LSS_MENU_CONFIRM_EXIT], LSS_MENU_TOP, LSS_MENU_BOTTOM);
 
 	/* start song audio */
 	dp->song_audio = lss_load_song_audio(lp->entry[t3f_rand(&dp->rng) % lp->entries]->path);
@@ -533,6 +545,11 @@ void lss_title_exit(LSS_TITLE_DATA * dp)
 		t3f_destroy_resource(dp->logo_bitmap);
 		dp->logo_bitmap = NULL;
 	}
+	if(dp->bg_bitmap)
+	{
+		t3f_destroy_resource(dp->bg_bitmap);
+		dp->bg_bitmap = NULL;
+	}
 	for(i = 0; i < LSS_MAX_MENUS; i++)
 	{
 		if(dp->menu[i])
@@ -554,23 +571,23 @@ void lss_title_menu_logic(T3F_GUI * gp, LSS_CONTROLLER * cp, int block_count, bo
 	{
 		if(!lss_process_text_entry())
 		{
-			if(t3f_key[ALLEGRO_KEY_ENTER] || cp->controller->state[LSS_CONTROLLER_BINDING_GUITAR_GREEN].pressed)
+			if(t3f_key[ALLEGRO_KEY_ENTER] || cp->input->element[T3F_GAMEPAD_A].pressed)
 			{
 				t3f_activate_selected_gui_element(gp, data);
 				t3f_key[ALLEGRO_KEY_ENTER] = 0;
 			}
-			else if(t3f_key[ALLEGRO_KEY_UP] || cp->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_UP].pressed)
+			else if(t3f_key[ALLEGRO_KEY_UP] || cp->input->element[T3F_GAMEPAD_DPAD_UP].pressed)
 			{
 				t3f_select_previous_gui_element(gp);
 				t3f_key[ALLEGRO_KEY_UP] = 0;
 			}
-			else if(t3f_key[ALLEGRO_KEY_DOWN] || cp->controller->state[LSS_CONTROLLER_BINDING_GUITAR_STRUM_DOWN].pressed)
+			else if(t3f_key[ALLEGRO_KEY_DOWN] || cp->input->element[T3F_GAMEPAD_DPAD_DOWN].pressed)
 			{
 				t3f_select_next_gui_element(gp);
 				t3f_key[ALLEGRO_KEY_DOWN] = 0;
 			}
 		}
-		if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || cp->controller->state[LSS_CONTROLLER_BINDING_GUITAR_RED].pressed)
+		if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || cp->input->element[T3F_GAMEPAD_START].pressed)
 		{
 			if(back_enabled)
 			{
@@ -603,8 +620,21 @@ void lss_title_logic(LSS_TITLE_DATA * dp, APP_INSTANCE * app)
 
 void lss_title_render(LSS_TITLE_DATA * dp, LSS_RESOURCES * rp)
 {
-	al_clear_to_color(LSS_TITLE_COLOR_BG);
-	al_draw_tinted_bitmap(dp->logo_bitmap, al_map_rgba_f(0.0, 0.0, 0.0, 0.125), 480 - al_get_bitmap_width(dp->logo_bitmap) / 2, 270 - al_get_bitmap_height(dp->logo_bitmap) / 2, 0);
+	float w = t3f_default_view->right - t3f_default_view->left;
+	float s;
+	if(dp->bg_bitmap)
+	{
+		al_draw_bitmap(dp->bg_bitmap, 480 - al_get_bitmap_width(dp->bg_bitmap) / 2, 270 - al_get_bitmap_height(dp->bg_bitmap) / 2, 0);
+	}
+	else
+	{
+		al_clear_to_color(LSS_TITLE_COLOR_BG);
+	}
+	if(dp->logo_bitmap)
+	{
+		s = w / al_get_bitmap_width(dp->logo_bitmap);
+		t3f_draw_scaled_bitmap(dp->logo_bitmap, t3f_color_white, t3f_default_view->left, t3f_default_view->top, 0, al_get_bitmap_width(dp->logo_bitmap) * s, al_get_bitmap_height(dp->logo_bitmap) * s, 0);
+	}
 	if(dp->current_menu >= 0)
 	{
 		t3f_render_gui(dp->menu[dp->current_menu]);

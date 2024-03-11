@@ -25,8 +25,11 @@ typedef struct
 
 	LSS_PROFILE * profile;
 	LSS_CONTROLLER * controller; //pointer to controller used by player
+	T3F_VIEW * view; // view for this player
+//	T3F_GUI * menu; // per-player game setup menu
 	bool block_menu_strum;
 
+	bool active;
 	int selected_track;
 	int selected_difficulty;
 	double song_pos;

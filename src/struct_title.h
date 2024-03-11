@@ -12,6 +12,7 @@ typedef struct
 {
 
 	ALLEGRO_BITMAP * logo_bitmap;
+	ALLEGRO_BITMAP * bg_bitmap;
 	T3F_GUI * menu[LSS_MAX_MENUS];
 	int current_menu;
 	int block_count;
