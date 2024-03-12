@@ -8,7 +8,9 @@ Live Studio Sessions Issues
 
 [X]Add a way to select a random song.
 
-[ ]Finish implementing game setup process.
+[ ]Finish implementing initial version of game setup process.
+
+   [ ]Create and orient player views before showing track select menu.
 
    [ ]Make song list selection handled by first active player.
 
