@@ -132,6 +132,16 @@ static bool setup_player_views(LSS_GAME * gp)
 			xywh = xywh2;
 			break;
 		}
+		case 3:
+		{
+			xywh = xywh3;
+			break;
+		}
+		case 4:
+		{
+			xywh = xywh4;
+			break;
+		}
 	}
 	if(!xywh)
 	{
