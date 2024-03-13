@@ -10,7 +10,7 @@ Live Studio Sessions Issues
 
 [ ]Finish implementing initial version of game setup process.
 
-   [ ]Expose player view setup so we can access it outside of the gameplay
+   [X]Expose player view setup so we can access it outside of the gameplay
       module.
    
    [ ]Rewrite game setup.
@@ -19,17 +19,19 @@ Live Studio Sessions Issues
 
       [ ]Players can be added and removed at any time.
 
-      [ ]Track and difficulty setup should be handled in a single state so
+         [ ]Make it so players can traverse backwards through the setup process
+            by pressing 'B'. When they reach the track select scrren, they
+            should be dropped out of the game if they press 'B' again.
+
+      [X]Track and difficulty setup should be handled in a single state so
          players can do setup at their own leisure.
 
-      [ ]Setup screen should be able to wait until all players are ready before
+      [X]Setup screen should be able to wait until all players are ready before
          starting the game.
 
-   [ ]Create and orient player views before showing track select menu.
+   [X]Create and orient player views before showing track select menu.
 
-   [ ]Make song list selection handled by first active player.
-
-   [ ]Show separate track select and difficulty select menus for each active
+   [X]Show separate track select and difficulty select menus for each active
       player. The menus should be rendered into each player's view. Once
       difficulty is selected, show player as ready. When all players are ready
       start the game.
