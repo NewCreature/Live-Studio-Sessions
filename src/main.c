@@ -143,11 +143,17 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_X, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_J);
 	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_Y, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_K);
 	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_B, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_L);
+	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_A, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_ENTER);
 	if(al_get_num_joysticks() > 0)
 	{
 		al_set_config_value(t3f_config, "Test", "joystick_name", al_get_joystick_name(al_get_joystick(0)));
 	}
 
+	/* set up views */
+	for(i = 0; i < LSS_MAX_PLAYERS; i++)
+	{
+		app->game.player[i].view = t3f_create_view(0, 0, t3f_virtual_display_width, t3f_virtual_display_height, t3f_virtual_display_width / 2, t3f_virtual_display_height / 2, t3f_flags);
+	}
 
 	t3f_debug_message("Loading resources...\n");
 	if(!lss_load_global_resources(&app->resources))

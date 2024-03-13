@@ -8,7 +8,7 @@
 #include "state_game_results.h"
 #include "state_title.h"
 #include "state_av_setup.h"
-#include "state_song_list.h"
+#include "state_game_setup.h"
 
 void lss_state_logic(APP_INSTANCE * app)
 {
@@ -45,19 +45,9 @@ void lss_state_logic(APP_INSTANCE * app)
 			lss_title_logic(&app->title, app);
 			break;
 		}
-		case LSS_STATE_SONG_SELECT:
+		case LSS_STATE_GAME_SETUP:
 		{
-			lss_state_song_list_song_select_logic(app);
-			break;
-		}
-		case LSS_STATE_SONG_SELECT_TRACK:
-		{
-			lss_state_song_list_track_select_logic(app);
-			break;
-		}
-		case LSS_STATE_SONG_SELECT_DIFFICULTY:
-		{
-			lss_state_song_list_difficulty_select_logic(app);
+			lss_state_game_setup_logic(app);
 			break;
 		}
 		case LSS_STATE_GAME:
@@ -121,7 +111,7 @@ void lss_state_logic(APP_INSTANCE * app)
 				}
 				lss_game_exit(&app->game);
 				lss_title_initialize(&app->title, &app->resources, app->song_list);
-				app->state = LSS_STATE_SONG_SELECT;
+				app->state = LSS_STATE_GAME_SETUP;
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				t3f_key[ALLEGRO_KEY_BACK] = 0;
 			}
@@ -160,19 +150,9 @@ void lss_state_render(APP_INSTANCE * app)
 			lss_title_render(&app->title, &app->resources);
 			break;
 		}
-		case LSS_STATE_SONG_SELECT:
+		case LSS_STATE_GAME_SETUP:
 		{
-			lss_state_song_list_song_select_render(app);
-			break;
-		}
-		case LSS_STATE_SONG_SELECT_TRACK:
-		{
-			lss_state_song_list_track_select_render(app);
-			break;
-		}
-		case LSS_STATE_SONG_SELECT_DIFFICULTY:
-		{
-			lss_state_song_list_difficulty_select_render(app);
+			lss_state_game_setup_render(app);
 			break;
 		}
 		case LSS_STATE_GAME:

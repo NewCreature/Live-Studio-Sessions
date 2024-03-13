@@ -15,7 +15,7 @@
 
 #include "state.h"
 #include "state_title.h"
-#include "state_song_list.h"
+#include "state_game_setup.h"
 #include "state_game.h"
 
 static char lss_new_profile_buffer[256] = {0};
