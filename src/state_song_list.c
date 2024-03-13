@@ -84,9 +84,16 @@ static void lss_enumerate_difficulties(LSS_SONG * sp, int track)
 static int lss_song_list_proc_select_difficulty(void * data, int i, void * p)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int j;
 
-	t3f_destroy_gui(lss_song_list_menu);
-	lss_song_list_menu = NULL;
+	for(j = 0; j < LSS_MAX_PLAYERS; j++)
+	{
+		if(app->game.player[j].menu)
+		{
+			t3f_destroy_gui(app->game.player[j].menu);
+			app->game.player[j].menu = NULL;
+		}
+	}
 	app->game.player[0].selected_difficulty = i - 2;
 	app->game.song_id = app->song_list->entry[app->selected_song]->id;
 	app->game.player[0].selected_track = lss_track[app->game.player[0].selected_track];
@@ -124,65 +131,73 @@ static int lss_song_list_proc_select_difficulty(void * data, int i, void * p)
 	return 1;
 }
 
-static bool lss_create_difficulty_menu(APP_INSTANCE * app)
+static bool lss_create_difficulty_menu(APP_INSTANCE * app, int player)
 {
 	char * track_name = NULL;
 	char * difficulty_text[4] = {"Easy", "Medium", "Hard", "Expert"};
 	char buf[256] = {0};
 	int i, pos = 0;
 
-	lss_song_list_menu = t3f_create_gui(0, 0);
-	if(!lss_song_list_menu)
+	app->game.player[player].menu  = t3f_create_gui(0, 0);
+	if(!app->game.player[player].menu )
 	{
 		return false;
 	}
 	sprintf(buf, "%s - %s", app->song_list->entry[app->selected_song]->artist, app->song_list->entry[app->selected_song]->title);
-	t3f_add_gui_text_element(lss_song_list_menu, NULL, buf, (void **)&app->resources.font[lss_song_list_font], t3f_default_view->left + 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	t3f_add_gui_text_element(app->game.player[player].menu , NULL, buf, (void **)&app->resources.font[lss_song_list_font], t3f_default_view->left + 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += lss_song_list_space;
 	track_name = app->game.song->source_midi->track[lss_track[app->game.player[0].selected_track]]->name;
 	if(!track_name)
 	{
 		track_name = "No Name";
 	}
-	t3f_add_gui_text_element(lss_song_list_menu, NULL, track_name, (void **)&app->resources.font[lss_song_list_font], t3f_default_view->left + 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	t3f_add_gui_text_element(app->game.player[player].menu , NULL, track_name, (void **)&app->resources.font[lss_song_list_font], t3f_default_view->left + 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += lss_song_list_space * 2;
 	for(i = 0; i < lss_diffs; i++)
 	{
-		t3f_add_gui_text_element(lss_song_list_menu, lss_song_list_proc_select_difficulty, difficulty_text[lss_diff[i]], (void **)&app->resources.font[lss_song_list_font], t3f_default_view->left + 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+		t3f_add_gui_text_element(app->game.player[player].menu , lss_song_list_proc_select_difficulty, difficulty_text[lss_diff[i]], (void **)&app->resources.font[lss_song_list_font], t3f_default_view->left + 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 		pos += lss_song_list_space;
 	}
-	lss_song_list_menu->hover_element = -1;
-	t3f_select_next_gui_element(lss_song_list_menu);
+	app->game.player[player].menu->hover_element = -1;
+	t3f_select_next_gui_element(app->game.player[player].menu );
 	return true;
 }
 
 static int lss_song_list_proc_select_track(void * data, int i, void * p)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int j;
 
-	t3f_destroy_gui(lss_song_list_menu);
-	lss_song_list_menu = NULL;
-	app->game.player[0].selected_track = i - 1;
-	lss_enumerate_difficulties(app->game.song, lss_track[app->game.player[0].selected_track]);
-	lss_create_difficulty_menu(app);
-	app->game.player[0].selected_difficulty = 0;
+	for(j = 0; j < LSS_MAX_PLAYERS; j++)
+	{
+		if(p == app->game.player[j].menu)
+		{
+			t3f_destroy_gui(app->game.player[j].menu);
+			app->game.player[j].menu = NULL;
+			app->game.player[j].selected_track = i - 1;
+			lss_enumerate_difficulties(app->game.song, lss_track[app->game.player[j].selected_track]);
+			lss_create_difficulty_menu(app, j);
+			app->game.player[j].selected_difficulty = 0;
+			break;
+		}
+	}
 	app->state = LSS_STATE_SONG_SELECT_DIFFICULTY;
 	return 1;
 }
 
-static bool lss_create_track_list_menu(APP_INSTANCE * app)
+static bool lss_create_track_list_menu(APP_INSTANCE * app, int player)
 {
 	char * track_name = NULL;
 	char buf[256] = {0};
 	int i, pos = 0;
 
-	lss_song_list_menu = t3f_create_gui(0, 0);
-	if(!lss_song_list_menu)
+	app->game.player[player].menu  = t3f_create_gui(0, 0);
+	if(!app->game.player[player].menu )
 	{
 		return false;
 	}
 	sprintf(buf, "%s - %s", app->song_list->entry[app->selected_song]->artist, app->song_list->entry[app->selected_song]->title);
-	t3f_add_gui_text_element(lss_song_list_menu, NULL, buf, (void **)&app->resources.font[lss_song_list_font], t3f_default_view->left + 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+	t3f_add_gui_text_element(app->game.player[player].menu , NULL, buf, (void **)&app->resources.font[lss_song_list_font], t3f_default_view->left + 8, pos, t3f_color_white, T3F_GUI_ELEMENT_STATIC | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 	pos += lss_song_list_space * 2;
 	for(i = 0; i < lss_tracks; i++)
 	{
@@ -191,11 +206,11 @@ static bool lss_create_track_list_menu(APP_INSTANCE * app)
 		{
 			track_name = "No Name";
 		}
-		t3f_add_gui_text_element(lss_song_list_menu, lss_song_list_proc_select_track, track_name, (void **)&app->resources.font[lss_song_list_font], t3f_default_view->left + 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+		t3f_add_gui_text_element(app->game.player[player].menu , lss_song_list_proc_select_track, track_name, (void **)&app->resources.font[lss_song_list_font], t3f_default_view->left + 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 		pos += lss_song_list_space;
 	}
-	lss_song_list_menu->hover_element = -1;
-	t3f_select_next_gui_element(lss_song_list_menu);
+	app->game.player[player].menu ->hover_element = -1;
+	t3f_select_next_gui_element(app->game.player[player].menu );
 	return true;
 }
 
@@ -379,6 +394,7 @@ static bool lss_song_select_entry_callback(void * data, int c)
 void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 {
 	int max;
+	int i;
 
 	if(t3f_key_pressed())
 	{
@@ -400,10 +416,17 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 	{
 		app->game.song = lss_load_song(app->song_list->entry[app->selected_song]->path);
 		lss_enumerate_tracks(app->game.song);
-		if(lss_create_track_list_menu(app))
+		for(i = 0; i < LSS_MAX_PLAYERS; i++)
 		{
-			app->game.player[0].selected_track = 0;
-			app->state = LSS_STATE_SONG_SELECT_TRACK;
+			if(lss_create_track_list_menu(app, i))
+			{
+				app->game.player[i].selected_track = 0;
+				app->state = LSS_STATE_SONG_SELECT_TRACK;
+			}
+		}
+		for(i = 0; i < al_get_num_joysticks() + 1; i++)
+		{
+			app->game.player[i].active = true;
 		}
 		lss_song_list_tap_frames = 0;
 		if(lss_song_list_sort_query)
@@ -630,14 +653,13 @@ void lss_state_song_list_track_select_logic(APP_INSTANCE * app)
 {
 	int i;
 
-	lss_song_list_process_menu(app, lss_song_list_menu);
-//	for(i = 0; i < LSS_MAX_PLAYERS; i++)
-//	{
-//		if(app->game.player[i].active)
-//		{
-//			lss_song_list_process_menu(app, app->game.player[i].menu);
-//		}
-//	}
+	for(i = 0; i < LSS_MAX_PLAYERS; i++)
+	{
+		if(app->game.player[i].active)
+		{
+			lss_song_list_process_menu(app, app->game.player[i].menu);
+		}
+	}
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || app->controller[0].input->element[T3F_GAMEPAD_B].pressed)
 	{
 		t3f_destroy_gui(lss_song_list_menu);
@@ -660,6 +682,8 @@ void lss_state_song_list_track_select_logic(APP_INSTANCE * app)
 
 void lss_state_song_list_track_select_render(APP_INSTANCE * app)
 {
+	int i;
+
 	if(app->title.bg_bitmap)
 	{
 		al_draw_bitmap(app->title.bg_bitmap, 480 - al_get_bitmap_width(app->title.bg_bitmap) / 2, 270 - al_get_bitmap_height(app->title.bg_bitmap) / 2, 0);
@@ -676,18 +700,36 @@ void lss_state_song_list_track_select_render(APP_INSTANCE * app)
 		}
 	}
 	al_hold_bitmap_drawing(true);
-	t3f_render_gui(lss_song_list_menu);
+	for(i = 0; i < LSS_MAX_PLAYERS; i++)
+	{
+		if(app->game.player[i].active)
+		{
+			t3f_select_view(app->game.player[i].view);
+			t3f_render_gui(app->game.player[i].menu);
+		}
+	}
 	al_hold_bitmap_drawing(false);
 }
 
 void lss_state_song_list_difficulty_select_logic(APP_INSTANCE * app)
 {
-	lss_song_list_process_menu(app, lss_song_list_menu);
+	int i;
+
+	for(i = 0; i < LSS_MAX_PLAYERS; i++)
+	{
+		if(app->game.player[i].active)
+		{
+			lss_song_list_process_menu(app, app->game.player[i].menu);
+		}
+	}
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || app->controller[0].input->element[T3F_GAMEPAD_B].pressed)
 	{
-		t3f_destroy_gui(lss_song_list_menu);
-		lss_song_list_menu = NULL;
-		lss_create_track_list_menu(app);
+		for(i = 0; i < LSS_MAX_PLAYERS; i++)
+		{
+			t3f_destroy_gui(app->game.player[i].menu);
+			app->game.player[i].menu = NULL;
+			lss_create_track_list_menu(app, i);
+		}
 		app->state = LSS_STATE_SONG_SELECT_TRACK;
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 		t3f_key[ALLEGRO_KEY_BACK] = 0;
@@ -696,14 +738,19 @@ void lss_state_song_list_difficulty_select_logic(APP_INSTANCE * app)
 	{
 		app->game.no_fail = !app->game.no_fail;
 	}
-	if(lss_song_list_menu)
+	for(i = 0; i < LSS_MAX_PLAYERS; i++)
 	{
-		lss_update_gui_colors(lss_song_list_menu, LSS_TITLE_COLOR_HEADER, LSS_TITLE_COLOR_SELECTED, LSS_TITLE_COLOR_NORMAL);
+		if(app->game.player[i].menu)
+		{
+			lss_update_gui_colors(app->game.player[i].menu, LSS_TITLE_COLOR_HEADER, LSS_TITLE_COLOR_SELECTED, LSS_TITLE_COLOR_NORMAL);
+		}
 	}
 }
 
 void lss_state_song_list_difficulty_select_render(APP_INSTANCE * app)
 {
+	int i;
+
 	if(app->title.bg_bitmap)
 	{
 		al_draw_bitmap(app->title.bg_bitmap, 480 - al_get_bitmap_width(app->title.bg_bitmap) / 2, 270 - al_get_bitmap_height(app->title.bg_bitmap) / 2, 0);
@@ -720,6 +767,13 @@ void lss_state_song_list_difficulty_select_render(APP_INSTANCE * app)
 		}
 	}
 	al_hold_bitmap_drawing(true);
-	t3f_render_gui(lss_song_list_menu);
+	for(i = 0; i < LSS_MAX_PLAYERS; i++)
+	{
+		if(app->game.player[i].active)
+		{
+//			t3f_select_view(app->game.player[i].view);
+			t3f_render_gui(app->game.player[i].menu);
+		}
+	}
 	al_hold_bitmap_drawing(false);
 }

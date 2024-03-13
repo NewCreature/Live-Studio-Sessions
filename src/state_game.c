@@ -357,10 +357,13 @@ bool lss_game_initialize(LSS_GAME * gp, ALLEGRO_PATH * song_path, LSS_RESOURCES 
 //	gp->board_speed = 1.0;
 	gp->delay_z = gp->av_delay * LSS_SONG_PLACEMENT_SCALE;
 	t3f_debug_message("\tInitializing player...\n");
-	lss_initialize_player(gp, 0);
-	gp->player[0].active = true;
-	lss_initialize_player(gp, 1);
-	gp->player[1].active = true;
+	for(i = 0; i < LSS_MAX_PLAYERS; i++)
+	{
+		if(gp->player[i].active)
+		{
+			lss_initialize_player(gp, i);
+		}
+	}
 	setup_player_views(gp);
 	t3f_debug_message("\tGenerating beat markers...\n");
 	lss_song_mark_beats(gp->song, gp->song_audio->length);
