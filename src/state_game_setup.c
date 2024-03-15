@@ -35,13 +35,12 @@ static int lss_song_list_sort_type = 0;
 static char lss_song_list_sort_filter[32] = {0};
 static bool lss_song_list_sort_query = false;
 static int lss_song_list_collection = 0;
-static int lss_game_setup_state = 0;
 
 void lss_state_song_list_initialize(APP_INSTANCE * app)
 {
 	lss_song_list_mouse_init = true;
 	app->state = LSS_STATE_GAME_SETUP;
-	lss_game_setup_state = LSS_GAME_SETUP_STATE_SONG_LIST;
+	app->game.setup_state = LSS_GAME_SETUP_STATE_SONG_LIST;
 }
 
 static void lss_enumerate_tracks(APP_INSTANCE * app, int player)
@@ -278,39 +277,6 @@ static bool lss_create_game_type_menu(APP_INSTANCE * app, int player)
 	return true;
 }
 
-void lss_game_setup_join_logic(APP_INSTANCE * app)
-{
-	int i, j;
-	bool new_player = false;
-
-	for(i = 0; i < LSS_MAX_PLAYERS; i++)
-	{
-		if(!app->game.player[i].active)
-		{
-			for(j = 0; j < app->controller[i].input->elements; j++)
-			{
-				if(app->controller[i].input->element[j].pressed)
-				{
-					app->game.player[i].controller = &app->controller[i];
-					app->game.player[i].active = true;
-					app->game.player[i].setup_state = LSS_PLAYER_SETUP_GAME_TYPE_SELECT;
-
-					/* create track list menu if we are past song selection */
-					if(lss_game_setup_state == LSS_GAME_SETUP_STATE_SETTINGS)
-					{
-						lss_create_track_list_menu(app, i);
-					}
-					new_player = true;
-				}
-			}
-		}
-	}
-	if(new_player)
-	{
-		lss_update_views(&app->game);
-	}
-}
-
 void lss_game_setup_common_render(APP_INSTANCE * app)
 {
 	t3f_select_view(t3f_default_view);
@@ -536,7 +502,7 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 				if(lss_create_game_type_menu(app, i))
 				{
 					app->game.player[i].selected_track = 0;
-					lss_game_setup_state = LSS_GAME_SETUP_STATE_SETTINGS;
+					app->game.setup_state = LSS_GAME_SETUP_STATE_SETTINGS;
 					app->game.player[i].setup_state = LSS_PLAYER_SETUP_GAME_TYPE_SELECT;
 				}
 			}
@@ -842,7 +808,7 @@ void lss_game_setup_start_logic(APP_INSTANCE * app)
 	{
 		if(app->game.player[i].active)
 		{
-			lss_game_setup_state = LSS_GAME_SETUP_STATE_SONG_LIST;
+			app->game.setup_state = LSS_GAME_SETUP_STATE_SONG_LIST;
 			break;
 		}
 	}
@@ -921,7 +887,7 @@ void lss_game_setup_player_settings_logic(APP_INSTANCE * app, int player)
 	{
 		lss_destroy_song(app->game.song);
 		app->game.song = NULL;
-		lss_game_setup_state = LSS_GAME_SETUP_STATE_SONG_LIST;
+		app->game.setup_state = LSS_GAME_SETUP_STATE_SONG_LIST;
 	}
 }
 
@@ -973,16 +939,7 @@ void lss_state_game_setup_logic(APP_INSTANCE * app)
 {
 	int i;
 
-	/* always read all controllers */
-	for(i = 0; i < LSS_MAX_PLAYERS; i++)
-	{
-		lss_read_controller(&app->controller[i]);
-	}
-
-	/* players can join at any time during the setup process */
-	lss_game_setup_join_logic(app);
-
-	switch(lss_game_setup_state)
+	switch(app->game.setup_state)
 	{
 		case LSS_GAME_SETUP_STATE_SONG_LIST:
 		{
@@ -1021,7 +978,7 @@ void lss_game_setup_settings_render(APP_INSTANCE * app)
 void lss_state_game_setup_render(APP_INSTANCE * app)
 {
 	lss_game_setup_common_render(app);
-	switch(lss_game_setup_state)
+	switch(app->game.setup_state)
 	{
 		case LSS_GAME_SETUP_STATE_SONG_LIST:
 		{

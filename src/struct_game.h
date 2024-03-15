@@ -89,6 +89,7 @@ typedef struct
 	T3F_ATLAS * atlas;
 	T3F_PRIMITIVES_CACHE * primitives;
 	T3F_GUI * pause_menu;
+	int setup_state;
 
 	LSS_PLAYER player[LSS_MAX_PLAYERS];
 	int current_tick, current_beat;

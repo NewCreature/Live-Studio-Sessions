@@ -9,12 +9,22 @@
 #include "state_title.h"
 #include "state_av_setup.h"
 #include "state_game_setup.h"
+#include "join.h"
 
 void lss_state_logic(APP_INSTANCE * app)
 {
 	char buf[2][64];
 	bool touched = false;
 	int i;
+
+	/* always read all controllers */
+	for(i = 0; i < LSS_MAX_PLAYERS; i++)
+	{
+		lss_read_controller(&app->controller[i]);
+	}
+
+	/* allow players to join at any time */
+	lss_player_join_logic(app);
 
 	switch(app->state)
 	{

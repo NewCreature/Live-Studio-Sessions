@@ -25,7 +25,7 @@ APP_OBJECTS = rtk/io.o rtk/midi.o rtk/io_allegro.o t3net/t3net.o modules/song_li
               modules/obfuscate.o modules/text_entry.o modules/profile.o \
               modules/gui.o main.o state.o state_game.o state_game_results.o \
               resources.o state_game_player.o state_title.o state_av_setup.o \
-              state_game_setup.o t3net/leaderboard.o instance.o views.o
+              state_game_setup.o t3net/leaderboard.o instance.o views.o join.o
 #APP_LIBS =
 APP_CFLAGS = -O2 -Wall -I.
 APP_CXXFLAGS = -std=c++11
