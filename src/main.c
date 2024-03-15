@@ -136,17 +136,9 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		t3f_map_input_for_xbox_controller(app->controller[i].input, i);
 	}
-	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_DPAD_LEFT, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_A);
-	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_DPAD_RIGHT, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_D);
-	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_DPAD_UP, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_W);
-	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_DPAD_DOWN, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_S);
-	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_X, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_J);
-	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_Y, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_K);
-	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_B, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_L);
-	t3f_bind_input_handler_element(app->controller[i].input, T3F_GAMEPAD_A, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_ENTER);
-	if(al_get_num_joysticks() > 0)
+	if(i < LSS_MAX_CONTROLLERS)
 	{
-		al_set_config_value(t3f_config, "Test", "joystick_name", al_get_joystick_name(al_get_joystick(0)));
+		lss_map_keyboard_menu_controls(&app->controller[i]);
 	}
 
 	/* set up views */

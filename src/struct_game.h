@@ -30,7 +30,14 @@ typedef struct
 	bool block_menu_strum;
 
 	bool active;
-	bool ready;
+
+	/* cache song details for menu creation */
+	int track[16];
+	int tracks;
+	int diff[4];
+	int track_type[16];
+	int setup_state;
+	int selected_game_type;
 	int selected_track;
 	int selected_difficulty;
 	double song_pos;
