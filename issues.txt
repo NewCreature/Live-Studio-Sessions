@@ -14,6 +14,8 @@ Live Studio Sessions Issues
 [ ]Keyboard input in new input system is broken. Keys are registered as pressed
    repeatedly while keys are held.
 
+[ ]Remove profile system.
+
 [ ]Finish implementing initial version of game setup process.
 
    [X]Expose player view setup so we can access it outside of the gameplay
