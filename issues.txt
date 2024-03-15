@@ -8,6 +8,12 @@ Live Studio Sessions Issues
 
 [X]Add a way to select a random song.
 
+[ ]T3F GUI system can soft lock if user tries to traverse menu manually when
+   there are no non-static menu items.
+
+[ ]Keyboard input in new input system is broken. Keys are registered as pressed
+   repeatedly while keys are held.
+
 [ ]Finish implementing initial version of game setup process.
 
    [X]Expose player view setup so we can access it outside of the gameplay
@@ -17,9 +23,9 @@ Live Studio Sessions Issues
 
       [ ]Any controller can be used to select the song.
 
-      [ ]Players can be added and removed at any time.
+      [X]Players can be added and removed at any time.
 
-         [ ]Make it so players can traverse backwards through the setup process
+         [X]Make it so players can traverse backwards through the setup process
             by pressing 'B'. When they reach the track select scrren, they
             should be dropped out of the game if they press 'B' again.
 
@@ -28,6 +34,11 @@ Live Studio Sessions Issues
 
       [X]Setup screen should be able to wait until all players are ready before
          starting the game.
+   
+   [ ]Allow instrument modes to be played with gamepad. We should set up an
+      appropriate map that implements all of the instrument controls on the
+      gamepad. This is to ensure that all songs can be played with the player's
+      preferred controller.
 
    [X]Create and orient player views before showing track select menu.
 
