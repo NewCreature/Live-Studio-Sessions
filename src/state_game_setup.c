@@ -117,12 +117,26 @@ static int lss_song_list_proc_select_difficulty(void * data, int i, void * p)
 	{
 		case LSS_SONG_TRACK_TYPE_INSTRUMENT:
 		{
-			lss_map_keyboard_instrument_controls(app->game.player[j].controller);
+			if(j < al_get_num_joysticks())
+			{
+				lss_map_joystick_instrument_controls(app->game.player[j].controller, j);
+			}
+			else
+			{
+				lss_map_keyboard_instrument_controls(app->game.player[j].controller);
+			}
 			break;
 		}
 		case LSS_SONG_TRACK_TYPE_GAMEPAD:
 		{
-			lss_map_keyboard_gamepad_controls(app->game.player[j].controller);
+			if(j < al_get_num_joysticks())
+			{
+				lss_map_joystick_gamepad_controls(app->game.player[j].controller, j);
+			}
+			else
+			{
+				lss_map_keyboard_gamepad_controls(app->game.player[j].controller);
+			}
 			break;
 		}
 	}

@@ -43,6 +43,8 @@ typedef struct
 void lss_map_keyboard_instrument_controls(LSS_CONTROLLER * cp);
 void lss_map_keyboard_gamepad_controls(LSS_CONTROLLER * cp);
 void lss_map_keyboard_menu_controls(LSS_CONTROLLER * cp);
+void lss_map_joystick_instrument_controls(LSS_CONTROLLER * cp, int joystick);
+void lss_map_joystick_gamepad_controls(LSS_CONTROLLER * cp, int joystick);
 void lss_read_controller(LSS_CONTROLLER * cp);
 
 #endif
