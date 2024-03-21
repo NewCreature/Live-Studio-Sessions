@@ -94,8 +94,12 @@ int lss_menu_proc_quit(void * data, int i, void * p)
 int lss_menu_proc_profiles_select(void * data, int i, void * p)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int j;
 
-	app->game.player[0].profile = &app->profiles->entry[i];
+	for(j = 0; j < LSS_MAX_PLAYERS; j++)
+	{
+		app->game.player[j].profile = &app->profiles->entry[i];
+	}
 	t3f_clear_touch_data();
 	lss_state_song_list_initialize(app);
 	return 1;
