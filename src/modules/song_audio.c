@@ -2,6 +2,7 @@
 #include "t3f/debug.h"
 
 #include "song_audio.h"
+#include "instance.h"
 
 LSS_SONG_AUDIO * lss_load_song_audio(ALLEGRO_PATH * pp)
 {
@@ -16,6 +17,11 @@ LSS_SONG_AUDIO * lss_load_song_audio(ALLEGRO_PATH * pp)
 		return NULL;
 	}
 	memset(ap, 0, sizeof(LSS_SONG_AUDIO));
+	ap->waveform = lss_create_waveform(960);
+	if(!ap->waveform)
+	{
+		return NULL;
+	}
 
 	pcp = al_clone_path(pp);
 	if(!pcp)
@@ -80,6 +86,10 @@ void lss_destroy_song_audio(LSS_SONG_AUDIO * ap)
 			al_destroy_audio_stream(ap->stream[i]);
 		}
 	}
+	if(ap->waveform)
+	{
+		lss_destroy_waveform(ap->waveform);
+	}
 	free(ap);
 }
 
@@ -94,6 +104,7 @@ static void av_sync_callback(void * buf, unsigned int samples, void * data)
 {
 	LSS_SONG_AUDIO * song_audio = (LSS_SONG_AUDIO *)data;
 
+	lss_waveform_callback(buf, samples, data);
 	song_audio->resync_video = true;
 }
 

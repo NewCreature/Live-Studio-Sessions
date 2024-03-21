@@ -622,6 +622,18 @@ void lss_game_logic(LSS_GAME * gp)
 	check_for_pause(gp);
 }
 
+static float wave_transform(LSS_WAVEFORM * wp, int pos)
+{
+	if(pos < 480)
+	{
+		return wp->data[pos] * (pos / 2);
+	}
+	else
+	{
+		return wp->data[pos] * ((960 - pos) / 2);
+	}
+}
+
 void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)
 {
 	double completed;
@@ -631,6 +643,7 @@ void lss_game_render(LSS_GAME * gp, LSS_RESOURCES * rp)
 
 	t3f_select_view(t3f_default_view);
 	t3f_draw_scaled_bitmap(gp->studio_image, t3f_color_white, 0, 0, 0, 960, 540, 0);
+	lss_render_waveform(gp->song_audio->waveform, 0, 270, t3f_color_white, wave_transform);
 	for(i = 0; i < LSS_MAX_PLAYERS; i++)
 	{
 		if(gp->player[i].active)

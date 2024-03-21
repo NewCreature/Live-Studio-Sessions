@@ -2,6 +2,7 @@
 #define LSS_SONG_AUDIO_H
 
 #include "t3f/t3f.h"
+#include "waveform.h"
 
 #define LSS_SONG_AUDIO_MAX_STREAMS 16
 
@@ -12,6 +13,7 @@ typedef struct
 //	ALLEGRO_MIXER * mixer;
 	ALLEGRO_AUDIO_STREAM * stream[LSS_SONG_AUDIO_MAX_STREAMS];
 	int streams;
+	LSS_WAVEFORM * waveform;
 
 	double length;
 	bool playing;
