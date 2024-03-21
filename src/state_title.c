@@ -574,31 +574,24 @@ void lss_title_exit(LSS_TITLE_DATA * dp)
 void lss_title_menu_logic(T3F_GUI * gp, LSS_CONTROLLER * cp, int block_count, bool back_enabled, void * data)
 {
 	t3f_process_gui(gp, data);
-	if(cp->source != LSS_CONTROLLER_SOURCE_TOUCH)
-	{
-		lss_read_controller(cp);
-	}
 	if(!block_count)
 	{
 		if(!lss_process_text_entry())
 		{
-			if(t3f_key[ALLEGRO_KEY_ENTER] || cp->input->element[T3F_GAMEPAD_A].pressed)
+			if(cp->input->element[T3F_GAMEPAD_A].pressed)
 			{
 				t3f_activate_selected_gui_element(gp, data);
-				t3f_key[ALLEGRO_KEY_ENTER] = 0;
 			}
-			else if(t3f_key[ALLEGRO_KEY_UP] || cp->input->element[T3F_GAMEPAD_DPAD_UP].pressed)
+			else if(cp->input->element[T3F_GAMEPAD_DPAD_UP].pressed)
 			{
 				t3f_select_previous_gui_element(gp);
-				t3f_key[ALLEGRO_KEY_UP] = 0;
 			}
-			else if(t3f_key[ALLEGRO_KEY_DOWN] || cp->input->element[T3F_GAMEPAD_DPAD_DOWN].pressed)
+			else if(cp->input->element[T3F_GAMEPAD_DPAD_DOWN].pressed)
 			{
 				t3f_select_next_gui_element(gp);
-				t3f_key[ALLEGRO_KEY_DOWN] = 0;
 			}
 		}
-		if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || cp->input->element[T3F_GAMEPAD_START].pressed)
+		if(t3f_key[ALLEGRO_KEY_BACK] || cp->input->element[T3F_GAMEPAD_START].pressed)
 		{
 			if(back_enabled)
 			{
@@ -606,7 +599,6 @@ void lss_title_menu_logic(T3F_GUI * gp, LSS_CONTROLLER * cp, int block_count, bo
 				t3f_select_previous_gui_element(gp);
 				t3f_activate_selected_gui_element(gp, data);
 			}
-			t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 			t3f_key[ALLEGRO_KEY_BACK] = 0;
 		}
 	}
