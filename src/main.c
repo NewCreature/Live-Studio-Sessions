@@ -235,8 +235,11 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	app->selected_track = 1;
 	app->selected_difficulty = 3;
 	app->leaderboard = NULL;
-	app->game.player[0].selected_track = 0;
-	app->game.player[0].selected_difficulty = 0;
+	for(i = 0; i < LSS_MAX_PLAYERS; i++)
+	{
+		app->game.player[i].selected_track = 0;
+		app->game.player[i].selected_difficulty = 0;
+	}
 	lss_select_menu(&app->title, LSS_MENU_MAIN);
 
 	rtk_io_set_allegro_driver();

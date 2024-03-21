@@ -150,6 +150,10 @@ static void lss_player_detect_visible_notes(LSS_GAME * gp, int player)
 			while(!lss_player_note_visible(gp, player, gp->player[player].last_visible_note))
 			{
 				gp->player[player].last_visible_note++;
+				if(gp->player[player].last_visible_note >= gp->song->track[gp->player[player].selected_track][gp->player[player].selected_difficulty].notes - 1)
+				{
+					break;
+				}
 			}
 		}
 	}
@@ -388,7 +392,6 @@ void lss_player_logic(LSS_GAME * gp, int player)
 	gp->player[player].hittable_notes_groups = group + 1;
 
 	/* check for note hits */
-	lss_read_controller(gp->player[player].controller);
 	if(gp->song->track[gp->player[player].selected_track]->type == LSS_SONG_TRACK_TYPE_GAMEPAD)
 	{
 		handle_auto_strum(gp, player);

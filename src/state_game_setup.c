@@ -70,7 +70,6 @@ static void lss_enumerate_difficulties(APP_INSTANCE * app, int track, int player
 	{
 		if(app->game.song->track[track][i].notes > 5)
 		{
-			printf("found notes\n");
 			app->game.player[player].diff[i] = 1;
 		}
 	}
@@ -106,10 +105,14 @@ static int lss_song_list_proc_select_difficulty(void * data, int i, void * p)
 			break;
 		}
 	}
+	if(j >= LSS_MAX_PLAYERS)
+	{
+		return 1;
+	}
 	app->game.player[j].selected_difficulty = i - 2;
 	app->game.song_id = app->song_list->entry[app->selected_song]->id;
 	app->game.player[j].selected_track = app->game.player[j].track[app->game.player[j].selected_track];
-	app->game.player[j].selected_difficulty = app->game.player[j].diff[app->game.player[j].selected_difficulty];
+//	app->game.player[j].selected_difficulty = app->game.player[j].diff[app->game.player[j].selected_difficulty];
 	switch(app->game.song->track[app->game.player[j].selected_track]->type)
 	{
 		case LSS_SONG_TRACK_TYPE_INSTRUMENT:
@@ -180,11 +183,8 @@ static int lss_song_list_proc_select_track(void * data, int i, void * p)
 			t3f_destroy_gui(app->game.player[j].menu);
 			app->game.player[j].menu = NULL;
 			app->game.player[j].selected_track = i - 1;
-			printf("break 1\n");
 			lss_enumerate_difficulties(app, app->game.player[j].track[app->game.player[j].selected_track], j);
-			printf("break 2\n");
 			lss_create_difficulty_menu(app, j);
-			printf("break 3\n");
 			app->game.player[j].selected_difficulty = 0;
 			app->game.player[j].setup_state = LSS_PLAYER_SETUP_DIFFICULTY_SELECT;
 			break;
@@ -262,6 +262,7 @@ static bool lss_create_game_type_menu(APP_INSTANCE * app, int player)
 	extra_flag = 0;
 	if(!app->game.player[player].track_type[0])
 	{
+		printf("no instrument\n");
 		extra_flag = T3F_GUI_ELEMENT_STATIC;
 	}
 	t3f_add_gui_text_element(app->game.player[player].menu , lss_game_setup_proc_select_game_type, "Instrument", (void **)&app->resources.font[lss_song_list_font], t3f_default_view->left + 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY | extra_flag);
@@ -269,6 +270,7 @@ static bool lss_create_game_type_menu(APP_INSTANCE * app, int player)
 	extra_flag = 0;
 	if(!app->game.player[player].track_type[1])
 	{
+		printf("no gamepad\n");
 		extra_flag = T3F_GUI_ELEMENT_STATIC;
 	}
 	t3f_add_gui_text_element(app->game.player[player].menu , lss_game_setup_proc_select_game_type, "Gamepad", (void **)&app->resources.font[lss_song_list_font], t3f_default_view->left + 8, pos, t3f_color_white, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY | extra_flag);
