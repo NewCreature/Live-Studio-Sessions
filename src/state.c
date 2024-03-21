@@ -121,7 +121,12 @@ void lss_state_logic(APP_INSTANCE * app)
 				}
 				lss_game_exit(&app->game);
 				lss_title_initialize(&app->title, &app->resources, app->song_list);
-				app->state = LSS_STATE_GAME_SETUP;
+				app->title.current_menu = LSS_MENU_MAIN;
+				for(i = 0; i < LSS_MAX_PLAYERS; i++)
+				{
+					app->game.player[i].setup_state = LSS_PLAYER_SETUP_GAME_TYPE_SELECT;
+				}
+				app->state = LSS_STATE_TITLE;
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				t3f_key[ALLEGRO_KEY_BACK] = 0;
 			}

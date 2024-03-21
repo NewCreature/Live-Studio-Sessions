@@ -479,14 +479,14 @@ void lss_state_song_list_song_select_logic(APP_INSTANCE * app)
 	int max;
 	int i;
 
-	if(t3f_key_pressed())
-	{
-		if(!lss_song_list_sort_query)
-		{
-			lss_begin_text_entry(app, "", lss_song_list_sort_filter, 32, lss_song_select_entry_callback);
-			lss_song_list_sort_query = true;
-		}
-	}
+//	if(t3f_key_pressed())
+//	{
+//		if(!lss_song_list_sort_query)
+//		{
+//			lss_begin_text_entry(app, "", lss_song_list_sort_filter, 32, lss_song_select_entry_callback);
+//			lss_song_list_sort_query = true;
+//		}
+//	}
 	lss_song_list_space = t3f_get_font_line_height(app->resources.font[lss_song_list_font]);
 	lss_song_list_visible = (540 - lss_song_list_space * 2) / lss_song_list_space;
 	lss_song_list_selected = false;
