@@ -131,16 +131,6 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		}
 	}
 
-	/* set up controllers */
-	for(i = 0; i < al_get_num_joysticks() && i < LSS_MAX_CONTROLLERS; i++)
-	{
-		t3f_map_input_for_xbox_controller(app->controller[i].input, i);
-	}
-	if(i < LSS_MAX_CONTROLLERS)
-	{
-		lss_map_keyboard_menu_controls(&app->controller[i]);
-	}
-
 	/* set up views */
 	for(i = 0; i < LSS_MAX_PLAYERS; i++)
 	{
@@ -227,7 +217,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 //	app->current_event = 0;
 //	app->current_event_tick = (app->midi->track[1]->event[app->current_event]->pos_sec + app->offset) * 60.0;
 	t3f_debug_message("Initializing title screen...\n");
-	if(!lss_title_initialize(&app->title, &app->resources, app->song_list))
+	if(!lss_title_initialize(app))
 	{
 		return false;
 	}

@@ -930,7 +930,7 @@ void lss_game_setup_settings_logic(APP_INSTANCE * app)
 		}
 		else
 		{
-			lss_title_initialize(&app->title, &app->resources, app->song_list);
+			lss_title_initialize(app);
 		}
 	}
 }

@@ -120,7 +120,7 @@ void lss_state_logic(APP_INSTANCE * app)
 					app->leaderboard = NULL;
 				}
 				lss_game_exit(&app->game);
-				lss_title_initialize(&app->title, &app->resources, app->song_list);
+				lss_title_initialize(app);
 				app->title.current_menu = LSS_MENU_MAIN;
 				for(i = 0; i < LSS_MAX_PLAYERS; i++)
 				{
@@ -137,7 +137,7 @@ void lss_state_logic(APP_INSTANCE * app)
 			lss_state_av_setup_logic(app);
 			if(app->game.done)
 			{
-				lss_title_initialize(&app->title, &app->resources, app->song_list);
+				lss_title_initialize(app);
 				al_show_mouse_cursor(t3f_display);
 				app->state = LSS_STATE_TITLE;
 			}

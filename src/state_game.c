@@ -325,10 +325,6 @@ void lss_game_exit(LSS_GAME * gp)
 	t3f_debug_message("\tDestroying song...\n");
 	lss_destroy_song(gp->song);
 	t3f_debug_message("\tDestroying textures...\n");
-	for(i = 0; i < LSS_MAX_PLAYERS; i++)
-	{
-		t3f_destroy_view(gp->player[i].view);
-	}
 	for(i = 0; i < 10; i++)
 	{
 		t3f_destroy_resource(gp->note_texture[i]);
